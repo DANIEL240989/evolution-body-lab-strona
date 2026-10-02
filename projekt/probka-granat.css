@@ -1,0 +1,11 @@
+:root { --noc: #13213B; --noc-2: #1A2B48; --mat: #13213B; --mat-karta: #1A2B48; }
+.naglowek { background: rgba(19, 33, 59, .97); }
+.pasek-dol { background: #13213B !important; }
+.hero-obraz, .monika-foto, .karta-obraz { background: radial-gradient(110% 80% at 70% 15%, rgba(212,164,154,.14), transparent 60%), linear-gradient(165deg, #1E3050, #0C1628); }
+.plakietka { background: rgba(19,33,59,.8); }
+@media (max-width: 900px) { .hero .pill.solid, .pasek-dol a.solid { box-shadow: 0 0 0 2px #13213B, 0 0 0 3px var(--rz); } }
+/* świecące pęknięcia: płyty i nitki różowego złota, tylko po prawej, nie pod tekstem */
+.hero { position: relative; overflow: hidden; isolation: isolate; }
+.hero::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='xMaxYMax slice'><defs><linearGradient id='g' x1='0' y1='1' x2='1' y2='0'><stop offset='0' stop-color='%23D4A49A' stop-opacity='0'/><stop offset='.45' stop-color='%23E9B9A8'/><stop offset='.62' stop-color='%23FFEDE3'/><stop offset='.8' stop-color='%23E2AE9C'/><stop offset='1' stop-color='%23D4A49A' stop-opacity='0'/></linearGradient><filter id='b' x='-20%' y='-20%' width='140%' height='140%'><feGaussianBlur stdDeviation='5'/></filter></defs><polygon points='640,900 1440,380 1440,900' fill='%23000' fill-opacity='.26'/><polygon points='1000,0 1440,0 1440,250' fill='%23fff' fill-opacity='.035'/><polygon points='1140,900 1440,705 1440,900' fill='%23000' fill-opacity='.22'/><g fill='none' stroke='url(%23g)' stroke-linecap='round'><path d='M640 900 L1440 380' stroke-width='9' filter='url(%23b)' opacity='.75'/><path d='M640 900 L1440 380' stroke-width='1.6'/><path d='M1000 0 L1440 250' stroke-width='7' filter='url(%23b)' opacity='.6'/><path d='M1000 0 L1440 250' stroke-width='1.2'/><path d='M1140 900 L1440 705' stroke-width='6' filter='url(%23b)' opacity='.6'/><path d='M1140 900 L1440 705' stroke-width='1.1'/></g></svg>") right bottom / cover no-repeat; }
+@media (max-width: 900px) { .hero::after { inset: 0 0 auto 0; height: 370px; opacity: .85; -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); } }
