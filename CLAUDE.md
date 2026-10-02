@@ -9,10 +9,14 @@ Strona kompletna, ale TYLKO lokalnie: noindex + robots Disallow, rezerwacje wył
 Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-publikacje` blokuje wydanie, dopóki zostało TEST.
 
 ## Decyzje Daniela (nie zmieniać bez polecenia)
-- Styl **Noir Rosé**: noc `#141113`, tekst `#F6ECE8`, pudrowy róż `#E8C9C1`, różowe złoto `#D4A49A` (przycisk z napisem noir),
+- Styl bazowy (pierwotnie **Noir Rosé**, zmienne na początku `css/style.css`): noc `#141113`, tekst `#F6ECE8`, pudrowy róż `#E8C9C1`, różowe złoto `#D4A49A` (przycisk z napisem noir),
   jasne `#F8EFEC`, karta `#EFDCD6`, tekst `#1E1A1C`, róż tekstowy `#8C4F58`. Cormorant Garamond + Manrope.
-  Od 02.10.2026 (wybór z porównania dekoratora A|B|C, `projekt/`): **czarny mat** bez tekstury (wariant A) + **folia z różowego
-  złota** na H1 i „Body Lab” (z wariantu C). Welur odrzucony (generator został w `narzedzia/welur.py`). Blok na końcu `css/style.css`.
+  Od 02.10.2026 wieczór (wybór Daniela z porównania D|E|F|G i jego zaznaczeń na zrzucie): **Cap Bleu + różowe złoto**.
+  Tło nocy błękit Riwiery `#0E2C3A` (karty `#163A4B`), jasne sekcje len `#F7F3EA` (`img/materialy/len.webp`) i `#E2E9E8`.
+  Napisy główne białe (kość słoniowa `#F6F0E4`), H1 biały. Różowe złoto `#D4A49A` tylko jako akcent: „Body Lab” w logo,
+  etykiety sekcji, podkreślenie języka i menu, ramki, obwódki przycisków (też Appeler/WhatsApp na telefonie), główny
+  przycisk (napis w błękicie). Na jasnym tle różowe złoto jako tekst `#8C4F58`. Wcześniejsze: czarny mat (D), welur,
+  Carrara, oliwka odrzucone; porównania w `projekt/`. Blok na końcu `css/style.css`.
 - Języki w kolejności: FR (domyślny), EN, ES, PL, RU, DE (`?lang=`). Monika mówi po francusku i polsku: tylko to piszemy
   jako języki obsługi, reszta to tłumaczenie oferty. Nigdy „6 langues”.
   Etap 1: FR kompletny do akceptacji; pozostałe języki tłumaczymy z francuskiego po akceptacji Moniki.
