@@ -44,7 +44,8 @@
     box.innerHTML = '';
     JEZ.forEach(function (l) {
       var a = document.createElement('a');
-      a.href = '?lang=' + l + location.hash;
+      var w = new URLSearchParams(location.search).get('w');
+      a.href = '?lang=' + l + (w ? '&w=' + w : '') + location.hash;
       a.textContent = window.NAZWY_JEZYKOW[l];
       a.hreflang = l;
       if (l === lang) a.setAttribute('aria-current', 'true');

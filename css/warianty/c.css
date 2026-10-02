@@ -1,10 +1,10 @@
 /* Wariant C · Welur i folia (?w=c). Wszystko z B + H1 i „Body Lab” w delikatnej folii z różowego złota.
    Folia = gradient tekstu. Najciemniejszy ton folii #C99384: 5,8:1 do najjaśniejszego miejsca weluru (#2C2326),
-   7,1:1 do #141113 (WCAG AA dla dużego i zwykłego tekstu). Najjaśniejszy ton #F2D5CB (bez bieli, bez połysku lustra). */
+   7,1:1 do #141113 (WCAG AA dla dużego i zwykłego tekstu). Najjaśniejszy ton #F4DAD0 (bez bieli, bez połysku lustra). */
 @import url("b.css");
 
 :root {
-  --folia: linear-gradient(100deg, #E9C2B6 0%, #F2D5CB 22%, #D4A49A 46%, #C99384 60%, #E6BDB1 80%, #D9AC9F 100%);
+  --folia: linear-gradient(100deg, #EAC4B8 0%, #F4DAD0 20%, #DDB0A4 42%, #C99384 58%, #E9C3B7 78%, #F1D3C9 100%);
 }
 
 .hero h1, .logo em {
