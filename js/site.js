@@ -44,7 +44,8 @@
     box.innerHTML = '';
     JEZ.forEach(function (l) {
       var a = document.createElement('a');
-      a.href = '?lang=' + l + location.hash;
+      var w = new URLSearchParams(location.search).get('w');
+      a.href = '?lang=' + l + (/^[efg]$/.test(w || '') ? '&w=' + w : '') + location.hash;
       a.textContent = window.NAZWY_JEZYKOW[l];
       a.hreflang = l;
       if (l === lang) a.setAttribute('aria-current', 'true');
@@ -71,4 +72,16 @@
   }
 
   render(jezykZAdresu());
+})();
+
+// Warianty kolorów do porównania (projekt/PALETY-2.md): ?w=e|f|g dokłada css/warianty/<w>.css po style.css.
+// Bez parametru strona wygląda jak dotąd. Do usunięcia po wyborze.
+(function () {
+  var w = new URLSearchParams(location.search).get('w');
+  if (!/^[efg]$/.test(w || '')) return;
+  var l = document.createElement('link');
+  l.rel = 'stylesheet';
+  l.href = 'css/warianty/' + w + '.css';
+  document.head.appendChild(l);
+  document.documentElement.setAttribute('data-wariant', w);
 })();
