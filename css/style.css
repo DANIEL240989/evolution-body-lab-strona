@@ -298,3 +298,12 @@ section { padding: 96px max(16px, calc((100% - var(--szer)) / 2)); }
   .pasek-dol a { border-color: var(--rz); color: var(--tekst-noc); }
   .pasek-dol a.solid { background: var(--rz); color: var(--noc); border-color: var(--rz); }
 }
+
+/* Telefon (Daniel 02.10.2026): dwa przyciski rezerwacji, „Prendre rendez-vous” w pierwszym ekranie i „Rendez-vous”
+   w pasku na dole, mają biały środek i obrys różowozłotą nitką. Na komputerze zostaje pełne różowe złoto. */
+@media (max-width: 900px) {
+  .hero .pill.solid, .pasek-dol a.solid {
+    background: var(--zloto); color: var(--noc); border: 0;
+    box-shadow: 0 0 0 2px var(--noc), 0 0 0 3px var(--rz);
+  }
+}
