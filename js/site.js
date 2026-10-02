@@ -72,3 +72,15 @@
 
   render(jezykZAdresu());
 })();
+
+// Warianty wyglądu do porównania (projekt/PALETY.md): ?w=a|b|c dokłada css/warianty/<w>.css po style.css.
+// Bez parametru strona wygląda jak dotąd. Do usunięcia po wyborze wariantu.
+(function () {
+  var w = new URLSearchParams(location.search).get('w');
+  if (!/^[abc]$/.test(w || '')) return;
+  var l = document.createElement('link');
+  l.rel = 'stylesheet';
+  l.href = 'css/warianty/' + w + '.css';
+  document.head.appendChild(l);
+  document.documentElement.setAttribute('data-wariant', w);
+})();

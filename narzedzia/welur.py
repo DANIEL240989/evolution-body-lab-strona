@@ -64,8 +64,9 @@ def polysk(N=768, ziarno=60602):
     smugi = sum(w * norm(blur_kat(g(), 14, 3.2, k)) for w, k in zip(wagi, katy))
     # łagodne fale światła (jak tkanina leżąca nierówno) + średnie plamy
     duze = norm(blur_kat(g(), 85, 85, 0))
-    srednie = norm(blur_kat(g(), 18, 24, 40))
-    m = 1.0 * duze + .5 * srednie + .07 * norm(smugi)
+    # miękkie „fałdy” połysku: wydłużone plamy wzdłuż kierunku przeczesania (to odróżnia tkaninę od dymu)
+    faldy = sum(w * norm(blur_kat(g(), 48, 15, k)) for w, k in zip(wagi, katy))
+    m = 1.0 * duze + .62 * norm(faldy) + .12 * norm(smugi)
     m = np.tanh(.9 * norm(m))           # miękkie nasycenie: połysk w łatach, bez ostrych krawędzi
     m = norm(m)
     return np.where(m > 0, 1.35 * m, .6 * m)   # połysk wyraźniejszy niż cień (welur: ciemny z jasnymi łatami)

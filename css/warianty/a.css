@@ -1,0 +1,36 @@
+/* Wariant A · Czarny mat (?w=a). Ładowany po style.css.
+   Noc gładka #141113 bez tekstury, różowe złoto #D4A49A oszczędnie: główny przycisk, cienkie linie, „Body Lab” w logo.
+   Reszta akcentów (etykiety danych, aktywny język, uwaga) schodzi do bieli i szarości nocy. Jasne sekcje bez zmian. */
+:root {
+  --mat: #141113;
+  --mat-karta: #1A1618;
+  --mat-linia: rgba(246, 236, 232, .09);
+}
+
+/* nagłówek: pełny mat zamiast przydymionego szkła, złota nić na dole cieńsza */
+.naglowek { background: rgba(20, 17, 19, .97); backdrop-filter: none; border-bottom-color: rgba(212, 164, 154, .28); }
+.jezyki a[aria-current] { background: none; color: var(--tekst-noc); box-shadow: inset 0 -1px 0 var(--zloto); border-radius: 0; }
+
+.noc { background: var(--mat); }
+
+/* pierwszy ekran: miejsce na zdjęcie w macie (bez różowej poświaty) */
+.hero-obraz, .monika-foto, .karta-obraz {
+  background: radial-gradient(110% 80% at 70% 15%, rgba(212, 164, 154, .16), transparent 60%),
+              linear-gradient(165deg, #241E21, #121011);
+}
+.hero-obraz { border-color: var(--mat-linia); }
+
+/* karty zabiegów: mat o ton jaśniejszy, obrys neutralny, złoto dopiero po najechaniu */
+.karta { background: var(--mat-karta); border-color: var(--mat-linia); }
+.karta:hover { border-color: rgba(212, 164, 154, .7); }
+.karta-meta { border-top-color: var(--mat-linia); }
+
+.uwaga { color: var(--tekst-noc-2); border-left-width: 1px; }
+.dane dt { color: var(--tekst-noc-2); }
+.cel { border-top-width: 1px; }
+.stopka { border-top-color: rgba(212, 164, 154, .28); }
+
+@media (max-width: 900px) {
+  .pasek-dol { background: var(--mat); border-top: 1px solid rgba(212, 164, 154, .45); }
+  .pasek-dol a { border-color: var(--mat-linia); }
+}
