@@ -1,0 +1,61 @@
+// Teksty strony. Kolejność języków (Daniel 02.10.2026): FR, EN, ES, PL, RU, DE.
+// Etap 1: francuski kompletny do akceptacji Moniki. Pozostałe języki tłumaczymy z francuskiego
+// PO akceptacji (mniej poprawek x6). Brakujący klucz = tekst francuski + pasek „traduction en préparation”.
+window.JEZYKI = ['fr', 'en', 'es', 'pl', 'ru', 'de'];
+window.NAZWY_JEZYKOW = { fr: 'FR', en: 'EN', es: 'ES', pl: 'PL', ru: 'RU', de: 'DE' };
+
+window.T = {
+  fr: {
+    meta_title: 'Evolution Body Lab · Remodelage de la silhouette à Nice',
+    meta_desc: 'Soins du corps à Nice : drainage, remodelage, fermeté. Tarifs affichés, première consultation sur rendez-vous, du lundi au vendredi.',
+    nav_soins: 'Soins', nav_tarifs: 'Tarifs', nav_visite: 'Première visite', nav_monika: 'Monika', nav_faq: 'Questions', nav_contact: 'Contact',
+    cta_rdv: 'Prendre rendez-vous', cta_rdv_court: 'Rendez-vous', cta_soins: 'Voir les soins', cta_appeler: 'Appeler', cta_whatsapp: 'WhatsApp',
+    demo: 'Version de démonstration : coordonnées, tarifs et images sont provisoires.',
+    traduction: 'Traduction en préparation : le texte s’affiche en français.',
+    image_synthese: 'Image de synthèse',
+    h_sur: 'Nice · Côte d’Azur',
+    h_titre: 'Remodelage de la silhouette à Nice',
+    h_lead: 'Des soins du corps précis, un protocole clair dès la première séance et des tarifs affichés. Sur rendez-vous, du lundi au vendredi.',
+    h_info: 'Monika vous reçoit en français et en polonais.',
+    obj_label: 'Vos objectifs',
+    obj_titre: 'Par où commencer ?',
+    obj_1_t: 'Jambes légères', obj_1_d: 'Sensation de lourdeur, rétention d’eau.',
+    obj_2_t: 'Fermeté', obj_2_d: 'Peau qui se relâche après une perte de poids ou une grossesse.',
+    obj_3_t: 'Silhouette', obj_3_d: 'Ventre, hanches, cuisses : affiner les zones rebelles.',
+    obj_4_t: 'Aspect peau d’orange', obj_4_d: 'Lisser la peau, retrouver un grain plus net.',
+    soins_label: 'Les soins',
+    soins_titre: 'Chaque soin, son prix et sa durée',
+    soins_test: 'Exemples de soins : la liste définitive sera validée par Monika.',
+    s_drainage_t: 'Drainage lymphatique', s_drainage_d: 'Massage manuel doux qui aide à éliminer l’eau retenue. Jambes plus légères dès la séance.',
+    s_lpg_t: 'Endermologie', s_lpg_d: 'Palper-rouler mécanique pour lisser la peau et travailler la fermeté.',
+    s_radiofrequence_t: 'Radiofréquence corps', s_radiofrequence_d: 'Chaleur douce en profondeur pour une peau plus ferme.',
+    s_cryo_t: 'Cryolipolyse', s_cryo_d: 'Le froid cible une zone précise : ventre, poignées d’amour, cuisses.',
+    duree: 'min', prix_tbc: 'Tarif à confirmer (TEST)', reserver_soin: 'Réserver ce soin',
+    visite_label: 'Première visite',
+    visite_titre: 'Comment se passe la première visite',
+    v1_t: 'Échange', v1_d: 'Vos objectifs, vos antécédents, un questionnaire rempli sur place.',
+    v2_t: 'Mesures', v2_d: 'Prise de mesures pour suivre vos résultats séance après séance.',
+    v3_t: 'Protocole', v3_d: 'Le soin adapté, le nombre de séances et leur rythme, le prix total.',
+    v4_t: 'Premier soin', v4_d: 'Si vous le souhaitez, le premier soin a lieu le jour même.',
+    visite_pratique: 'Prévoir environ 1 h. Tenue confortable, aucune préparation particulière.',
+    monika_label: 'Votre praticienne',
+    monika_titre: 'Monika',
+    monika_txt: 'Présentation, parcours et certifications à venir (TEST).',
+    monika_langues: 'Langues : français, polonais.',
+    faq_label: 'Questions fréquentes',
+    faq_titre: 'Avant de réserver',
+    q1: 'Est-ce douloureux ?', a1: 'La plupart des soins sont confortables. Une sensation de chaleur, de froid ou de pression est possible selon la technique ; on en parle avant de commencer.',
+    q2: 'Combien de séances faut-il ?', a2: 'Cela dépend du soin et de votre objectif. Le nombre de séances et le prix total sont fixés lors de la première visite, avant tout engagement.',
+    q3: 'Y a-t-il des contre-indications ?', a3: 'Oui, selon les soins : grossesse, certains traitements ou problèmes de santé. Le questionnaire de la première visite sert à les vérifier.',
+    q4: 'Puis-je annuler mon rendez-vous ?', a4: 'Oui. Conditions d’annulation à confirmer (TEST).',
+    q5: 'Les résultats sont-ils garantis ?', a5: 'Non, et personne ne peut honnêtement les garantir. Les résultats varient selon chaque personne ; nous les suivons avec des mesures régulières.',
+    contact_label: 'Contact',
+    contact_titre: 'Prendre rendez-vous',
+    horaires: 'Horaires', horaires_val: 'Du lundi au vendredi, 9 h à 19 h · dernier rendez-vous à 18 h',
+    weekend: 'Fermé le samedi et le dimanche',
+    adresse: 'Adresse', telephone: 'Téléphone', langues: 'Langues', langues_val: 'Monika parle français et polonais',
+    rdv_off: 'La réservation en ligne ouvrira avec l’institut. En attendant, appelez ou écrivez sur WhatsApp.',
+    footer_legal: 'Mentions légales', footer_siret: 'SIRET'
+  },
+  en: {}, es: {}, pl: {}, ru: {}, de: {}
+};

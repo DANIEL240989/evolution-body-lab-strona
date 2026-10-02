@@ -1,0 +1,2 @@
+{ "name": "evolution-body-lab-strona", "private": true, "type": "module",
+  "scripts": { "test": "node --test", "sprawdz-publikacje": "node narzedzia/sprawdz_publikacje.mjs" } }

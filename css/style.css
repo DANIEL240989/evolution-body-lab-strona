@@ -1,0 +1,134 @@
+/* Noir Rosé (wybór Daniela 02.10.2026). Kontrasty WCAG policzone, najsłabszy tekst 5,5:1. */
+:root {
+  --noc: #141113;
+  --noc-2: #1d181b;
+  --tekst-noc: #F6ECE8;
+  --tekst-noc-2: #A79A9C;
+  --roz: #E8C9C1;
+  --zloto: #D4A49A;
+  --jasne: #F8EFEC;
+  --karta: #EFDCD6;
+  --tekst: #1E1A1C;
+  --tekst-2: #6E6265;
+  --roz-tekst: #8C4F58;
+  --szeryf: 'Cormorant Garamond', Georgia, serif;
+  --bez: 'Manrope', system-ui, sans-serif;
+  --szer: 1180px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--jasne); color: var(--tekst); font: 400 17px/1.6 var(--bez); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--szeryf); font-weight: 600; line-height: 1.1; margin: 0 0 .5em; }
+h1 { font-size: clamp(40px, 7vw, 76px); }
+h2 { font-size: clamp(32px, 4.6vw, 52px); }
+h3 { font-size: 24px; }
+
+.pasek-demo, .pasek-tlum { background: var(--roz); color: var(--noc); font-size: 13px; text-align: center; padding: 6px 16px; }
+.pasek-tlum { background: var(--karta); }
+
+.naglowek { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 24px;
+  padding: 14px max(16px, calc((100% - var(--szer)) / 2)); background: rgba(20,17,19,.92);
+  backdrop-filter: blur(10px); color: var(--tekst-noc); border-bottom: 1px solid rgba(212,164,154,.35); }
+.logo { font: 600 24px/1 var(--szeryf); text-decoration: none; letter-spacing: .02em; white-space: nowrap; }
+.logo em { color: var(--zloto); font-style: italic; }
+.menu { display: flex; gap: 22px; margin-left: auto; font-size: 15px; }
+.menu a { text-decoration: none; color: var(--tekst-noc-2); }
+.menu a:hover { color: var(--tekst-noc); }
+.jezyki { display: flex; gap: 2px; font-size: 13px; }
+.jezyki a { text-decoration: none; padding: 4px 6px; color: var(--tekst-noc-2); border-radius: 4px; }
+.jezyki a[aria-current] { color: var(--noc); background: var(--zloto); }
+
+.pill { display: inline-block; padding: 14px 28px; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: 16px; text-align: center; }
+.pill.solid { background: var(--zloto); color: var(--noc); }
+.pill.solid:hover { background: var(--roz); }
+.pill.ramka { border: 1px solid var(--zloto); color: inherit; }
+.pill.maly { padding: 9px 18px; font-size: 14px; }
+.przyciski { display: flex; flex-wrap: wrap; gap: 12px; margin: 28px 0 16px; }
+
+section { padding: 96px max(16px, calc((100% - var(--szer)) / 2)); }
+.noc { background: var(--noc); color: var(--tekst-noc); }
+.jasna { background: var(--jasne); }
+.jasna.druga { background: var(--karta); }
+.noc + .jasna, .jasna + .noc { border-top: 1px solid rgba(212,164,154,.5); }
+.etykieta { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 14px; display: flex; align-items: center; gap: 12px; }
+.etykieta::before { content: ''; width: 28px; height: 1px; background: var(--zloto); }
+.noc .etykieta { color: var(--tekst-noc-2); }
+.jasna .etykieta { color: var(--roz-tekst); }
+.lead { font-size: 19px; max-width: 620px; }
+.noc .lead { color: var(--tekst-noc); }
+.info { font-size: 15px; color: var(--tekst-noc-2); }
+.info.ciemna { color: var(--tekst-2); }
+.uwaga { font-size: 14px; color: var(--roz); border-left: 2px solid var(--zloto); padding-left: 12px; }
+
+.hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; min-height: calc(100vh - 100px); padding-top: 64px; }
+.hero h1 { color: var(--tekst-noc); }
+.hero-obraz, .monika-foto, .karta-obraz { position: relative; border-radius: 4px; overflow: hidden;
+  background: radial-gradient(120% 90% at 70% 20%, rgba(212,164,154,.55), transparent 55%),
+              radial-gradient(90% 70% at 20% 90%, rgba(232,201,193,.25), transparent 60%),
+              linear-gradient(160deg, #2a2125, #120f11); }
+.hero-obraz { aspect-ratio: 4 / 5; order: 2; border: 1px solid rgba(212,164,154,.35); }
+.plakietka { position: absolute; left: 12px; bottom: 12px; font-size: 11px; letter-spacing: .06em; padding: 4px 8px;
+  background: rgba(20,17,19,.75); color: var(--tekst-noc); border-radius: 3px; }
+
+.siatka4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
+.cel { display: block; text-decoration: none; background: var(--karta); padding: 28px 22px; border-radius: 4px; border-top: 2px solid var(--zloto); }
+.cel:hover { background: #ead2cb; }
+.cel p { margin: 0; color: var(--tekst-2); font-size: 15px; }
+
+.karty { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 32px; }
+.karta { background: var(--noc-2); border: 1px solid rgba(212,164,154,.3); border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; }
+.karta:hover { border-color: var(--zloto); }
+.karta-obraz { aspect-ratio: 4 / 3; border-radius: 0; }
+.karta-tresc { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.karta-tresc > p { color: var(--tekst-noc-2); font-size: 15px; margin: 0; flex: 1; }
+.karta-meta { display: flex; justify-content: space-between; font-size: 14px; margin: 8px 0; color: var(--tekst-noc); border-top: 1px solid rgba(212,164,154,.25); padding-top: 10px; }
+.karta .pill { align-self: flex-start; }
+
+.kroki { list-style: none; padding: 0; margin: 32px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.kroki li { border-top: 1px solid var(--zloto); padding-top: 16px; }
+.kroki .nr { font: 600 15px var(--bez); color: var(--roz-tekst); }
+.kroki p { color: var(--tekst-2); font-size: 15px; margin: 0; }
+
+.monika { display: grid; grid-template-columns: 380px 1fr; gap: 48px; align-items: center; }
+.monika-foto { aspect-ratio: 4 / 5; }
+
+.faq { max-width: 780px; margin-top: 24px; }
+.faq details { border-bottom: 1px solid rgba(140,79,88,.3); padding: 18px 0; }
+.faq summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+.faq summary::after { content: '+'; color: var(--roz-tekst); font-size: 22px; line-height: 1; }
+.faq details[open] summary::after { content: '−'; }
+.faq p { color: var(--tekst-2); margin: 10px 0 0; }
+
+.dane { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin: 40px 0 0; }
+.dane dt { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--zloto); margin-bottom: 6px; }
+.dane dd { margin: 0; color: var(--tekst-noc); }
+
+.stopka { padding: 40px 16px 110px; text-align: center; font-size: 14px; color: var(--tekst-noc-2); border-top: 1px solid rgba(212,164,154,.35); }
+.stopka .logo { font-size: 26px; color: var(--tekst-noc); }
+
+.pasek-dol { display: none; }
+
+@media (max-width: 1100px) {
+  .menu { display: none; }
+  .siatka4, .karty, .kroki, .dane { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 900px) {
+  .naglowek { gap: 12px; }
+  .naglowek .pill { display: none; }
+  .jezyki { margin-left: auto; }
+  .hero { grid-template-columns: 1fr; min-height: 0; gap: 28px; padding-top: 32px; }
+  .hero-obraz { order: 0; aspect-ratio: 16 / 10; }
+  .monika { grid-template-columns: 1fr; }
+  section { padding-top: 64px; padding-bottom: 64px; }
+  .pasek-dol { display: grid; grid-template-columns: 1fr 1fr 1.3fr; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    background: var(--noc); border-top: 1px solid var(--zloto); padding: 8px; gap: 8px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+  .pasek-dol a { text-align: center; text-decoration: none; color: var(--tekst-noc); font-size: 14px; font-weight: 600; padding: 12px 4px; border: 1px solid rgba(212,164,154,.4); border-radius: 999px; }
+  .pasek-dol a.solid { background: var(--zloto); color: var(--noc); border-color: var(--zloto); }
+}
+@media (max-width: 560px) {
+  .siatka4, .karty, .kroki, .dane { grid-template-columns: 1fr; }
+  .logo { font-size: 20px; }
+  .jezyki a { padding: 4px 3px; font-size: 12px; }
+}
