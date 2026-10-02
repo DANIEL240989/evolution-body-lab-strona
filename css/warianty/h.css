@@ -47,6 +47,6 @@
 
 @media (max-width: 900px) {
   .pasek-dol { border-top-color: var(--rz-linia); }
-  .pasek-dol a { border-color: rgba(212, 164, 154, .35); }
+  .pasek-dol a { border-color: var(--rz); color: var(--tekst-noc); }
   .pasek-dol a.solid { background: var(--rz); color: var(--noc); border-color: var(--rz); }
 }
