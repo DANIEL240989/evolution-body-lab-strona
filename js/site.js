@@ -45,7 +45,7 @@
     JEZ.forEach(function (l) {
       var a = document.createElement('a');
       var w = new URLSearchParams(location.search).get('w');
-      a.href = '?lang=' + l + (/^[efg]$/.test(w || '') ? '&w=' + w : '') + location.hash;
+      a.href = '?lang=' + l + (/^[efgh]$/.test(w || '') ? '&w=' + w : '') + location.hash;
       a.textContent = window.NAZWY_JEZYKOW[l];
       a.hreflang = l;
       if (l === lang) a.setAttribute('aria-current', 'true');
@@ -78,7 +78,7 @@
 // Bez parametru strona wygląda jak dotąd. Do usunięcia po wyborze.
 (function () {
   var w = new URLSearchParams(location.search).get('w');
-  if (!/^[efg]$/.test(w || '')) return;
+  if (!/^[efgh]$/.test(w || '')) return;
   var l = document.createElement('link');
   l.rel = 'stylesheet';
   l.href = 'css/warianty/' + w + '.css';
