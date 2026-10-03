@@ -80,7 +80,7 @@ test('teksty z wyróżnieniem (*słowo*) mają parzystą liczbę gwiazdek', () =
 
 test('ilustracje marki: plakietka, alt z kluczy, srcset, poza sekcją Moniki', () => {
   const fig = [...html.matchAll(/<figure class="ilustracja[\s\S]*?<\/figure>/g)].map(m => m[0]);
-  assert.equal(fig.length, 2);
+  assert.equal(fig.length, 3);   // róża (manifest), kapelusz (wizyta), czarny kapelusz (pytania)
   for (const f of fig) {
     assert.match(f, /class="plakietka" data-t="image_synthese"/);
     assert.match(f, /data-t-attr="alt:ilustracja_alt"/);
