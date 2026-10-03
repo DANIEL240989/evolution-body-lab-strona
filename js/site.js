@@ -32,11 +32,10 @@
        danych = sam plakat.
      Każdy render i wideo z RTX to grafika AI: z plakietką „Image de synthèse” (opis plików: img/rtx/OPIS.md). */
   var RTX = {
-    /* EMS (Daniel 03.10.2026): czarno-złota stacja + kombinezon EMS, oba z przezroczystym tłem */
+    /* EMS (Daniel 03.10.2026): sama czarno-złota stacja, przezroczyste tło. Kombinezon usunięty (Daniel: „kombinezon wyleci,
+       na samą maszynę, to niehigieniczne”); pliki img/rtx/ems-kombinezon-*.webp zostają w repo, nieużywane. */
     ems: { wolny: true, src: 'img/rtx/ems-urzadzenie-900.webp', srcset: 'img/rtx/ems-urzadzenie-900.webp 593w, img/rtx/ems-urzadzenie-1400.webp 922w',
-           sizes: '(max-width: 900px) 46vh, 53vh', w: 922, h: 1400,
-           obok: { src: 'img/rtx/ems-kombinezon-900.webp', srcset: 'img/rtx/ems-kombinezon-900.webp 593w, img/rtx/ems-kombinezon-1400.webp 923w',
-                   sizes: '(max-width: 900px) 30vh, 40vh', w: 923, h: 1400 } },
+           sizes: '(max-width: 900px) 46vh, 53vh', w: 922, h: 1400 },
     /* kriolipoliza (Daniel 03.10.2026): czarno-złote urządzenie z 4 aplikatorami w lodowym błękicie i mgłą, przezroczyste tło;
        poświata za nim chłodna (chlod). Pętla img/rtx/krio-mgla.mp4 zostaje w repo, nieużywana: wolno stojące urządzenie
        na granacie jest czystsze niż kadr studyjny w tle. */

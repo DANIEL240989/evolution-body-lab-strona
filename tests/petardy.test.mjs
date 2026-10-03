@@ -59,10 +59,10 @@ test('tor: 3 panele, ceny z dane.js, „Réserver ce soin” nadal zaznacza zabi
   assert.match(site, /a\.className = 'karta panel'/);                   // js/rezerwacja.js: #karty-zabiegow .karta a
   assert.match(site, /tekst\(lang, 'a_partir'\) \+ ' ' \+ z\.cena \+ ' €'/);
   assert.match(site, /if \(z\.test\)/);                                 // kriolipoliza z dopiskiem TEST
-  // RTX: EMS = stacja + kombinezon, kriolipoliza = urządzenie (przezroczyste tło), wizyta = kabina Daniela (kadr wtopiony w granat); wszystko z plakietką
+  // RTX: EMS = sama stacja (bez kombinezonu), kriolipoliza = urządzenie (przezroczyste tło), wizyta = kabina Daniela (kadr wtopiony w granat); wszystko z plakietką
   assert.match(site, /ems: \{ wolny: true, src: 'img\/rtx\/ems-urzadzenie-900\.webp', srcset: 'img\/rtx\/ems-urzadzenie-900\.webp 593w, img\/rtx\/ems-urzadzenie-1400\.webp 922w'/);
-  assert.match(site, /obok: \{ src: 'img\/rtx\/ems-kombinezon-900\.webp'/);
-  for (const f of ['img/rtx/ems-kombinezon-900.webp', 'img/rtx/ems-kombinezon-1400.webp', 'img/rtx/krio-urzadzenie-900.webp', 'img/rtx/krio-urzadzenie-1400.webp', 'img/rtx/kabina-daniel-1200.webp', 'img/rtx/kabina-daniel-1920.webp']) assert.ok(jest(f), f);
+  assert.doesNotMatch(site, /src: 'img\/rtx\/ems-kombinezon/);   // kombinezon niehigieniczny (Daniel 03.10.2026)
+  for (const f of ['img/rtx/ems-urzadzenie-900.webp', 'img/rtx/ems-urzadzenie-1400.webp', 'img/rtx/krio-urzadzenie-900.webp', 'img/rtx/krio-urzadzenie-1400.webp', 'img/rtx/kabina-daniel-1200.webp', 'img/rtx/kabina-daniel-1920.webp']) assert.ok(jest(f), f);
   assert.match(site, /return h \+ '<span class="plakietka"><\/span>';/);   // każdy render i wideo RTX z plakietką
   assert.match(site, /cryo: \{ wolny: true, chlod: true, src: 'img\/rtx\/krio-urzadzenie-900\.webp'/);
   assert.match(site, /visite: \{ kadr: true, src: 'img\/rtx\/kabina-daniel-1200\.webp'/);
