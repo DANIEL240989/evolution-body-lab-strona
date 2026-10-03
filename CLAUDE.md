@@ -96,3 +96,12 @@ Podpis „Monika” (SVG kreską) usunięty ze strony 03.10.2026 (Daniel: „nie
   ciała, bez napisów i liczb) wpasowane w perspektywę szkła przez matrix3d z 4 zmierzonych rogów (`js/site.js`, EKRAN).
   Nigdy płaskie grafiki/SVG przyklejone prostokątem na ekranie urządzenia; nigdy liczby udające wyniki.
 - Stopka: pierwszy link „Accueil” (#top). Monika w stopce bez poświaty i złotego konturu (dawały „matowe” zdjęcie).
+
+## Telefon (od 03.10.2026 wieczór, Daniel: „teraz mobil”, „wszystko gra”)
+- Blok TELEFON na końcu `css/paleta.css`: Monika narysowana w pierwszym ekranie, przyciski złote 24K, menu pełnoekranowe
+  z medalionem (`js/silnik2.js`, `mm.add('all')`), teleport przez różę i tor 3 petard w bok (`js/petardy.js`, WSZEDZIE)
+  w układzie pionowym. PWA: `manifest.webmanifest`, ikony `img/app-*.png`, `img/apple-touch-icon.png`.
+- Ograniczony ruch w telefonie (Android „Usuń animacje”, oszczędzanie baterii Samsunga) = strona bez animacji, zgodnie ze
+  standardem dostępności; Daniel sam tak używa telefonu („szanuję płynność”) i to akceptuje. `?ruch=1` wymusza ruch do testów.
+- `color-scheme: dark` (meta i `:root`): Samsung Internet nie przerabia złota w wymuszonym trybie ciemnym.
+- Na telefonie jeszcze wyłączone: WebGL Moniki (płyn pod palcem), złoty pył, napis z kropek, ekrany wideo w torze.
