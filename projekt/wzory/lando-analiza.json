@@ -1,0 +1,117 @@
+{
+ "globals": {
+  "gsap": false,
+  "ScrollTrigger": false,
+  "Lenis": true,
+  "THREE": false,
+  "barba": false,
+  "webflow": true
+ },
+ "canvas": 21,
+ "video": 0,
+ "wysokosc": 13577,
+ "fonty": [
+  "\"Mona Sans Variable\", Arial, sans-serif",
+  "Brier, Arial, sans-serif"
+ ],
+ "sekcje": [
+  {
+   "tag": "DIV",
+   "klasa": "taxi-w",
+   "h": 13577,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "LANDO NORRIS 2025 MCLAREN FORMULA 1 DRIVER Next Race NEXT RACE Singapore SINGAPO"
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s home-hero",
+   "h": 900,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "Next Race NEXT RACE Singapore SINGAPORE gp GP mclaren f1 since 2019 MCLAREN F1 S"
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s home-marquee",
+   "h": 900,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "Message from lando MESSAGE FROM LANDO"
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s",
+   "h": 1027,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "mclaren f1 since 2019 MCLAREN F1 SINCE 2019 Redefining limits, fighting for wins"
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s is-horizontal-track",
+   "h": 3143,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "Qatar, 2024 QATAR, 2024 FIA Prize Giving, 2024 FIA PRIZE GIVING, 2024 It doesn’t"
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s is-otot-home",
+   "h": 900,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "ON ON TRACK TRACK Most recent results, career stats and photos from trackside."
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s is-otot-end",
+   "h": 900,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": ""
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s home-helmets",
+   "h": 1696,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "HELMETS HELMETS HALL OF FAME HALL OF FAME From his iconic blobs to innovative "
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s",
+   "h": 476,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "See more helmets and highlights from Lando on the track See more helmets and hig"
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s is-lando-exe",
+   "h": 907,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "LANDO STORE LANDO STORE WORLD DRIVERS' CHAMPION WORLD DRIVERS' CHAMPION Celebra"
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s is-home-collabs",
+   "h": 795,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "PARTNERS PARTNERS &CAMPAIGNS &CAMPAIGNS Lando is proud to collaborate with a ra"
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s is-callout-socials",
+   "h": 965,
+   "tlo": "rgba(0, 0, 0, 0)",
+   "tekst": "WHAT’S UPON SOCIALS WHAT’S UP ON SOCIALS Follow Lando on social media Follow Lan"
+  },
+  {
+   "tag": "SECTION",
+   "klasa": "s is-footer",
+   "h": 967,
+   "tlo": "rgb(244, 244, 237)",
+   "tekst": "PAGES Home HOME On Track ON TRACK Off Track OFF TRACK Calendar CALENDAR Store ST"
+  }
+ ],
+ "skrypty": [
+  "https://cdn.prod.website-files.com/67b5a02dc5d338960b17a7e9/js/lando-offbrand.751e0867.148dc658e77a3916.js",
+  "https://cdn.prod.website-files.com/67b5a02dc5d338960b17a7e9/js/lando-offbrand.schunk.7321a5097fb66f41.js",
+  "https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js",
+  "https://lando.itsoffbrand.io/dev-js/lando-by-OFF+BRAND.05.js",
+  "https://lando.itsoffbrand.io/gl/draco/draco_wasm_wrapper.js"
+ ]
+}
