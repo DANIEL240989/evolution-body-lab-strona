@@ -32,3 +32,78 @@
 }
 .karta-nr { background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--k24-pelne); }
 .stopka-logo .logo-obraz { margin-bottom: 18px; }
+
+/* =====================================================================================================================
+   ZABIEGI POD 2 KARTY (projektant 03.10.2026). Przy dwóch zabiegach poziomy tor zostawiał pół ekranu pustego:
+   dwie duże karty obok siebie na całą szerokość treści, duży kadr, numer w złocie 24K, cena biała, obrys różowym złotem.
+   Tor (.tor-poziomo) zostaje w style.css i wraca sam od 3 kart (js/ruch.js, TOR_OD). Telefon: karty jedna pod drugą. */
+#soins:not(.tor-poziomo) .tor-wstep { max-width: none; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
+  gap: 16px 48px; align-items: end; }
+#soins:not(.tor-poziomo) .tor-wstep .etykieta, #soins:not(.tor-poziomo) .tor-wstep h2 { grid-column: 1; }
+#soins:not(.tor-poziomo) .tor-wstep h2 { margin: 0; font-size: clamp(38px, 4.4vw, 64px); }
+#soins:not(.tor-poziomo) .tor-wstep .uwaga { grid-column: 2; grid-row: 2; margin: 0 0 .5em; border-left-color: var(--rz); color: var(--tekst-noc-2); }
+#soins:not(.tor-poziomo) .karty { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 2.6vw, 40px); margin-top: clamp(36px, 6vh, 64px); }
+#soins:not(.tor-poziomo) .karta { padding: 0; border-radius: 2px; background: rgba(5, 5, 5, .74); border-color: var(--rz-linia); }
+#soins:not(.tor-poziomo) .karta-obraz { aspect-ratio: 16 / 10; border-bottom: 1px solid var(--rz-linia); }
+#soins .karta-obraz img { transform: translateY(var(--py, 0%)) scale(var(--sk, 1.12)); transition: transform 1.2s cubic-bezier(.16,1,.3,1); will-change: transform; }
+#soins .karta:hover .karta-obraz img { transform: translateY(var(--py, 0%)) scale(1.17); }
+#soins:not(.tor-poziomo) .karta-obraz .plakietka { left: auto; right: 12px; bottom: 12px; }
+#soins:not(.tor-poziomo) .karta-tresc { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto 1fr auto auto;
+  grid-template-areas: "nr tyt tyt" "opis opis opis" "linia linia linia" "cena cena btn"; gap: 0 20px; padding: clamp(24px, 2.6vw, 36px); flex: 1; }
+#soins:not(.tor-poziomo) .karta-tresc::before { content: ''; grid-area: linia; height: 1px; margin: 24px 0 20px; background: linear-gradient(90deg, var(--rz-linia), rgba(212,164,154,.12)); }
+#soins:not(.tor-poziomo) .karta-nr { grid-area: nr; font-size: clamp(52px, 5vw, 76px); line-height: .9; padding-right: .06em; }
+#soins:not(.tor-poziomo) .karta h3 { grid-area: tyt; align-self: end; margin: 0 0 .08em; font-size: clamp(30px, 2.8vw, 42px); color: var(--mocno); }
+#soins:not(.tor-poziomo) .karta-tresc > p:not(.karta-meta) { grid-area: opis; margin-top: 18px; font-size: 16px; line-height: 1.6; color: var(--tekst-noc-2); max-width: 34em; }
+#soins:not(.tor-poziomo) .karta-meta { grid-area: cena; align-self: center; margin: 0; padding: 0; border: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; }
+#soins:not(.tor-poziomo) .karta-meta .cena { font: 500 clamp(26px, 2.2vw, 32px)/1.1 var(--szeryf); font-variant-numeric: lining-nums; color: #FFFFFF; }
+#soins:not(.tor-poziomo) .karta-meta .czas { color: var(--tekst-noc-2); font-size: 14px; }
+#soins:not(.tor-poziomo) .karta .pill { grid-area: btn; align-self: center; }
+#soins:not(.tor-poziomo) .tor-koniec { max-width: none; display: flex; align-items: center; justify-content: space-between; gap: 24px 48px;
+  margin-top: clamp(40px, 7vh, 72px); padding-top: clamp(28px, 4vh, 40px); border-top: 1px solid var(--rz-linia); }
+#soins:not(.tor-poziomo) .tor-koniec-tekst { margin: 0; max-width: 24em; }
+#soins:not(.tor-poziomo) .tor-koniec .pill { flex: none; }
+#soins:not(.tor-poziomo) .slowo-tlo { top: clamp(24px, 6vh, 64px); left: auto; right: -2vw; }
+@media (min-width: 901px) and (max-height: 720px) {
+  #soins:not(.tor-poziomo) .karta-obraz { aspect-ratio: 2 / 1; }
+}
+@media (max-width: 900px) {
+  #soins:not(.tor-poziomo) .tor-wstep { grid-template-columns: 1fr; }
+  #soins:not(.tor-poziomo) .tor-wstep .uwaga { grid-column: 1; grid-row: auto; margin-top: 8px; }
+  #soins:not(.tor-poziomo) .karty { grid-template-columns: 1fr; gap: 28px; }
+  #soins:not(.tor-poziomo) .tor-koniec { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 560px) {
+  #soins:not(.tor-poziomo) .karta-obraz { aspect-ratio: 4 / 3; }
+  #soins:not(.tor-poziomo) .karta-tresc { grid-template-areas: "nr tyt" "opis opis" "linia linia" "cena cena" "btn btn"; grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto auto auto; gap: 0 14px; padding: 22px 20px 24px; }
+  #soins:not(.tor-poziomo) .karta-nr { font-size: 48px; }
+  #soins:not(.tor-poziomo) .karta h3 { font-size: 30px; }
+  #soins:not(.tor-poziomo) .karta .pill { justify-self: start; margin-top: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #soins .karta-obraz img { transition: none; }
+}
+
+/* =====================================================================================================================
+   PORZĄDKI PO ZMIANIE PALETY (granat → czerń, 03.10.2026). Resztki granatu (#0C1322, #142038, #A7B1C2, niebieska
+   kula w wizycie) zamienione na czerń i ciepłą szarość; obrazy tła Daniela bez zmian. */
+:root { --tekst-noc-2: #B5AEAB; --szary: #B5AEAB; }
+.pasek-demo { background: #0E0E0F; color: #CFC9C6; }
+.karta { background: rgba(14, 14, 15, .88); }
+.hero-obraz, .monika-foto, .karta-obraz { background: radial-gradient(110% 80% at 70% 15%, rgba(212,164,154,.12), transparent 60%), linear-gradient(165deg, #1A1718, #050505); }
+.hero .hero-obraz { background: none; }
+.monika-foto { background: none; }
+/* kula światła w wizycie: zamiast niebieskiej poświaty ciepłe, przygaszone różowe złoto */
+#visite .kula { background: radial-gradient(closest-side, rgba(212, 164, 154, .20), rgba(212, 164, 154, .07) 50%, rgba(5, 5, 5, 0) 100%); }
+#visite .kroki li { background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.015)); }
+/* telefon: pełne przyciski wszędzie jak w pierwszym ekranie (biały środek, różowozłota nitka), a nie raz biały, raz różowy */
+@media (max-width: 900px) {
+  .pill.solid, .jasna .pill.solid { background: var(--zloto); color: #050505; border: 0; box-shadow: 0 0 0 2px var(--noc), 0 0 0 3px var(--rz); }
+  .jasna .pill.solid { box-shadow: 0 0 0 2px #F7F3EA, 0 0 0 3px var(--rz-ciemne, #8C4F58); }
+}
+/* stopka: napis pod logo miał za mało powietrza */
+.stopka-logo .logo-obraz { margin-bottom: 26px; }
+.stopka-logo p:not(.logo) { letter-spacing: .3em; color: var(--rz); }
+.stopka-kolumny { align-items: center; }
+/* cyfry ceny i numerów kart w kroju szeryfowym: równe (lining), bo „100” w cyfrach nautycznych czytało się jak „Ioo” */
+#soins .karta .karta-meta .cena, #soins .karta .karta-nr { font-variant-numeric: lining-nums; }

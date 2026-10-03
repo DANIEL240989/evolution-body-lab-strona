@@ -5,7 +5,7 @@
    - nagłówki linia po linii spod maski (podział cofany po animacji), etykiety wycierane od kreski, zdjęcia spod maski;
    - pierwszy ekran: pas napisu w dwóch rzędach (prędkość i kierunek idą za przewijaniem);
    - manifest: słowa rozjaśniają się przy przewijaniu, schodki z bloków w różowym złocie i nocy przechodzą do zabiegów;
-   - zabiegi: przypięty poziomy tor (tylko komputer), wielkie słowo w tle jedzie wolniej niż karty;
+   - zabiegi: przy 2 kartach siatka obok siebie, od 3 kart przypięty poziomy tor (komputer); wielkie słowo w tle jedzie;
    - pierwsza wizyta: dwie połówki rozjeżdżają się, kula światła płynie, szklane karty wpływają;
    - stopka: ciemny panel unosi się nad poświatą;
    - Lenis tylko z myszą (telefon i dotyk przewijają natywnie);
@@ -219,8 +219,25 @@
     return function () { sch.style.display = ''; sek.classList.remove('ze-schodkami'); };
   });
 
-  /* ---------- zabiegi: przypięty poziomy tor (komputer) ---------- */
-  mm.add(KOMPUTER, function () {
+  /* ---------- zabiegi ----------
+     Przy 2 kartach (EMS i kriolipoliza, 03.10.2026) poziomy tor zostawiał pół ekranu pustego: karty stoją obok siebie
+     w siatce (css/paleta.css), wchodzą od dołu, obraz płynie wolniej niż karta, wielkie słowo w tle jedzie.
+     Tor wraca sam, gdy zabiegów będzie co najmniej TOR_OD. */
+  var TOR_OD = 3, malo = QA('#soins .karta').length < TOR_OD;
+  if (malo) {
+    kolejka('#soins .karta', 'akapit', 'top 90%', 60);
+    mm.add(KOMPUTER, function () {
+      var sek = Q('#soins'); if (!sek) return;
+      gsap.fromTo(Q('.slowo-tlo', sek), { xPercent: 4 }, { xPercent: -16, ease: 'none',
+        scrollTrigger: { trigger: sek, start: 'top bottom', end: 'bottom top', scrub: true } });
+      QA('.karta', sek).forEach(function (k) {
+        gsap.fromTo(k, { '--py': '-5%' }, { '--py': '5%', ease: 'none',
+          scrollTrigger: { trigger: k, start: 'top bottom', end: 'bottom top', scrub: true } });
+      });
+    });
+  }
+  /* poziomy tor (komputer, od TOR_OD kart) */
+  if (!malo) mm.add(KOMPUTER, function () {
     var sek = Q('#soins'), tor = Q('.tor', sek); if (!tor) return;
     sek.classList.add('tor-poziomo');
     var dystans = function () { return Math.max(0, tor.scrollWidth - innerWidth); };
@@ -240,7 +257,7 @@
     ScrollTrigger.refresh();
     return function () { sek.classList.remove('tor-poziomo'); gsap.set(tor, { clearProps: 'transform' }); };
   });
-  mm.add(TELEFON, function () { kolejka('#soins .karta', 'akapit', 'top 92%', 50); });
+  if (!malo) mm.add(TELEFON, function () { kolejka('#soins .karta', 'akapit', 'top 92%', 50); });
 
   /* ---------- pierwsza wizyta ---------- */
   var duo = Q('.duo');
