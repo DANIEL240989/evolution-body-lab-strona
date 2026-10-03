@@ -107,3 +107,31 @@ test('ruch: efekty P1 silników (tokeny, okno logo, ramka hero, skos, linia krok
   assert.match(pal, /\.hero\.hero-rama \.hero-obraz \.plakietka \{ right: var\(--pr/);
   assert.match(pal, /@media \(prefers-reduced-motion: reduce\) \{\s*#soins \.karta\.unosi \{ animation: none; \}/);
 });
+
+test('WebGL (js/gl.js): ładowany po ruch.js, bezpieczniki, mapy głębi na miejscu, latarka CSS usunięta', () => {
+  const gl = kod('js/gl.js'), ruch = kod('js/ruch.js'), pal = kod('css/paleta.css');
+  assert.ok(html.indexOf('<script src="js/gl.js"></script>') > html.indexOf('<script src="js/ruch.js"></script>'));
+  // ograniczony ruch, oszczędzanie danych, brak WebGL: nic nie startuje, zostaje obraz CSS
+  assert.match(gl, /prefers-reduced-motion: reduce/);
+  assert.match(gl, /saveData/);
+  assert.match(gl, /if \(wolno\(\) \|\| !W\.WebGLRenderingContext\) return;/);
+  assert.match(gl, /failIfMajorPerformanceCaveat: !SW/);
+  assert.match(gl, /COMPILE_STATUS\)\) \{ gl\.deleteShader\(s\); return null; \}/);   // błąd shadera = cicho null
+  assert.doesNotMatch(gl, /console\./);
+  assert.match(gl, /webglcontextlost/);
+  // wydajność: dpr max 1.5 (telefon 1), pauza poza ekranem i przy ukrytej karcie
+  assert.match(gl, /Math\.min\(W\.devicePixelRatio \|\| 1, TEL\.matches \? 1 : 1\.5\)/);
+  assert.match(gl, /IntersectionObserver/);
+  assert.match(gl, /visibilitychange/);
+  // płótna aria-hidden, plakietka zostaje w HTML
+  assert.equal((gl.match(/setAttribute\('aria-hidden', 'true'\)/g) || []).length, 2);
+  for (const f of ['img/glebia/fala-pc-glebia.webp', 'img/glebia/fala-tel-glebia.webp']) {
+    assert.ok(gl.includes(f), f);
+    assert.ok(readFileSync(new URL('../' + f, import.meta.url)).length > 1000, f);
+  }
+  // klasy włącza dopiero skrypt; przy ograniczonym ruchu płótna schowane także w CSS
+  assert.match(pal, /\.hero\.gl-on \.hero-fala \{ display: block;/);
+  assert.match(pal, /@media \(prefers-reduced-motion: reduce\) \{\s*\.gl-hero, \.gl-plotno \{ display: none; \}/);
+  assert.doesNotMatch(html, /gl-on|gl-fx/);
+  assert.doesNotMatch(ruch + pal, /hero-latarka/);
+});

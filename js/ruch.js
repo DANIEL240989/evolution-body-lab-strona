@@ -12,8 +12,8 @@
    - Lenis tylko z myszą (telefon i dotyk przewijają natywnie);
    SILNIKI P1 (03.10.2026, projekt/wzory/SILNIKI.md): nazwane krzywe (reveal/editorial/ui/cover), Lenis lerp .14,
    okno logo w kurtynie (Lando), pierwszy ekran kurczy się do ramki między rzędami napisu (Lando), skośna kurtyna
-   #visite → #monika (jjettas), linia przez kroki wizyty ze świecącą głowicą (Orchid); P2: kursor-latarka na fali,
-   unoszenie kart zabiegów;
+   #visite → #monika (jjettas), linia przez kroki wizyty ze świecącą głowicą (Orchid); P2: unoszenie kart zabiegów;
+   WebGL (2,5D z mapy głębi, płyn pod kursorem, dystorsje kart i medalionów): osobny plik js/gl.js;
    - przyciski, dane kontaktu i FAQ bez animacji wejścia: są gotowe od razu;
    - ograniczony ruch albo brak bibliotek: nic nie jest ukryte, kurtyny nie ma, układ pionowy. */
 (function () {
@@ -419,34 +419,7 @@
   if (kartyZ.length) ScrollTrigger.create({ trigger: '#soins', start: 'top bottom', end: 'bottom top',
     onToggle: function (st) { kartyZ.forEach(function (k) { k.classList.add('unosi'); k.classList.toggle('w-kadrze', st.isActive); }); } });
 
-  /* Kursor-latarka na fali (Lando, lekka wersja SILNIKI #5): nad falą ta sama fala rozjaśniona w różowe złoto,
-     odsłaniana miękkim kołem pod kursorem (mask-image); pozycja przez quickTo .7 s power3.out, promień rośnie z prędkością
-     myszy. Tylko komputer z myszą; telefon i dotyk: zwykły obraz. */
-  mm.add('(min-width: 901px) and (hover: hover) and (pointer: fine)', function () {
-    if (!hero || !fala) return;
-    var l = document.createElement('i'); l.className = 'hero-latarka'; l.setAttribute('aria-hidden', 'true'); fala.appendChild(l);
-    var poz = { x: fala.offsetWidth * .62, y: fala.offsetHeight * .45, r: 0 }, cisza, ost = null;
-    var rys = function () {
-      l.style.setProperty('--lx', poz.x.toFixed(1) + 'px'); l.style.setProperty('--ly', poz.y.toFixed(1) + 'px');
-      l.style.setProperty('--lr', (230 + poz.r).toFixed(0) + 'px');
-    };
-    var qx = gsap.quickTo(poz, 'x', { duration: .7, ease: 'power3.out', onUpdate: rys }),
-        qy = gsap.quickTo(poz, 'y', { duration: .7, ease: 'power3.out', onUpdate: rys }),
-        qr = gsap.quickTo(poz, 'r', { duration: .9, ease: 'power3.out', onUpdate: rys });
-    var ruszaj = function (e) {
-      if (kurtynaTrwa) return;
-      var b = fala.getBoundingClientRect(), sk = b.width / (fala.offsetWidth || 1);
-      qx((e.clientX - b.left) / sk); qy((e.clientY - b.top) / sk);
-      if (ost) qr(Math.min(150, Math.hypot(e.clientX - ost.x, e.clientY - ost.y) * 3));
-      ost = { x: e.clientX, y: e.clientY };
-      clearTimeout(cisza); cisza = setTimeout(function () { qr(0); }, 140);
-      l.classList.add('wl');
-    };
-    var wyjdz = function () { l.classList.remove('wl'); ost = null; };
-    rys();
-    hero.addEventListener('mousemove', ruszaj); hero.addEventListener('mouseleave', wyjdz);
-    return function () { hero.removeEventListener('mousemove', ruszaj); hero.removeEventListener('mouseleave', wyjdz); clearTimeout(cisza); l.remove(); };
-  });
+  /* Kursor-latarka (CSS) zastąpiona płynem WebGL: js/gl.js (płótno w .hero-fala, ładowane po tym pliku). */
 
   /* ---------- Monika i stopka: wielkie słowo w tle jedzie, panel stopki się unosi ---------- */
   gsap.fromTo('#monika .slowo-tlo', { xPercent: 4 }, { xPercent: -14, ease: 'none', scrollTrigger: { trigger: '#monika', start: 'top bottom', end: 'bottom top', scrub: true } });

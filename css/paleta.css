@@ -191,13 +191,6 @@ html.k-tlo body { background-color: var(--noc); }   /* do końca kurtyny: spod p
 @media (max-width: 900px) {
   .hero.hero-rama .hero-fala { background: #020306 url(../img/materialy/fala-tel.webp) 50% -330px / 150% auto no-repeat; }
 }
-/* kursor-latarka (P2 #5): ta sama fala rozjaśniona w różowe złoto pod miękkim kołem kursora */
-.hero-latarka { position: absolute; inset: 0; background: inherit; opacity: 0; transition: opacity .6s var(--e-ui); pointer-events: none;
-  filter: grayscale(1) sepia(1) saturate(1.6) hue-rotate(-30deg) brightness(1.8);
-  -webkit-mask-image: radial-gradient(circle var(--lr, 230px) at var(--lx, 60%) var(--ly, 45%), #000 0%, rgba(0,0,0,.5) 42%, transparent 100%);
-          mask-image: radial-gradient(circle var(--lr, 230px) at var(--lx, 60%) var(--ly, 45%), #000 0%, rgba(0,0,0,.5) 42%, transparent 100%); }
-.hero-latarka.wl { opacity: 1; }
-
 /* #8 skośna kurtyna #visite → #monika: len nachodzi na noc o --skos-o, górna krawędź po przekątnej (--sl lewa, --sr prawa) */
 #visite.pod-skosem::after { content: ''; display: block; height: var(--skos-o, 0px); }
 #monika.skos { z-index: 2; margin-top: calc(-1 * var(--skos-o, 0px)); border-top-color: transparent;
@@ -233,5 +226,28 @@ html.k-tlo body { background-color: var(--noc); }   /* do końca kurtyny: spod p
 
 @media (prefers-reduced-motion: reduce) {
   #soins .karta.unosi { animation: none; }
-  .hero-latarka { display: none; }
+}
+
+/* =====================================================================================================================
+   WEBGL (js/gl.js, 03.10.2026; Daniel: „kilka efektów mamy, ale nie to, co w tamtych stronach”). Klasy dodaje dopiero
+   skrypt po pierwszej narysowanej klatce; bez WebGL, przy ograniczonym ruchu i oszczędzaniu danych nic tu nie działa,
+   zostaje statyczny obraz z CSS. Płótno pierwszego ekranu siedzi w .hero-fala: ramka clip-path i skala z pinu
+   (js/ruch.js) kurczą je razem z warstwą, a okno w logo kurtyny pokazuje już żywy obraz. */
+.hero.gl-on .hero-fala { display: block; position: absolute; inset: 0; z-index: -2; pointer-events: none; overflow: hidden;
+  background: #020306 url(../img/materialy/fala-pc.webp) 70% 50% / cover no-repeat; }
+@media (max-width: 900px) {
+  .hero.gl-on .hero-fala { background: #020306 url(../img/materialy/fala-tel.webp) 50% -330px / 150% auto no-repeat; }
+}
+.gl-hero { position: absolute; inset: 0; display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .9s var(--e-ui); }
+.hero.gl-on .gl-hero { opacity: 1; }
+/* karty zabiegów i medaliony: płótno 2D nad <img> tylko na czas efektu (wjazd, najechanie), potem wraca obraz */
+.gl-plotno { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; opacity: 0; }
+.gl-fx > .gl-plotno { opacity: 1; }
+.gl-fx > img { opacity: 0; }
+#soins .karta-obraz .gl-plotno { transform: translateY(var(--py, 0%)) scale(var(--sk, 1.12)); transition: transform 1.2s cubic-bezier(.16,1,.3,1); }
+#soins .karta:hover .karta-obraz .gl-plotno { transform: translateY(var(--py, 0%)) scale(1.17); }
+.ilustracja .gl-plotno { filter: drop-shadow(0 30px 60px rgba(0,0,0,.55)); }
+.ilustracja-czarny .gl-plotno { filter: drop-shadow(0 18px 34px rgba(30,26,28,.18)); }
+@media (prefers-reduced-motion: reduce) {
+  .gl-hero, .gl-plotno { display: none; }
 }

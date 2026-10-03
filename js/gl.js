@@ -1,0 +1,521 @@
+/* Evolution Body Lab: silnik WebGL (03.10.2026). Daniel: „kilka efektów mamy, ale nie to, co w tamtych stronach”.
+   Mechanika wzorów (projekt/wzory/SILNIKI.md #6 i #10), kod i shadery własne, bez bibliotek (CSP: tylko self + cdnjs):
+   1. Pierwszy ekran (.hero-fala): obraz „fala” Daniela żyje w 2,5D z mapy głębi (img/glebia/*-glebia.webp, jasne = blisko):
+      paralaksa zależna od głębi za myszą (wygładzenie ok. 0,35 s), lekki dryf w czasie, przy przewijaniu kamera
+      „wjeżdża” w obraz (zoom zależny od głębi). Telefon: sam dryf + żyroskop, jeśli działa bez pytania o zgodę.
+   2. Płyn pod kursorem (komputer z myszą): symulacja na teksturach ping-pong w 1/6 rozdzielczości (adwekcja, wir,
+      dywergencja, ciśnienie Jacobiego, odjęcie gradientu). Mysz wstrzykuje prędkość i „tusz” odcinkiem (bez kropek przy
+      szybkim ruchu). Tusz jest maską: w śladzie ten sam obraz w tonacji różowego złota i złota 24K (w shaderze, bez
+      nowego pliku), z izoliniami głębi, połyskiem od światła za kursorem, refrakcją i aberracją chromatyczną na krawędzi.
+   3. Karty zabiegów (#soins) i medaliony ilustracji: przy wjeździe w ekran i przy najechaniu obraz faluje w shaderze,
+      kanały RGB rozchodzą się przy krawędziach. Jeden wspólny kontekst poza DOM, wynik kopiowany do lekkiego płótna 2D
+      tylko na czas efektu; po efekcie wraca zwykły <img>.
+   Współpraca z js/ruch.js: płótno siedzi w .hero-fala, więc okno w logo (kurtyna) pokazuje żywy obraz, a ramka
+   clip-path i skala z pinu kurczą płótno razem z warstwą. Plakietka „Image de synthèse” stoi nad płótnem.
+   Bezpieczniki: ograniczony ruch, oszczędzanie danych / 2G, brak WebGL, błąd shadera albo FBO, utrata kontekstu,
+   za wolne klatki → zostaje statyczny obraz CSS, bez komunikatów w konsoli. Programowy WebGL (SwiftShader) jest
+   odrzucany (failIfMajorPerformanceCaveat); do testów w przeglądarce bez GPU: ?gl=sw. */
+(function () {
+  'use strict';
+  var H = document.documentElement, W = window;
+  var szukaj = location.search || '';
+  var SW = /[?&]gl=sw\b/.test(szukaj);
+  function wolno() {
+    try {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return true;
+      var c = navigator.connection;
+      if (c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || ''))) return true;
+    } catch (e) {}
+    return /[?&]gl=0\b/.test(szukaj);
+  }
+  if (wolno() || !W.WebGLRenderingContext) return;
+
+  var TEL = matchMedia('(max-width: 900px)'), MYSZ = matchMedia('(hover: hover) and (pointer: fine)');
+  var stat = W.EBL_GL = { hero: 'brak', karty: 'brak', plyn: false, klatki: 0, srMs: 0 };
+
+  /* ---------------------------------------------------------------- narzędzia GL (bez logów: błąd = null) */
+  var ATR = { alpha: false, antialias: false, depth: false, stencil: false, premultipliedAlpha: false,
+    preserveDrawingBuffer: false, powerPreference: 'high-performance', failIfMajorPerformanceCaveat: !SW };
+  function kontekst(cv, atr) {
+    var gl = null, v2 = false;
+    try { gl = cv.getContext('webgl2', atr); v2 = !!gl; if (!gl) gl = cv.getContext('webgl', atr) || cv.getContext('experimental-webgl', atr); }
+    catch (e) { gl = null; }
+    return gl ? { gl: gl, v2: v2 } : null;
+  }
+  function shader(gl, typ, zr) {
+    var s = gl.createShader(typ); gl.shaderSource(s, zr); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { gl.deleteShader(s); return null; }
+    return s;
+  }
+  /* program + mapa uniformów (nazwa → lokalizacja), liczona raz: w pętli żadnego szukania */
+  function program(gl, vs, fs) {
+    var a = shader(gl, gl.VERTEX_SHADER, vs), b = shader(gl, gl.FRAGMENT_SHADER, fs);
+    if (!a || !b) return null;
+    var p = gl.createProgram(); gl.attachShader(p, a); gl.attachShader(p, b);
+    gl.bindAttribLocation(p, 0, 'aPos'); gl.linkProgram(p);
+    gl.deleteShader(a); gl.deleteShader(b);
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { gl.deleteProgram(p); return null; }
+    var u = {}, n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
+    for (var i = 0; i < n; i++) { var inf = gl.getActiveUniform(p, i); u[inf.name.replace(/\[0\]$/, '')] = gl.getUniformLocation(p, inf.name); }
+    return { p: p, u: u };
+  }
+  /* jeden duży trójkąt na cały ekran */
+  function trojkat(gl) {
+    var b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    return b;
+  }
+  function tekstura(gl, filtr) {
+    var t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filtr); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filtr);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return t;
+  }
+  function piksel(gl, r, g, b, a) {
+    var t = tekstura(gl, gl.NEAREST);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([r, g, b, a]));
+    return t;
+  }
+  function wgraj(gl, t, img, mip) {
+    gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+    if (mip) { gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); }
+  }
+  function obraz(src) {
+    return new Promise(function (ok, zle) {
+      var i = new Image(); i.decoding = 'async';
+      i.onload = function () { (i.decode ? i.decode() : Promise.resolve()).then(function () { ok(i); }, function () { ok(i); }); };
+      i.onerror = zle; i.src = src;
+    });
+  }
+
+  /* ---------------------------------------------------------------- shadery (GLSL ES 1.00: WebGL2 i WebGL1) */
+  var VS = 'attribute vec2 aPos;varying vec2 vUv;void main(){vUv=aPos*.5+.5;gl_Position=vec4(aPos,0.,1.);}';
+  var VS_S = 'attribute vec2 aPos;uniform vec2 uTexel;varying vec2 vUv,vL,vR,vT,vB;' +
+    'void main(){vUv=aPos*.5+.5;vL=vUv-vec2(uTexel.x,0.);vR=vUv+vec2(uTexel.x,0.);vT=vUv+vec2(0.,uTexel.y);vB=vUv-vec2(0.,uTexel.y);gl_Position=vec4(aPos,0.,1.);}';
+  var P = 'precision highp float;precision highp sampler2D;';
+  var PS = P + 'varying vec2 vUv,vL,vR,vT,vB;';
+  var FS = {
+    /* wstrzyknięcie wzdłuż odcinka A→B (ruch myszy w tej klatce), gaussowski profil */
+    splat: P + 'varying vec2 vUv;uniform sampler2D uCel;uniform vec2 uA,uB;uniform vec3 uWart;uniform float uProm,uAsp;' +
+      'void main(){vec2 p=vUv-uA,b=uB-uA;p.x*=uAsp;b.x*=uAsp;float h=clamp(dot(p,b)/max(dot(b,b),1e-9),0.,1.);vec2 d=p-b*h;' +
+      'gl_FragColor=vec4(texture2D(uCel,vUv).xyz+uWart*exp(-dot(d,d)/uProm),1.);}',
+    adwekcja: P + 'varying vec2 vUv;uniform sampler2D uV,uZr;uniform vec2 uTexel;uniform float uDt,uZanik;' +
+      'void main(){vec2 c=vUv-uDt*texture2D(uV,vUv).xy*uTexel;gl_FragColor=texture2D(uZr,c)/(1.+uZanik*uDt);}',
+    wir: PS + 'uniform sampler2D uV;void main(){float L=texture2D(uV,vL).y,R=texture2D(uV,vR).y,T=texture2D(uV,vT).x,B=texture2D(uV,vB).x;' +
+      'gl_FragColor=vec4(.5*(R-L-T+B),0.,0.,1.);}',
+    wirowosc: PS + 'uniform sampler2D uV,uW;uniform float uSila,uDt;void main(){float L=texture2D(uW,vL).x,R=texture2D(uW,vR).x,' +
+      'T=texture2D(uW,vT).x,B=texture2D(uW,vB).x,C=texture2D(uW,vUv).x;vec2 f=.5*vec2(abs(T)-abs(B),abs(R)-abs(L));' +
+      'f/=length(f)+1e-4;f*=uSila*C;f.y=-f.y;vec2 v=texture2D(uV,vUv).xy+f*uDt;gl_FragColor=vec4(clamp(v,-900.,900.),0.,1.);}',
+    dywergencja: PS + 'uniform sampler2D uV;void main(){vec2 C=texture2D(uV,vUv).xy;float L=texture2D(uV,vL).x,R=texture2D(uV,vR).x,' +
+      'T=texture2D(uV,vT).y,B=texture2D(uV,vB).y;if(vL.x<0.)L=-C.x;if(vR.x>1.)R=-C.x;if(vT.y>1.)T=-C.y;if(vB.y<0.)B=-C.y;' +
+      'gl_FragColor=vec4(.5*(R-L+T-B),0.,0.,1.);}',
+    cisnienie: PS + 'uniform sampler2D uP,uD;void main(){float s=texture2D(uP,vL).x+texture2D(uP,vR).x+texture2D(uP,vT).x+texture2D(uP,vB).x;' +
+      'gl_FragColor=vec4((s-texture2D(uD,vUv).x)*.25,0.,0.,1.);}',
+    gradient: PS + 'uniform sampler2D uP,uV;void main(){float L=texture2D(uP,vL).x,R=texture2D(uP,vR).x,T=texture2D(uP,vT).x,B=texture2D(uP,vB).x;' +
+      'gl_FragColor=vec4(texture2D(uV,vUv).xy-.5*vec2(R-L,T-B),0.,1.);}',
+    mnoz: P + 'varying vec2 vUv;uniform sampler2D uT;uniform float uM;void main(){gl_FragColor=uM*texture2D(uT,vUv);}',
+
+    /* pierwszy ekran: 2,5D + płyn + złota wersja w śladzie */
+    hero: P + 'varying vec2 vUv;uniform sampler2D uImg,uGl,uTusz,uV;uniform vec2 uRes,uPar,uSw,uSwiatlo;uniform vec4 uKadr;' +
+      'uniform float uZoom,uPlyn,uCzas,uRefr;uniform vec3 uTlo;' +
+      'float glb(vec2 s){return texture2D(uGl,s).r;}' +
+      'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}' +
+      'vec3 zloto(float x){x=clamp(x,0.,1.);' +
+      'vec3 c=mix(vec3(.018,.011,.010),vec3(.34,.19,.15),smoothstep(0.,.22,x));' +        /* głęboki cień różowego złota */
+      'c=mix(c,vec3(.831,.643,.604),smoothstep(.16,.58,x));' +                              /* #D4A49A */
+      'return mix(c,vec3(.984,.906,.631),smoothstep(.52,.96,x));}' +                        /* 24K #FBE7A1 */
+      'void main(){vec2 px=vec2(vUv.x,1.-vUv.y)*uRes;vec2 u0=(px-uKadr.xy)/uKadr.zw;' +
+      /* 2,5D: odwrotne odwzorowanie paralaksy (punkt stały, 4 kroki) + zoom kamery zależny od głębi */
+      'vec2 off=uPar/uKadr.zw;vec2 s=u0;for(int i=0;i<4;i++){float d=glb(s);s=.5+(u0-off*(d-.45)-.5)/(1.+uZoom*(.35+d));}' +
+      'float d=glb(s);' +
+      'vec4 tz=uPlyn>.5?texture2D(uTusz,vUv):vec4(0.);vec2 v=uPlyn>.5?texture2D(uV,vUv).xy:vec2(0.);' +
+      'float m=smoothstep(.035,.7,tz.r);float kr=m*(1.-m)*4.;' +
+      'vec2 rf=v*uRefr;float lr=length(rf);if(lr>.014)rf*=.014/lr;vec2 sr=s+rf*(m+kr)/uKadr.zw*uRes;' +
+      'vec2 dir=lr>1e-5?rf/lr:vec2(1.,0.);vec2 ca=dir*kr*.0022*uRes/uKadr.zw;' +
+      'vec3 baza=texture2D(uImg,s).rgb;' +
+      'vec3 c=baza;if(m+kr>.002){' +
+      'vec3 zr=vec3(texture2D(uImg,sr+ca).r,texture2D(uImg,sr).g,texture2D(uImg,sr-ca).b);' +
+      'float l=dot(zr,vec3(.299,.587,.114));' +
+      /* połysk złotej folii: normalna z luminancji obrazu (żyłki marmuru), światło idzie za kursorem */
+      'vec2 e=uSw;vec3 j=vec3(.333);' +
+      'float lx=dot(texture2D(uImg,sr+vec2(e.x,0.)).rgb-texture2D(uImg,sr-vec2(e.x,0.)).rgb,j),' +
+      'ly=dot(texture2D(uImg,sr+vec2(0.,e.y)).rgb-texture2D(uImg,sr-vec2(0.,e.y)).rgb,j);' +
+      'vec3 n=normalize(vec3(-lx*2.6,ly*2.6,1.));vec3 hv=normalize(normalize(vec3(uSwiatlo,1.))+vec3(0.,0.,1.));' +
+      'float bl=pow(max(dot(n,hv),0.),30.);' +
+      'vec3 zl=zloto(pow(l,.8)*2.1+d*.06)*(.86+.28*bl)+bl*vec3(1.,.93,.78)*.3*smoothstep(.02,.12,l);' +
+      'c=mix(mix(baza,zr,kr),zl,m)+vec3(.831,.643,.604)*kr*.07;}' +
+      /* poza obrazem (telefon: pod falą) czerń tła sekcji */
+      'float w=step(0.,u0.x)*step(u0.x,1.)*step(0.,u0.y)*smoothstep(1.,.985,u0.y);c=mix(uTlo,c,w);' +
+      'c+=(hash(px+fract(uCzas))-.5)/255.;gl_FragColor=vec4(c,1.);}',
+
+    /* karty i medaliony: fala + rozejście kanałów RGB przy krawędziach (tekstury z premultiplikowaną alfą) */
+    karta: P + 'varying vec2 vUv;uniform sampler2D uImg;uniform vec2 uRes,uObr,uMysz;uniform float uWej,uNad,uCzas;' +
+      'void main(){vec2 p=vec2(vUv.x,1.-vUv.y);float ar=uRes.x/uRes.y,ai=uObr.x/uObr.y;vec2 sk=ar>ai?vec2(1.,ai/ar):vec2(ar/ai,1.);' +
+      'vec2 uv=(p-.5)*sk+.5;' +
+      'float a=uWej,t=uCzas;' +
+      'vec2 f=vec2(sin(p.y*9.+t*2.1)+.6*sin(p.y*23.-t*3.3),sin(p.x*7.-t*1.7)+.5*sin(p.x*19.+t*2.6));' +
+      'vec2 dsp=f*.011*a+vec2(0.,a*a*.05*sin(p.x*3.1416));' +
+      'vec2 q=(p-uMysz)*vec2(ar,1.);float r=length(q);' +
+      'dsp+=(r>1e-4?q/r:vec2(0.))*sin(r*34.-t*5.5)*exp(-r*4.5)*.0065*uNad*sk;' +
+      'float kr=smoothstep(.18,.72,length((p-.5)*vec2(1.,1./max(ar,.5))));' +
+      'vec2 o=(vec2(.010,.004)*a+vec2(.0045,.0018)*uNad)*(.25+kr);' +
+      'vec4 cr=texture2D(uImg,uv+dsp+o),cg=texture2D(uImg,uv+dsp),cb=texture2D(uImg,uv+dsp-o);' +
+      'gl_FragColor=vec4(cr.r,cg.g,cb.b,max(cg.a,max(cr.a,cb.a)));}'
+  };
+
+  /* ================================================================ 1. PIERWSZY EKRAN */
+  var hero = document.querySelector('.hero'), fala = document.querySelector('.hero-fala');
+  if (hero && fala) (function () {
+    var cv = document.createElement('canvas'); cv.className = 'gl-hero'; cv.setAttribute('aria-hidden', 'true');
+    var K = kontekst(cv, ATR); if (!K) return;
+    var gl = K.gl, v2 = K.v2;
+    var pr = {}, fbo = null, plyn = false, tex = {}, gotowe = false, raf = 0, widac = true;
+    var ZRODLA = { pc: ['img/materialy/fala-pc.webp', 'img/glebia/fala-pc-glebia.webp'],
+                   tel: ['img/materialy/fala-tel.webp', 'img/glebia/fala-tel-glebia.webp'] };
+    /* parametry (komputer / telefon) */
+    var PAR = { pc: [22, 14], tel: [10, 7] }, ZAPAS = 16, SYM = 6, ITER = 14,
+        ZANIK_V = 1.1, ZANIK_T = .85, WIR = 16, PROM = .0016, SILA = 1.5, TUSZ = .55, REFR = 2.4e-5;
+    var tlo = [2 / 255, 3 / 255, 6 / 255];
+
+    function zbuduj() {
+      trojkat(gl);
+      for (var k in FS) if (k !== 'karta') {
+        pr[k] = program(gl, /^(wir|wirowosc|dywergencja|cisnienie|gradient)$/.test(k) ? VS_S : VS, FS[k]);
+        if (!pr[k]) return false;
+      }
+      tex.img = tekstura(gl, gl.LINEAR); tex.gl = tekstura(gl, gl.LINEAR); tex.zero = piksel(gl, 0, 0, 0, 0);
+      gl.bindTexture(gl.TEXTURE_2D, tex.gl);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([115, 115, 115, 255]));
+      return true;
+    }
+    /* format FBO płynu: half float; bez renderowania do half float płyn wyłączony (2,5D zostaje) */
+    var FMT = null;
+    function format() {
+      var f;
+      if (v2) {
+        if (!gl.getExtension('EXT_color_buffer_float') && !gl.getExtension('EXT_color_buffer_half_float')) return null;
+        f = { wew: gl.RGBA16F, typ: gl.HALF_FLOAT, filtr: gl.LINEAR };
+      } else {
+        var hf = gl.getExtension('OES_texture_half_float'); if (!hf) return null;
+        f = { wew: gl.RGBA, typ: hf.HALF_FLOAT_OES, filtr: gl.getExtension('OES_texture_half_float_linear') ? gl.LINEAR : gl.NEAREST };
+      }
+      var c = cel(4, 4, f), ok = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+      usun(c); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      return ok ? f : null;
+    }
+    function cel(w, h, f) {
+      var t = tekstura(gl, f.filtr);
+      gl.texImage2D(gl.TEXTURE_2D, 0, f.wew, w, h, 0, gl.RGBA, f.typ, null);
+      var fb = gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, t, 0);
+      gl.viewport(0, 0, w, h); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+      return { t: t, fb: fb, w: w, h: h };
+    }
+    function usun(c) { if (c) { gl.deleteTexture(c.t); gl.deleteFramebuffer(c.fb); } }
+    function para(w, h, f) {
+      var o = { a: cel(w, h, f), b: cel(w, h, f) };
+      o.zamien = function () { var x = o.a; o.a = o.b; o.b = x; };
+      return o;
+    }
+    function fboPlynu(sw, sh) {
+      if (fbo && fbo.sw === sw && fbo.sh === sh) return;
+      if (fbo) ['v', 'tusz', 'p'].forEach(function (k) { usun(fbo[k].a); usun(fbo[k].b); }), usun(fbo.div), usun(fbo.wir);
+      var tw = Math.min(512, sw * 2), th = Math.round(tw * sh / sw);
+      fbo = { sw: sw, sh: sh, tw: tw, th: th, v: para(sw, sh, FMT), p: para(sw, sh, FMT), tusz: para(tw, th, FMT),
+              div: cel(sw, sh, FMT), wir: cel(sw, sh, FMT) };
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    }
+
+    /* kadr jak w CSS: komputer „70% 50% / cover”, telefon „50% -330px / 150% auto”; ZAPAS px na paralaksę */
+    var cssW = 1, cssH = 1, dpr = 1, iw = 1536, ih = 1024, tryb = '', kadr = [0, 0, 1, 1];
+    function liczKadr() {
+      var dw, dh, ox, oy;
+      if (tryb === 'tel') { dw = cssW * 1.5; dh = dw * ih / iw; ox = (cssW - dw) * .5; oy = -330; }
+      else { var s = Math.max(cssW / iw, cssH / ih); dw = iw * s; dh = ih * s; ox = (cssW - dw) * .7; oy = (cssH - dh) * .5; }
+      var k = 1 + 2 * ZAPAS / Math.min(dw, dh), nw = dw * k, nh = dh * k;
+      kadr[0] = ox - (nw - dw) * (tryb === 'tel' ? .5 : .7); kadr[1] = tryb === 'tel' ? oy - (nh - dh) * .15 : oy - (nh - dh) * .5;
+      kadr[2] = nw; kadr[3] = nh;
+    }
+    function rozmiar() {
+      var w = fala.clientWidth, h = fala.clientHeight; if (!w || !h) return;
+      dpr = Math.min(W.devicePixelRatio || 1, TEL.matches ? 1 : 1.5);
+      cssW = w; cssH = h;
+      var pw = Math.round(w * dpr), ph = Math.round(h * dpr);
+      if (cv.width !== pw || cv.height !== ph) { cv.width = pw; cv.height = ph; }
+      liczKadr();
+      if (plyn) { var sw = Math.max(48, Math.min(256, Math.round(w / SYM))); fboPlynu(sw, Math.max(32, Math.round(sw * h / w))); }
+    }
+    var ladowanie = 0;
+    function wczytaj() {
+      var t = TEL.matches ? 'tel' : 'pc'; if (t === tryb) return Promise.resolve();
+      tryb = t; var nr = ++ladowanie;
+      return obraz(ZRODLA[t][0]).then(function (im) {
+        if (nr !== ladowanie || !gl || gl.isContextLost()) return;
+        iw = im.naturalWidth; ih = im.naturalHeight; wgraj(gl, tex.img, im, false);
+        liczKadr();
+        return obraz(ZRODLA[t][1]).then(function (g) { if (nr === ladowanie && !gl.isContextLost()) wgraj(gl, tex.gl, g, false); }, function () {});
+      });
+    }
+
+    /* ---------------------------------------------------------------- wejście: mysz, żyroskop, przewijanie */
+    var mx = 0, my = 0, sx = 0, sy = 0;                   /* cel i wygładzona paralaksa (-1..1) */
+    var pA = [0, 0], pB = [0, 0], ruch = false, ostRuch = -1e9, czasPlynu = 0, start = 0, swiatlo = [0, 0];
+    function kurtyna() { return H.classList.contains('kurtyna-on'); }
+    function mysz(e) {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      mx = Math.max(-1, Math.min(1, e.clientX / innerWidth * 2 - 1)); my = Math.max(-1, Math.min(1, e.clientY / innerHeight * 2 - 1));
+      if (!plyn || !widac || kurtyna()) return;
+      var r = cv.getBoundingClientRect(); if (!r.width) return;
+      var x = (e.clientX - r.left) / r.width, y = 1 - (e.clientY - r.top) / r.height;
+      if (x < -.05 || x > 1.05 || y < -.05 || y > 1.05) { ruch = false; pA[0] = -1; return; }
+      if (pA[0] < 0 || !ruch && performance.now() - ostRuch > 400) { pA[0] = x; pA[1] = y; pB[0] = x; pB[1] = y; }
+      pB[0] = x; pB[1] = y; ruch = true; ostRuch = performance.now();
+    }
+    pA[0] = -1;
+    var g0 = null;
+    function zyro(e) {
+      if (e.gamma == null || e.beta == null) return;
+      if (!g0) g0 = [e.gamma, e.beta];
+      mx = Math.max(-1, Math.min(1, (e.gamma - g0[0]) / 22)); my = Math.max(-1, Math.min(1, (e.beta - g0[1]) / 22));
+    }
+
+    /* ---------------------------------------------------------------- symulacja */
+    function rysujDo(c) {
+      if (c) { gl.bindFramebuffer(gl.FRAMEBUFFER, c.fb); gl.viewport(0, 0, c.w, c.h); }
+      else { gl.bindFramebuffer(gl.FRAMEBUFFER, null); gl.viewport(0, 0, cv.width, cv.height); }
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    function uzyj(p) { gl.useProgram(p.p); return p.u; }
+    function tex2(jedn, t, loc) { gl.activeTexture(gl.TEXTURE0 + jedn); gl.bindTexture(gl.TEXTURE_2D, t); gl.uniform1i(loc, jedn); }
+    function krok(dt, dtR) {
+      var f = fbo, u, txw = 1 / f.sw, txh = 1 / f.sh, asp = cssW / cssH;
+      if (ruch) {
+        var dx = pB[0] - pA[0], dy = pB[1] - pA[1], dl = Math.hypot(dx * cssW, dy * cssH);
+        if (dl > .5) {
+          var vx = dx * f.sw / dtR * SILA, vy = dy * f.sh / dtR * SILA, mv = Math.hypot(vx, vy);
+          if (mv > 700) { vx *= 700 / mv; vy *= 700 / mv; }
+          u = uzyj(pr.splat); gl.uniform2f(u.uA, pA[0], pA[1]); gl.uniform2f(u.uB, pB[0], pB[1]);
+          gl.uniform1f(u.uProm, PROM * (1 + Math.min(1, dl / 90) * .8)); gl.uniform1f(u.uAsp, asp);
+          tex2(0, f.v.a.t, u.uCel); gl.uniform3f(u.uWart, vx, vy, 0); rysujDo(f.v.b); f.v.zamien();
+          var ilosc = Math.min(1, dl / 34) * TUSZ;
+          tex2(0, f.tusz.a.t, u.uCel); gl.uniform3f(u.uWart, ilosc, ilosc, ilosc); rysujDo(f.tusz.b); f.tusz.zamien();
+          czasPlynu = 0;
+        }
+        pA[0] = pB[0]; pA[1] = pB[1]; ruch = false;
+      }
+      u = uzyj(pr.wir); gl.uniform2f(u.uTexel, txw, txh); tex2(0, f.v.a.t, u.uV); rysujDo(f.wir);
+      u = uzyj(pr.wirowosc); gl.uniform2f(u.uTexel, txw, txh); tex2(0, f.v.a.t, u.uV); tex2(1, f.wir.t, u.uW);
+      gl.uniform1f(u.uSila, WIR); gl.uniform1f(u.uDt, dt); rysujDo(f.v.b); f.v.zamien();
+      u = uzyj(pr.dywergencja); gl.uniform2f(u.uTexel, txw, txh); tex2(0, f.v.a.t, u.uV); rysujDo(f.div);
+      u = uzyj(pr.mnoz); tex2(0, f.p.a.t, u.uT); gl.uniform1f(u.uM, .8); rysujDo(f.p.b); f.p.zamien();
+      u = uzyj(pr.cisnienie); gl.uniform2f(u.uTexel, txw, txh); tex2(1, f.div.t, u.uD);
+      for (var i = 0; i < ITER; i++) { tex2(0, f.p.a.t, u.uP); rysujDo(f.p.b); f.p.zamien(); }
+      u = uzyj(pr.gradient); gl.uniform2f(u.uTexel, txw, txh); tex2(0, f.p.a.t, u.uP); tex2(1, f.v.a.t, u.uV); rysujDo(f.v.b); f.v.zamien();
+      u = uzyj(pr.adwekcja); gl.uniform2f(u.uTexel, txw, txh); gl.uniform1f(u.uDt, dt);
+      tex2(0, f.v.a.t, u.uV); tex2(1, f.v.a.t, u.uZr); gl.uniform1f(u.uZanik, ZANIK_V); rysujDo(f.v.b); f.v.zamien();
+      tex2(0, f.v.a.t, u.uV); tex2(1, f.tusz.a.t, u.uZr); gl.uniform1f(u.uZanik, ZANIK_T); rysujDo(f.tusz.b); f.tusz.zamien();
+    }
+    function wyczysc() {
+      if (!fbo) return;
+      [fbo.v.a, fbo.v.b, fbo.tusz.a, fbo.tusz.b, fbo.p.a, fbo.p.b].forEach(function (c) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, c.fb); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+      });
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    }
+
+    /* ---------------------------------------------------------------- klatka */
+    var ost = 0, nrK = 0, pomiar = new Float32Array(120), pi = 0, suma = 0, wypelnione = 0, pominK = false, zdegradowane = 0;
+    function klatka(t) {
+      raf = requestAnimationFrame(klatka);
+      if (TEL.matches && (pominK = !pominK)) return;            /* telefon: 30 kl./s wystarczy na sam dryf */
+      var dtR = ost ? (t - ost) : 16.7; ost = t;
+      var dt = Math.min(dtR / 1000, 1 / 30);
+      if (!start) start = t;
+      var czas = (t - start) / 1000;
+      /* pomiar i samoobrona: jeśli średnia klatka > 45 ms, płyn wyłączony; > 90 ms, wraca obraz CSS */
+      stat.klatki = ++nrK;
+      if (nrK > 20) {                                            /* pierwsze klatki (wgrywanie tekstur) pomijamy */
+        suma += dtR - pomiar[pi]; pomiar[pi] = dtR; pi = (pi + 1) % pomiar.length; if (wypelnione < pomiar.length) wypelnione++;
+        stat.srMs = suma / wypelnione;
+      }
+      if (!SW && wypelnione >= 40 && nrK % 30 === 0) {
+        if (stat.srMs > 90 && zdegradowane) { zatrzymaj(true); return; }
+        if (stat.srMs > 45 && plyn) { plyn = false; stat.plyn = false; zdegradowane = 1; wypelnione = 0; suma = 0; pomiar.fill(0); }
+      }
+      var k = 1 - Math.exp(-dt / .35);
+      sx += (mx - sx) * k; sy += (my - sy) * k;
+      var p = TEL.matches ? PAR.tel : PAR.pc;
+      var dryfX = Math.sin(czas * .21) * .22 + Math.sin(czas * .057) * .12, dryfY = Math.cos(czas * .17) * .18;
+      if (TEL.matches) { dryfX *= 2.2; dryfY *= 2.2; }
+      var przew = Math.max(0, Math.min(1.2, (W.scrollY || 0) / (innerHeight || 1)));
+      var wjazd = Math.pow(Math.max(0, 1 - czas / 2.6), 3);    /* kamera osiada po starcie (kurtyna, okno w logo) */
+      if (plyn) {
+        if (ruch || czasPlynu < 6) { krok(dt, Math.max(dt, Math.min(dtR / 1000, .25))); czasPlynu += dt; }
+        else if (czasPlynu < 1e9) { wyczysc(); czasPlynu = 1e9; }
+      }
+      var u = uzyj(pr.hero);
+      gl.uniform2f(u.uRes, cssW, cssH); gl.uniform4f(u.uKadr, kadr[0], kadr[1], kadr[2], kadr[3]);
+      gl.uniform2f(u.uPar, (sx + dryfX) * p[0], (sy + dryfY) * p[1] + przew * p[1] * 1.4);
+      gl.uniform2f(u.uSw, 1.5 / kadr[2], 1.5 / kadr[3]); gl.uniform2f(u.uSwiatlo, sx * .55, -sy * .55);
+      gl.uniform1f(u.uZoom, przew * .07 + wjazd * .06); gl.uniform1f(u.uCzas, czas); gl.uniform1f(u.uRefr, REFR);
+      gl.uniform3f(u.uTlo, tlo[0], tlo[1], tlo[2]);
+      var aktywny = plyn && czasPlynu < 1e9;
+      gl.uniform1f(u.uPlyn, aktywny ? 1 : 0);
+      tex2(0, tex.img, u.uImg); tex2(1, tex.gl, u.uGl);
+      tex2(2, aktywny ? fbo.tusz.a.t : tex.zero, u.uTusz); tex2(3, aktywny ? fbo.v.a.t : tex.zero, u.uV);
+      rysujDo(null);
+      if (!gotowe) { gotowe = true; requestAnimationFrame(function () { hero.classList.add('gl-on'); }); }
+    }
+    function graj() { if (!raf && widac && !document.hidden && pr.hero) { ost = 0; raf = requestAnimationFrame(klatka); } }
+    function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
+    function zatrzymaj(calkiem) {
+      stop(); hero.classList.remove('gl-on'); stat.hero = 'wylaczony';
+      if (calkiem) { W.removeEventListener('pointermove', mysz); setTimeout(function () { cv.remove(); }, 900); pr = {}; }
+    }
+
+    /* ---------------------------------------------------------------- start */
+    function init() {
+      if (!zbuduj()) return false;
+      FMT = MYSZ.matches && !TEL.matches ? format() : null;
+      plyn = !!FMT; stat.plyn = plyn; tryb = '';
+      return true;
+    }
+    if (!init()) return;
+    stat.hero = v2 ? 'webgl2' : 'webgl1';
+    fala.appendChild(cv);
+    rozmiar();
+    wczytaj().then(function () { rozmiar(); graj(); }, function () { zatrzymaj(true); });
+
+    if ('ResizeObserver' in W) new ResizeObserver(function () { rozmiar(); }).observe(fala);
+    else W.addEventListener('resize', rozmiar);
+    var zmianaTrybu = function () {
+      plyn = !!FMT && MYSZ.matches && !TEL.matches && !zdegradowane; stat.plyn = plyn;
+      if (!FMT && MYSZ.matches && !TEL.matches) { FMT = format(); plyn = !!FMT; stat.plyn = plyn; }
+      wczytaj().then(rozmiar);
+    };
+    if (TEL.addEventListener) TEL.addEventListener('change', zmianaTrybu);
+    W.addEventListener('pointermove', mysz, { passive: true });
+    if (TEL.matches && !MYSZ.matches && W.DeviceOrientationEvent && typeof W.DeviceOrientationEvent.requestPermission !== 'function')
+      W.addEventListener('deviceorientation', zyro, { passive: true });
+    if ('IntersectionObserver' in W) new IntersectionObserver(function (w) {
+      widac = w[w.length - 1].isIntersecting; widac ? graj() : stop();
+    }).observe(hero);
+    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : graj(); });
+    cv.addEventListener('webglcontextlost', function (e) {
+      e.preventDefault(); stop(); hero.classList.remove('gl-on'); gotowe = false; fbo = null; pr = {}; stat.hero = 'utracony';
+    });
+    cv.addEventListener('webglcontextrestored', function () {
+      tex = {}; if (!init()) return; stat.hero = v2 ? 'webgl2' : 'webgl1'; rozmiar();
+      wczytaj().then(function () { rozmiar(); graj(); }, function () {});
+    });
+  })();
+
+  /* ================================================================ 2. KARTY ZABIEGÓW I MEDALIONY */
+  (function () {
+    var cele = [].slice.call(document.querySelectorAll('#soins .karta-obraz, .ilustracja-obraz'));
+    if (!cele.length || !('IntersectionObserver' in W)) return;
+    var cv = document.createElement('canvas'), K = kontekst(cv, { alpha: true, premultipliedAlpha: true, antialias: false, depth: false,
+      stencil: false, preserveDrawingBuffer: false, failIfMajorPerformanceCaveat: !SW });
+    if (!K) return;
+    var gl = K.gl, pk = null, raf = 0, aktywne = [], DL_WEJ = 1.7;
+    function init() {
+      trojkat(gl); pk = program(gl, VS, FS.karta);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+      gl.clearColor(0, 0, 0, 0);
+      return !!pk;
+    }
+    if (!init()) return;
+    stat.karty = K.v2 ? 'webgl2' : 'webgl1';
+    var stany = cele.map(function (el) {
+      return { el: el, img: el.querySelector('img'), cv: null, ctx: null, t: null, w: 0, h: 0, wej: -1, nad: 0, nadCel: 0,
+               mx: .5, my: .5, akt: false, czas0: 0 };
+    });
+    function gotowy(s) { return s.img && s.img.complete && s.img.naturalWidth > 0; }
+    function przygotuj(s) {
+      if (!s.cv) {
+        s.cv = document.createElement('canvas'); s.cv.className = 'gl-plotno'; s.cv.setAttribute('aria-hidden', 'true');
+        s.ctx = s.cv.getContext('2d'); s.img.insertAdjacentElement('afterend', s.cv);
+      }
+      if (!s.t) { s.t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, s.t);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, s.img);
+        if (K.v2) { gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); }
+        else gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        s.src = s.img.currentSrc;
+      }
+      var d = Math.min(W.devicePixelRatio || 1, TEL.matches ? 1 : 1.5);
+      s.w = Math.max(2, Math.round(s.el.clientWidth * d)); s.h = Math.max(2, Math.round(s.el.clientHeight * d));
+      if (s.cv.width !== s.w || s.cv.height !== s.h) { s.cv.width = s.w; s.cv.height = s.h; }
+      if (cv.width < s.w || cv.height < s.h) { cv.width = Math.max(cv.width, s.w); cv.height = Math.max(cv.height, s.h); }
+    }
+    function wlacz(s) {
+      if (!gotowy(s)) return;
+      if (s.t && s.src !== s.img.currentSrc) { gl.deleteTexture(s.t); s.t = null; }
+      przygotuj(s);
+      if (!s.akt) { s.akt = true; aktywne.push(s); }
+      if (!raf && !document.hidden) raf = requestAnimationFrame(petla);
+    }
+    var t0 = performance.now();
+    function rysuj(s, t) {
+      var u = pk.u, czas = (t - t0) / 1000, a = 0;
+      if (s.wej >= 0) { var x = Math.min(1, (t - s.wej) / (DL_WEJ * 1000)); a = Math.pow(1 - x, 2.4); if (x >= 1) s.wej = -2; }
+      var dt = s.ost ? Math.min(.1, (t - s.ost) / 1000) : .016; s.ost = t;
+      s.nad += (s.nadCel - s.nad) * (1 - Math.exp(-dt / (s.nadCel ? .35 : .45)));
+      gl.viewport(0, 0, s.w, s.h); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform2f(u.uRes, s.w, s.h); gl.uniform2f(u.uObr, s.img.naturalWidth, s.img.naturalHeight);
+      gl.uniform2f(u.uMysz, s.mx, s.my); gl.uniform1f(u.uWej, a); gl.uniform1f(u.uNad, s.nad); gl.uniform1f(u.uCzas, czas);
+      gl.bindTexture(gl.TEXTURE_2D, s.t);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (s.img.style.transform !== s.cv.style.transform) s.cv.style.transform = s.img.style.transform;   /* tor poziomy (GSAP) */
+      s.ctx.clearRect(0, 0, s.w, s.h);
+      s.ctx.drawImage(cv, 0, cv.height - s.h, s.w, s.h, 0, 0, s.w, s.h);
+      if (!s.el.classList.contains('gl-fx')) s.el.classList.add('gl-fx');
+      return a > .001 || s.nadCel > 0 || s.nad > .002;
+    }
+    function petla(t) {
+      raf = 0;
+      gl.useProgram(pk.p); gl.activeTexture(gl.TEXTURE0); gl.uniform1i(pk.u.uImg, 0);
+      for (var i = aktywne.length - 1; i >= 0; i--) {
+        var s = aktywne[i];
+        if (!rysuj(s, t)) { s.akt = false; s.nad = 0; s.ost = 0; s.el.classList.remove('gl-fx'); aktywne.splice(i, 1); }
+      }
+      if (aktywne.length && !document.hidden) raf = requestAnimationFrame(petla);
+    }
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { if (raf) cancelAnimationFrame(raf); raf = 0; }
+      else if (aktywne.length && !raf) raf = requestAnimationFrame(petla);
+    });
+    /* wjazd w ekran: raz, gdy co najmniej 30% elementu widać */
+    var io = new IntersectionObserver(function (w) {
+      w.forEach(function (e) {
+        var s = stany[cele.indexOf(e.target)]; if (!s || s.wej !== -1 || e.intersectionRatio < .3) return;
+        var go = function () { s.wej = performance.now(); wlacz(s); };
+        if (gotowy(s)) go(); else s.img.addEventListener('load', go, { once: true });
+        io.unobserve(e.target);
+      });
+    }, { threshold: [0, .3] });
+    stany.forEach(function (s) {
+      if (!s.img) return;
+      io.observe(s.el);
+      /* najechanie: fala od kursora, RGB na krawędziach (karta: cały kafel reaguje, medalion: samo koło) */
+      var strefa = s.el.closest('.karta') || s.el;
+      strefa.addEventListener('pointerenter', function (e) { if (e.pointerType !== 'mouse') return; s.nadCel = 1; wlacz(s); });
+      strefa.addEventListener('pointerleave', function () { s.nadCel = 0; });
+      strefa.addEventListener('pointermove', function (e) {
+        if (e.pointerType !== 'mouse') return;
+        var r = s.el.getBoundingClientRect(); if (!r.width) return;
+        s.mx = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)); s.my = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+      }, { passive: true });
+    });
+    cv.addEventListener('webglcontextlost', function (e) {
+      e.preventDefault(); if (raf) cancelAnimationFrame(raf); raf = 0;
+      aktywne.forEach(function (s) { s.akt = false; s.el.classList.remove('gl-fx'); }); aktywne.length = 0;
+      stany.forEach(function (s) { s.t = null; }); pk = null; stat.karty = 'utracony';
+    });
+    cv.addEventListener('webglcontextrestored', function () { if (init()) stat.karty = K.v2 ? 'webgl2' : 'webgl1'; });
+    /* karty przebudowuje site.js tylko przy starcie (zmiana języka = przeładowanie), więc lista celów jest stała */
+  })();
+})();
