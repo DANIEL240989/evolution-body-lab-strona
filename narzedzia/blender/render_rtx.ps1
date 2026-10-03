@@ -1,4 +1,4 @@
-# Render sceny „Łupek z żywicą” na RTX Daniela i wysyłka obrazu do repo.
+﻿# Render sceny „Łupek z żywicą” na RTX Daniela i wysyłka obrazu do repo.
 # Uruchom w PowerShell:  powershell -ExecutionPolicy Bypass -File .\render_rtx.ps1
 # Wymaga: git (zalogowany do GitHuba), Blender 4.2+ (skrypt doinstaluje przez winget, jeśli brak).
 param(
@@ -7,6 +7,7 @@ param(
   [int]$Szer = 2400, [int]$Wys = 1350, [int]$Probki = 512, [int]$Siatka = 1600
 )
 $ErrorActionPreference = "Stop"
+[Console]::OutputEncoding = [Text.Encoding]::UTF8
 
 # 1. Repo: pobierz albo zaktualizuj
 if (-not (Test-Path "$Repo\.git")) {
@@ -38,7 +39,13 @@ $czas = Measure-Command {
 Write-Host ("Czas renderu: {0:N1} min" -f $czas.TotalMinutes)
 
 # 4. Wyślij obrazy do repo (Claude je stamtąd weźmie i wepnie)
+if (-not (git -C $Repo config user.email)) {
+  git -C $Repo config user.name "Daniel Stanko"
+  git -C $Repo config user.email "daniel-stanko@live.fr"
+}
 git -C $Repo add "img/materialy/lupek-3d-pc.png" "img/materialy/lupek-3d-tel.png"
 git -C $Repo commit -m "Render RTX: łupek z żywicą i różowym złotem ($Szer x $Wys, $Probki próbek)"
+if ($LASTEXITCODE -ne 0) { Write-Host "BŁĄD: zapis (commit) się nie udał. Wklej Claude komunikat powyżej." -ForegroundColor Red; exit 1 }
 git -C $Repo push origin $Galaz
-Write-Host "Gotowe. Napisz Claude: render wysłany."
+if ($LASTEXITCODE -ne 0) { Write-Host "BŁĄD: wysyłka (push) się nie udała. Wklej Claude komunikat powyżej." -ForegroundColor Red; exit 1 }
+Write-Host "Gotowe. Napisz Claude: render wysłany." -ForegroundColor Green
