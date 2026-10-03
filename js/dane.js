@@ -17,8 +17,8 @@ window.EBL = {
   zabiegi: [
     { id: 'drainage', czas: 60, cena: null, seria: null, test: true },
     { id: 'lpg', czas: 35, cena: null, seria: null, test: true },
-    { id: 'radiofrequence', czas: 45, cena: null, seria: null, test: true },
-    { id: 'cryo', czas: 75, cena: null, seria: null, test: true }
+    { id: 'radiofrequence', czas: 45, cena: null, seria: null, test: true }
+    // Kriolipoliza usunięta 03.10.2026 (skarbnik): we Francji w praktyce zarezerwowana dla lekarzy (Cass. 31.01.2023).
   ],
   przedPo: [],   // tylko prawdziwe zdjęcia klientek z pisemną zgodą; pusto = sekcja ukryta
   opinie: []     // tylko prawdziwe opinie z Google; pusto = sekcja ukryta
