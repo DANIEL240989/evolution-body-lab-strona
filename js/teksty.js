@@ -69,7 +69,7 @@ window.T = {
     q4: 'Puis-je annuler mon rendez-vous ?', a4: 'Oui. Conditions d’annulation à confirmer (TEST).',
     q5: 'Les résultats sont-ils garantis ?', a5: 'Non, et personne ne peut honnêtement les garantir. Les résultats varient selon chaque personne ; nous les suivons avec des mesures régulières.',
     contact_label: 'Contact',
-    contact_titre: 'Prendre rendez-vous',
+    contact_titre: 'Réserver votre visite',
     horaires: 'Horaires', horaires_val: 'Du lundi au vendredi, 9 h à 19 h · dernier rendez-vous à 18 h',
     weekend: 'Fermé le samedi et le dimanche',
     adresse: 'Adresse', telephone: 'Téléphone', langues: 'Langues', langues_val: 'Monika parle français et polonais',
