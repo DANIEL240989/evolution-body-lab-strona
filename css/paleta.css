@@ -9,14 +9,16 @@
   --tekst-noc: #FFFFFF; --mocno: #FFFFFF;
 }
 
-/* logo z fasady 1 do 1 (Daniel 03.10.2026: „najbardziej lubię te z fasady napisy”): monogram E w kole.
+/* (do 03.10 popołudnie) logo z fasady 1 do 1 (Daniel 03.10.2026: „najbardziej lubię te z fasady napisy”): monogram E w kole.
    img/logo-e.webp = plik Daniela z wyciętym tłem; img/logo-e-poziom.webp = te same elementy obok siebie na pasek.
-   Logo z królową (img/logo.webp) zostaje w repo, na stronie nieużywane. */
+   Logo z królową (img/logo.webp) zostaje w repo, na stronie nieużywane.
+   Od 03.10.2026 (Daniel: „logo jako szyld zamiast E”): medalion z damą w kapeluszu (obręcz zostaje) + napis
+   EVOLUTION / BODY LAB z fasady: img/logo-dama-poziom.webp (pasek), img/logo-dama.webp (stopka, kurtyna). */
 .logo-obraz { display: inline-flex; align-items: center; line-height: 0; }
-.logo-obraz img { display: block; height: 40px; width: auto; }
-.stopka-logo .logo-obraz img { height: auto; width: min(300px, 64vw); margin: 0 auto; }
-.k-znak img { display: block; width: min(440px, 70vw); height: auto; margin: 0 auto; }
-@media (max-width: 600px) { .naglowek .logo-obraz img { height: 30px; } }
+.logo-obraz img { display: block; height: 54px; width: auto; }
+.stopka-logo .logo-obraz img { height: auto; width: min(240px, 56vw); margin: 0 auto; }
+.k-znak img { display: block; height: min(40vh, 360px); width: auto; margin: 0 auto; }
+@media (max-width: 600px) { .naglowek .logo-obraz img { height: 42px; } }
 
 /* obrysy różowym złotem */
 .naglowek { border-bottom-color: var(--rz-linia); }

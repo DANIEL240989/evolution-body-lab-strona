@@ -54,8 +54,9 @@ raffermissement/remodelage. Ceny na stronie z biznesplanu Moniki (EMS 100 €, k
 Biznesplanu (PDF, dane finansowe) nie wrzucamy do repo.
 
 ## Logo i kolory (Daniel 03.10.2026)
-Logo z fasady 1 do 1: monogram E w kole + EVOLUTION / BODY LAB (`img/logo-e.webp`, na pasku `img/logo-e-poziom.webp`).
-Nie przerysowywać. Kolory: czerń, biel, złoto 24K tylko na pełnych przyciskach i numerach, różowe złoto na obrysach
+Od 03.10.2026 po południu (Daniel: „logo jako szyld zamiast E”, „obręcz zostaje”): medalion z damą w kapeluszu w złotej
+obręczy (plik Daniela, przezroczysty) + napis EVOLUTION / BODY LAB z fasady: `img/logo-dama-poziom.webp` (pasek),
+`img/logo-dama.webp` (stopka, kurtyna). Wcześniejsze: E z fasady (`img/logo-e*.webp`), królowa (`img/logo.webp`). Nie przerysowywać. Kolory: czerń, biel, złoto 24K tylko na pełnych przyciskach i numerach, różowe złoto na obrysach
 i kreskach (`css/paleta.css`, ostatni arkusz). Zero „musztardowego” (złoto szampańskie odrzucone).
 
 Podpis „Monika” (SVG kreską) usunięty ze strony 03.10.2026 (Daniel: „nie jest super”). Nie przywracać.
