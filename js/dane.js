@@ -7,7 +7,7 @@ window.EBL = {
   telefonTekst: '00 00 00 00 00 (TEST)',
   whatsapp: '+33000000000',         // TEST
   email: 'contact@exemple.test',    // TEST
-  adres: '8 rue Gaston Charbonnier, 06300 Nice',   // TEST: adres domowy Moniki tymczasowo, do czasu lokalu (Daniel 03.10.2026). Blokuje publikację.
+  adres: 'Nice 06300 · adresse précise communiquée à la réservation',   // TEST: do czasu lokalu bez ulicy (Daniel 03.10.2026: nie pokazujemy adresu domowego). Podmień na adres lokalu.
   siret: '000 000 000 00000 (TEST)',
   forma: 'EI (TEST)',
   // Godziny: pon-pt 9:00-19:00, ostatnia wizyta 18:00 (ustalone z Danielem 02.10.2026)
