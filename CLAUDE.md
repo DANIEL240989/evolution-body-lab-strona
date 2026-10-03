@@ -17,6 +17,10 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
   etykiety sekcji, podkreślenie języka i menu, ramki, obwódki przycisków (też Appeler/WhatsApp na telefonie), główny
   przycisk (napis w błękicie). Na jasnym tle różowe złoto jako tekst `#8C4F58`. Wcześniejsze: czarny mat (D), welur,
   Carrara, oliwka odrzucone; porównania w `projekt/`. Blok na końcu `css/style.css`.
+- **Pierwszy ekran = render 3D z RTX Daniela** (03.10.2026): łupek i kora, niebieska żywica świecąca jak lawa, krawędzie
+  w różowym złocie. Scena: `narzedzia/blender/lupek_scena.py` (Blender Cycles, bez AI), render na RTX 5080 przez
+  `narzedzia/blender/render_rtx.ps1`; na stronie webp w `img/materialy/lupek-3d-*.webp`, z plakietką „Image de synthèse”.
+  Desktop Commander na komputerze Daniela: `npx @wonderwhy-er/desktop-commander@latest remote` (w cmd, okno otwarte).
 - Języki w kolejności: FR (domyślny), EN, ES, PL, RU, DE (`?lang=`). Monika mówi po francusku i polsku: tylko to piszemy
   jako języki obsługi, reszta to tłumaczenie oferty. Nigdy „6 langues”.
   Etap 1: FR kompletny do akceptacji; pozostałe języki tłumaczymy z francuskiego po akceptacji Moniki.
