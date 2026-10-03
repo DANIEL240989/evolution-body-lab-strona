@@ -269,7 +269,10 @@
     if (!tasma || panele.length < 2) return;
     tor.classList.add('tor-on');
     var N = panele.length, vw = 1, stan = { x: 0 }, akt = 0, skCel = 0, sk = 0;
-    if (zEl) zEl.textContent = '/ ' + (N < 10 ? '0' : '') + N;
+    /* licznik liczy tylko zabiegi (biznesplan: EMS i kriolipoliza = „01 / 02”); panel pierwszej wizyty zamyka tor bez numeru,
+       na nim licznik gaśnie (Daniel 03.10.2026: „03 Première visite” wyglądało jak trzeci zabieg) */
+    var NZ = panele.filter(function (p) { return p.classList.contains('karta'); }).length || N, licznikEl0 = Q('.tor3-licznik', tScena);
+    if (zEl) zEl.textContent = '/ ' + (NZ < 10 ? '0' : '') + NZ;
     QA('img', tasma).forEach(function (i) { i.loading = 'eager'; });
     var cz = panele.map(function (p) {
       var im = Q('.panel-obraz > img', p);
@@ -298,8 +301,66 @@
       });
     }
     szer();
+    /* SILNIKI-2 #12 (Lando: tło zmienia kolor w trakcie toru): granat #0A142C → #101C3A → #0E1A36 za przesuwem */
+    var TLO = [[10, 20, 44], [16, 28, 58], [14, 26, 54]];
+    function tloToru(x) {
+      var f = Math.max(0, Math.min(1, x / (N - 1))) * (TLO.length - 1), i = Math.min(TLO.length - 2, Math.floor(f)), t = f - i;
+      var c = TLO[i].map(function (v, j) { return Math.round(v + (TLO[i + 1][j] - v) * t); });
+      tor.style.setProperty('--tor-tlo', 'rgb(' + c.join(',') + ')');
+    }
+    /* SILNIKI-2 #5: tytuły paneli (EMS, Cryolipolyse, Première visite) odsłaniane blokami (js/ruch.js: EBL_BLOKI),
+       raz, gdy panel wjedzie w ok. 45%; do tego czasu tytuł czeka (bez skryptu bloków nic nie jest ukryte) */
+    var BL = W.EBL_BLOKI, zagrane = [], wTorze = false;
+    if (BL) cz.forEach(function (c) { if (c.tyt) c.tyt.classList.add('czeka'); });
+    function tytuly(x) {
+      if (!BL || !wTorze) return;
+      cz.forEach(function (c, i) { if (!zagrane[i] && c.tyt && x > i - .55) { zagrane[i] = 1; BL(c.tyt); } });
+    }
+    /* SILNIKI-2 #7 i #8 (jjettas: wideo jest wszędzie): pętle wideo z RTX w panelach 02 i 03 jako ekran obok renderu;
+       wejście jak włączenie starego telewizora (kreska → pas → obraz, błysk), raz na panel; wideo pobierane dopiero przy
+       panelu, gra tylko w kadrze; plakat = pierwsza klatka; plakietka „Image de synthèse”. */
+    var WIDEO = { cryo: { src: 'img/rtx/krio-mgla.mp4', plakat: 'img/rtx/krio-mgla-plakat.webp' },
+                  visite: { src: 'img/rtx/kabina-swiatlo.mp4', plakat: 'img/rtx/kabina-swiatlo-plakat.webp' } };
+    var ekrany = [], wlaczone = [];
+    cz.forEach(function (c, i) {
+      var wd = WIDEO[c.p.getAttribute('data-zabieg')]; if (!wd) return;
+      var f = document.createElement('figure'); f.className = 'panel-ekran'; f.setAttribute('aria-hidden', 'true');
+      f.innerHTML = '<span class="panel-ekran-obraz"><video muted loop playsinline preload="none" disablepictureinpicture width="1280" height="704"></video></span>' +
+        '<span class="plakietka"></span>';
+      var v = Q('video', f); v.poster = wd.plakat; v.muted = true;
+      Q('.plakietka', f).textContent = (Q('.panel-obraz .plakietka', c.p) || {}).textContent || 'Image de synthèse';
+      c.p.appendChild(f); c.ekran = f; ekrany.push({ i: i, f: f, v: v, src: wd.src });
+      gsap.set(Q('.panel-ekran-obraz', f), { scaleY: .004, opacity: 0 });
+    });
+    function grajWideo(e, tak) {
+      if (tak) { if (!e.v.getAttribute('src')) e.v.src = e.src; var pr = e.v.play(); if (pr && pr.catch) pr.catch(function () {}); }
+      else if (!e.v.paused) e.v.pause();
+    }
+    var ioW = 'IntersectionObserver' in W ? new IntersectionObserver(function (w) {
+      w.forEach(function (x) { var e = ekrany.filter(function (q) { return q.f === x.target; })[0]; if (e && wlaczone[e.i]) grajWideo(e, x.isIntersecting); });
+    }, { threshold: .25 }) : null;
+    ekrany.forEach(function (e) { if (ioW) ioW.observe(e.f); });
+    function telewizor(e) {
+      if (wlaczone[e.i]) return; wlaczone[e.i] = 1;
+      var o = Q('.panel-ekran-obraz', e.f);
+      grajWideo(e, true);
+      gsap.timeline()
+        .set(o, { opacity: 1, filter: 'brightness(2.2)' })
+        .fromTo(o, { scaleY: .004 }, { scaleY: .08, duration: .25, ease: 'expo.out' })
+        .to(o, { scaleY: 1, duration: .3, ease: 'expo.inOut' })
+        .to(o, { filter: 'brightness(1)', duration: .4, ease: 'power2.out', clearProps: 'filter' }, '-=.15');
+    }
+    function ekranyTeraz(x) {
+      if (!wTorze) return;
+      ekrany.forEach(function (e) { if (x > e.i - .3) telewizor(e); });
+    }
+    /* koniec liczony z długości pinu (element przypięty: jego „bottom” nie uwzględnia własnego pinu) */
+    var stWidac = ScrollTrigger.create({ trigger: tScena, start: 'top 70%', end: function () { return '+=' + Math.round(innerHeight * (PIN_TOR + 1)); },
+      invalidateOnRefresh: true,
+      onToggle: function (st) { wTorze = st.isActive; tytuly(stan.x); ekranyTeraz(stan.x); } });
     function rysuj() {
       var x = stan.x;
+      tloToru(x); tytuly(x); ekranyTeraz(x);
       tasma.style.transform = 'translate3d(' + (-x * vw).toFixed(1) + 'px,0,0)';
       cz.forEach(function (c, i) {
         var off = i - x, a = Math.min(1, Math.abs(off));
@@ -315,6 +376,7 @@
            wyjeździe, zamiast wjeżdżać na sąsiedni panel albo urywać się na jego krawędzi */
         if (c.wolna && c.img) { c.img.style.opacity = Math.max(0, 1 - a * 1.5).toFixed(3); if (c.plak) c.plak.style.opacity = c.img.style.opacity; }
         c.tyt && c.tyt.style.setProperty('--tx', (off * vw * .22).toFixed(1) + 'px');
+        if (c.ekran) { c.ekran.style.setProperty('--ex', (-off * vw * .25).toFixed(1) + 'px'); c.ekran.style.opacity = Math.max(0, 1 - a * 1.4).toFixed(3); }
         c.tyt && c.tyt.style.setProperty('--sk', sk.toFixed(2) + 'deg');
         c.nr && c.nr.style.setProperty('--nx', (off * vw * .5).toFixed(1) + 'px');
         c.d.forEach(function (d, j) { d.style.setProperty('--dx', (off * vw * (.08 + j * .05)).toFixed(1) + 'px'); d.style.setProperty('--to', Math.max(0, 1 - a * 1.6).toFixed(3)); });
@@ -322,10 +384,13 @@
       if (tlo) tlo.style.setProperty('--bx', (x * vw * .3 - vw * .08).toFixed(1) + 'px');
       if (pasek) pasek.style.setProperty('--tp', (x / (N - 1)).toFixed(4));
       var k = Math.min(N - 1, Math.max(0, Math.round(x)));
+      if (licznikEl0) licznikEl0.classList.toggle('tor3-licznik-off', x > NZ - 1 + .5);
       if (k !== akt && nrEl) {
         var w = k > akt ? 1 : -1; akt = k;
-        nrEl.textContent = (k < 9 ? '0' : '') + (k + 1);
-        gsap.fromTo(nrEl, { yPercent: 100 * w }, { yPercent: 0, duration: .55, ease: 'reveal', overwrite: true });
+        if (k < NZ) {
+          nrEl.textContent = (k < 9 ? '0' : '') + (k + 1);
+          gsap.fromTo(nrEl, { yPercent: 100 * w }, { yPercent: 0, duration: .55, ease: 'reveal', overwrite: true });
+        }
       }
     }
     /* pochylenie tytułów z prędkością przewijania (wygasa samo) */
@@ -348,8 +413,10 @@
     }
     rysuj();
     return function () {
-      gsap.ticker.remove(tik);
-      tor.classList.remove('tor-on'); tor.style.removeProperty('--vw'); tor.style.removeProperty('--tor-gora');
+      gsap.ticker.remove(tik); stWidac.kill(); if (ioW) ioW.disconnect();
+      ekrany.forEach(function (e) { e.v.pause(); e.f.remove(); });
+      cz.forEach(function (c) { c.ekran = null; if (c.tyt) c.tyt.classList.remove('czeka'); });
+      tor.classList.remove('tor-on'); tor.style.removeProperty('--vw'); tor.style.removeProperty('--tor-gora'); tor.style.removeProperty('--tor-tlo');
       panele.forEach(function (p) { ['.panel-tytul', '.panel-nr'].forEach(function (s) { var e = Q(s, p); if (e) e.style.fontSize = ''; }); });
       tasma.style.transform = '';
       cz.forEach(function (c) {
@@ -357,6 +424,7 @@
         [c.img, c.obok, c.tyt, c.nr].concat(c.d).forEach(function (el) { if (el) ['--ix', '--is', '--ry', '--tx', '--sk', '--nx', '--dx', '--to'].forEach(function (v) { el.style.removeProperty(v); }); });
       });
       if (nrEl) { nrEl.textContent = '01'; gsap.set(nrEl, { clearProps: 'transform' }); }
+      if (licznikEl0) licznikEl0.classList.remove('tor3-licznik-off');
     };
   });
 

@@ -32,13 +32,17 @@ test('kursor: słowa z teksty.js, natywny kursor w kontakcie i nad polami, magne
   assert.doesNotMatch(pal, /#contact[^{]*\{[^}]*cursor: none/);
 });
 
-test('zasłona: elipsa .75 s z krzywą Lando, skok pod zasłoną, przerwanie Esc/klik, limit czasu', () => {
-  assert.match(fx, /CustomEase\.create\('zaslona', '0\.65,0\.05,0,1'\)/);
-  assert.match(fx, /r: R, duration: \.75/);
-  assert.match(fx, /duration: \.45/);
+test('zasłona-medalion (SILNIKI-2 #11): koło .2 → 40 znaku .4 s expo.in, skok pod zasłoną, okno .33 s expo.out, ≤ .9 s', () => {
+  assert.match(fx, /var ZASL = \{ znak: 75, od: \.2, do: 40, zakryj: \.4, odkryj: \.33, przerwa: \.06 \};/);
+  assert.match(fx, /r: rMax, duration: ZASL\.zakryj, ease: 'expo\.in'/);
+  assert.match(fx, /o: R \+ 4, duration: ZASL\.odkryj, ease: 'expo\.out'/);
+  assert.ok(.4 + .06 + .33 <= .9);
+  assert.doesNotMatch(fx, /ellipse|EX = 1\.22/);                           // elipsa usunięta
+  assert.match(pal, /\.zaslona-brzeg \{ clip-path: circle\(var\(--zr, 0px\) at 50% 50%\); \}/);
+  assert.match(pal, /mask-image: radial-gradient\(circle at 50% 50%, transparent var\(--zo, 0px\)/);
   assert.match(fx, /e\.key === 'Escape'/);
   assert.match(fx, /addEventListener\('pointerdown', przerwij, true\)/);
-  assert.match(fx, /setTimeout\(koniec, 1600\)/);
+  assert.match(fx, /setTimeout\(koniec, 1200\)/);
   assert.match(fx, /e\.detail === 0/);                                     // klawiatura: zwykły skok bez zasłony
   assert.match(fx, /document\.addEventListener\('click', klik, true\)/);
   assert.match(ruch, /window\.EBL_LENIS = lenis;/);
@@ -61,11 +65,11 @@ test('złoty pył: punkty WebGL z bezpiecznikami jak gl.js', () => {
   assert.match(fx, /vec3\(\.831,\.643,\.604\),vec3\(\.984,\.906,\.631\)/);
 });
 
-test('połysk H2, liczniki cen z dane.js, kontakt bez animacji formularza', () => {
+test('połysk H2, ceny stoją od razu (bez licznika od 0), kontakt bez animacji formularza', () => {
   assert.match(fx, /main > section:not\(\.hero\) h2/);
-  assert.match(fx, /W\.EBL \|\| \{\}/);                                     // ceny z js/dane.js, nie wpisane na sztywno
-  assert.match(fx, /duration: 1\.2, delay: \.12 \* i, ease: 'power2\.out'/);
-  assert.match(fx, /e\.textContent = oryg\[i\]/);                           // na końcu dokładnie tekst z cennika
+  // SILNIKI-2: licznik od zera wyłączony („cena jak wygrana”); tekst ceny nigdy nie jest podmieniany, zostaje połysk
+  assert.doesNotMatch(fx, /textContent = szablon|e\.textContent = /);
+  assert.match(fx, /blysk\(e, false\); stat\.ceny\+\+;/);
   assert.doesNotMatch(fx, /#contact (form|\.rdv|input)/);
   assert.match(pal, /@keyframes blysk-tekst/);
   assert.match(pal, /\.blysk-tekst\.blysk-ciemny \{ --g1: #8C6418;/);      // na lnie ciemne złoto, bez „musztardy”

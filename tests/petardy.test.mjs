@@ -65,7 +65,7 @@ test('tor: 3 panele, ceny z dane.js, „Réserver ce soin” nadal zaznacza zabi
   for (const f of ['img/rtx/ems-urzadzenie-900.webp', 'img/rtx/ems-urzadzenie-1400.webp', 'img/rtx/krio-urzadzenie-900.webp', 'img/rtx/krio-urzadzenie-1400.webp', 'img/rtx/kabina-daniel-1200.webp', 'img/rtx/kabina-daniel-1920.webp']) assert.ok(jest(f), f);
   assert.match(site, /return h \+ '<span class="plakietka"><\/span>';/);   // każdy render i wideo RTX z plakietką
   assert.match(site, /cryo: \{ wolny: true, chlod: true, src: 'img\/rtx\/krio-urzadzenie-900\.webp'/);
-  assert.match(site, /visite: \{ kadr: true, src: 'img\/rtx\/kabina-daniel-1200\.webp'/);
+  assert.match(site, /visite: \{ kadr: true, przod: \{ src: 'img\/rtx\/analizator-900\.webp'[\s\S]*?\}, src: 'img\/rtx\/kabina-daniel-1200\.webp'/);   // kabina + analizator (pomiary)
   assert.match(site, /preload="none"/);   // wideo (gdy wpisane w RTX) ładowane dopiero przy zbliżeniu
   assert.match(site, /prefers-reduced-motion: reduce/);
   for (const f of ['img/rtx/ems-urzadzenie-900.webp', 'img/rtx/ems-urzadzenie-1400.webp']) assert.ok(jest(f), f);

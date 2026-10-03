@@ -433,6 +433,7 @@ html.k-tlo body { background-color: var(--granat); }
 /* wycięcie dotyka lewej, górnej i dolnej krawędzi kadru zdjęcia (bluzka i włosy ucięte kadrem): te brzegi rozpuszczone
    maską (przecięcie trzech gradientów), prawa krawędź to czyste wycięcie BiRefNet */
 .stopka-monika img { position: relative; z-index: 1; display: block; width: 100%; height: auto;
+  /* góra: tylko 3% miękkiego wejścia (było 9%: zjadało czubek głowy; Daniel 03.10.2026 „na końcu ucięło głowę”) */
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24%), linear-gradient(180deg, transparent 0, #000 3%), linear-gradient(180deg, #000 66%, transparent 98%);
   -webkit-mask-composite: source-in, source-in;
   mask-image: linear-gradient(90deg, transparent 0, #000 24%), linear-gradient(180deg, transparent 0, #000 3%), linear-gradient(180deg, #000 66%, transparent 98%);
@@ -698,6 +699,180 @@ html.zaslona-on .kursor { visibility: hidden; }
 .tor-on .panel-tresc { top: var(--tor-gora, calc(var(--nav, 80px) + 120px)); justify-content: safe flex-end; }
 @media (min-width: 901px) and (max-height: 720px) {
   .tor-on .panel-tresc { top: var(--tor-gora, calc(var(--nav, 80px) + 100px)); }
+}
+
+/* =====================================================================================================================
+   SILNIKI-2 (03.10.2026, projekt/wzory/SILNIKI-2.md: pomiar na wideo, 15 poprawek). Wszystko poniżej włączają skrypty
+   klasami tylko na komputerze (≥ 901 px) z ruchem; telefon, ograniczony ruch i brak skryptu: strona jak dotąd.
+   Paleta bez zmian: granat, kość słoniowa, złoto 24K tylko na pełnych przyciskach i numerach, różowe złoto na obrysach. */
+
+/* ---------- #2 kurtyna: logo buduje się od dołu (pasek postępu), stoi nad twarzą Moniki, okno w medalionie rośnie ---------- */
+html.kurtyna-on.ruch .k-znak img:not(.k-cien) { clip-path: inset(100% 0% 0% 0%); }
+html.ruch:not(.ruch-js) .kurtyna .k-pod, html.ruch:not(.ruch-js) .kurtyna .k-linia { opacity: 0; }   /* bez skoku z środka nad twarz */
+.k-cien { position: absolute; left: 0; right: 0; top: 0; margin: 0 auto; opacity: .12; filter: grayscale(1) brightness(1.5); pointer-events: none; }
+.kurtyna.k-przy-twarzy .k-znak, .kurtyna.k-przy-twarzy .k-pod, .kurtyna.k-przy-twarzy .k-linia { translate: var(--kdx, 0px) var(--kdy, 0px); }
+.kurtyna.k-przy-twarzy .k-linia { left: calc(50% - 190px); right: calc(50% - 190px); }
+.kurtyna.k-okno .k-znak { overflow: visible; }
+.kurtyna.k-okno .k-znak img { will-change: transform; }
+
+/* ---------- #3 menu pełnoekranowe (przycisk 56×56 w pasku; panel spada z wypukłą krawędzią) ---------- */
+.menu-przycisk, .menu-pelne { display: none; }
+.menu-kreski { position: relative; display: block; width: 22px; height: 10px; }
+.menu-kreski i { position: absolute; left: 0; right: 0; height: 1.5px; border-radius: 1px; background: currentColor;
+  transition: transform .35s var(--e-editorial), top .35s var(--e-editorial); transform-origin: 100% 50%; }
+.menu-kreski i:first-child { top: 0; } .menu-kreski i:last-child { top: 8.5px; }
+.menu-x i { top: 4.25px !important; transform-origin: 50% 50%; }
+.menu-x i:first-child { transform: rotate(45deg); } .menu-x i:last-child { transform: rotate(-45deg); }
+@media (min-width: 901px) {
+  html.z-menu .menu-przycisk { display: inline-grid; place-items: center; flex: none; width: 56px; height: 56px; margin: -4px 0 -4px -6px; padding: 0;
+    border: 1px solid var(--rz-linia); border-radius: 50%; background: rgba(10, 20, 44, .35); color: #F6F0E4; cursor: pointer;
+    transition: border-color .3s var(--e-ui), background-color .3s var(--e-ui); }
+  .menu-przycisk:hover { border-color: var(--rz); background-color: rgba(212, 164, 154, .1); }
+  .menu-przycisk:hover .menu-kreski i:last-child { transform: scaleX(.55); }
+  .menu-przycisk:focus-visible, .mp-zamknij:focus-visible, .mp-link:focus-visible, .mp-jezyki a:focus-visible, .mp-tel:focus-visible {
+    outline: 2px solid var(--rz); outline-offset: 4px; }
+  html.z-menu .menu-pelne:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 9300; }
+  .mp-nic, .mp-tlo { position: absolute; inset: 0; }
+  .mp-nic { clip-path: ellipse(150% var(--my, 0%) at 50% 0%); background: linear-gradient(90deg, #D4A49A, #F1C9BE 30%, #FBE7A1 50%, #F1C9BE 70%, #D4A49A); }
+  .mp-tlo { clip-path: ellipse(150% max(0px, calc(var(--my, 0%) - 1.5px)) at 50% 0%); overflow: hidden auto;
+    background: var(--ziarno), radial-gradient(70% 70% at 64% 34%, var(--granat-swiatlo), var(--granat) 58%, var(--granat-gleboki));
+    display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.3fr) minmax(200px, .55fr); gap: clamp(28px, 4vw, 72px); align-items: center;
+    padding: calc(var(--nav, 80px) + 20px) max(32px, 6vw) 6vh; }
+  .mp-zamknij { position: absolute; z-index: 2; width: 56px; height: 56px; padding: 0; display: grid; place-items: center; cursor: pointer;
+    border: 1px solid var(--rz); border-radius: 50%; background: rgba(212, 164, 154, .08); color: #F6F0E4; }
+  .mp-kadry { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-self: center; }
+  .mp-kadr { position: relative; margin: 0; overflow: hidden; aspect-ratio: 4 / 5; border: 1px solid rgba(212, 164, 154, .28);
+    background: radial-gradient(70% 60% at 50% 42%, rgba(212, 164, 154, .12), transparent 72%), #0C1830; }
+  .mp-kadr:last-child { grid-column: 1 / -1; aspect-ratio: 16 / 8.4; }
+  .mp-kadr img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) brightness(.72);
+    transition: filter .3s var(--e-ui), transform .8s var(--e-reveal); }
+  .mp-kadr-wolny img { object-fit: contain; object-position: 50% 100%; padding: 10% 12% 0; }
+  .mp-kadr.mp-kadr-kolor img { filter: none; transform: scale(1.04); }
+  .mp-wybor .mp-kadr:not(.mp-kadr-kolor) img { filter: grayscale(1) brightness(.42); }
+  .mp-kadr .plakietka { left: auto; right: 8px; bottom: 8px; }
+  .mp-linki { display: flex; flex-direction: column; gap: .5vh; }
+  .mp-link { display: flex; align-items: baseline; gap: 20px; width: max-content; text-decoration: none; color: #F6F0E4;
+    font: 500 clamp(44px, min(5vw, 8.2vh), 72px)/1.06 var(--szeryf); letter-spacing: -.005em; }
+  .mp-nr { flex: none; min-width: 2.4em; font: 600 12px/1 var(--bez); letter-spacing: .22em; color: var(--rz); transform: translateY(-1.6em); }
+  .mp-maska { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
+  .mp-tekst { display: block; }
+  .mp-link .rolka-b { color: var(--rz); }
+  .mp-bok { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
+  .mp-medalion { margin: 0; } .mp-medalion img { display: block; width: clamp(110px, 10vw, 160px); height: auto; filter: drop-shadow(0 18px 40px rgba(0, 0, 0, .5)); }
+  .mp-jezyki { display: flex; gap: 4px; margin: 0; font-size: 13px; }
+  .mp-jezyki a { padding: 4px 6px; color: var(--tekst-noc-2); text-decoration: none; }
+  .mp-jezyki a[aria-current] { color: #FFFFFF; box-shadow: inset 0 -1px 0 var(--rz); }
+  .mp-tel-w { margin: 0; }
+  .mp-etyk { display: block; margin-bottom: 6px; font: 600 11px/1 var(--bez); letter-spacing: .26em; text-transform: uppercase; color: var(--rz); }
+  .mp-tel { font: 500 22px/1.2 var(--szeryf); font-variant-numeric: lining-nums; color: #F6F0E4; text-decoration: none; }
+  .mp-cta { margin: 0; }
+}
+@media (min-width: 901px) and (max-height: 720px) {
+  .mp-kadry { grid-template-columns: 1fr 1fr 1fr; } .mp-kadr:last-child { grid-column: auto; aspect-ratio: 4 / 5; }
+  .mp-bok { gap: 14px; } .mp-medalion img { width: 96px; }
+}
+
+/* ---------- #4 rolka tekstu (dwie kopie w masce, .27 s) ---------- */
+.rolka { position: relative; display: inline-block; overflow: hidden; vertical-align: top; }
+.rolka-a, .rolka-b { display: block; transition: transform .27s cubic-bezier(.65, .05, 0, 1); }
+.rolka-b { position: absolute; left: 0; top: 0; width: 100%; transform: translateY(100%); }
+.z-rolka:hover .rolka-a, .z-rolka:focus-visible .rolka-a, .mp-link:hover .rolka-a, .mp-link:focus-visible .rolka-a { transform: translateY(-100%); }
+.z-rolka:hover .rolka-b, .z-rolka:focus-visible .rolka-b, .mp-link:hover .rolka-b, .mp-link:focus-visible .rolka-b { transform: translateY(0); }
+.naglowek .menu a .rolka-b { color: #FFFFFF; }
+.stopka-menu a .rolka-b { color: var(--rz); }
+
+/* ---------- #5 bloki odsłaniające wielkie nagłówki ---------- */
+.blok-ramka { position: relative; display: inline-block; }
+.blok { position: absolute; left: -.05em; right: -.05em; top: .04em; bottom: .02em; z-index: 1; pointer-events: none; transform: scaleX(0); }
+
+/* ---------- #6 bez martwych ciemnych ekranów: orbita celów jaśniejsza; #monika wchodzi z granatu w len ---------- */
+@media (min-width: 901px) {
+  .cele.orbita::before { border-color: rgba(212, 164, 154, .34);
+    box-shadow: 0 0 90px -24px rgba(212, 164, 154, .4), inset 0 0 90px -36px rgba(212, 164, 154, .32); }
+  .cele.orbita::after { content: ''; position: absolute; left: 50%; top: 46%; width: min(900px, 70vw); height: 52vh; transform: translate(-50%, -50%);
+    border-radius: 50%; pointer-events: none; z-index: 0;
+    background: radial-gradient(closest-side, rgba(212, 164, 154, .16), rgba(31, 51, 97, .22) 55%, rgba(10, 20, 44, 0) 100%); }
+  .orbita .cel-orbita .cel { background: linear-gradient(160deg, rgba(31, 51, 104, .9), rgba(14, 26, 54, .86)); border-color: rgba(212, 164, 154, .42); }
+  #monika.z-noca > .monika-noc { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: var(--tlo-granat); }
+}
+
+/* ---------- #7 i #8 pętle wideo RTX w torze: ekran obok renderu, wejście jak włączenie telewizora ---------- */
+.panel-ekran { display: none; }
+@media (min-width: 901px) {
+  .tor-on .panel-ekran { display: block; position: absolute; z-index: 2; margin: 0; right: 47%; top: calc(var(--tor-gora, 200px) - 12px);
+    width: min(22vw, 340px, 38vh); transform: translate3d(var(--ex, 0px), 0, 0); pointer-events: none; }
+  .tor-on .panel-wizyta .panel-ekran { right: max(24px, 3vw); width: min(15vw, 240px, 27vh); }
+  .panel-ekran-obraz { position: relative; display: block; aspect-ratio: 1280 / 704; overflow: hidden; border: 1px solid var(--rz-linia); background: #050A17;
+    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .85), 0 0 50px -22px rgba(212, 164, 154, .5); }
+  .panel-ekran video { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .panel-ekran .plakietka { left: auto; right: 8px; bottom: 8px; z-index: 2; }
+}
+
+/* ---------- #9 przechył kart + połysk ---------- */
+.przechyl { position: relative; will-change: transform; }
+.polysk { position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none; opacity: 0;
+  background: linear-gradient(115deg, rgba(246, 240, 228, 0) 30%, rgba(246, 240, 228, .28) 50%, rgba(246, 240, 228, 0) 70%) var(--px, 50%) var(--py, 50%) / 250% 250% no-repeat;
+  mix-blend-mode: overlay; transition: opacity .3s var(--e-ui); }
+.przechyl-on .polysk { opacity: 1; }
+
+/* ---------- #11 przejście medalionem: koło rośnie od środka, potem okno w medalionie odsłania nowe miejsce ---------- */
+.zaslona { -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--zo, 0px), #000 calc(var(--zo, 0px) + 1px));
+  mask-image: radial-gradient(circle at 50% 50%, transparent var(--zo, 0px), #000 calc(var(--zo, 0px) + 1px)); }
+.zaslona-brzeg { clip-path: circle(var(--zr, 0px) at 50% 50%); }
+.zaslona-tlo { clip-path: circle(max(0px, calc(var(--zr, 0px) - 2.5px)) at 50% 50%); }
+.zaslona-okno { left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important;
+  width: calc(2 * var(--zo, 0px)); height: calc(2 * var(--zo, 0px)); transform: translate(-50%, -50%); border-radius: 50%;
+  box-shadow: 0 0 0 1.5px #E7C2B6, 0 0 34px 4px rgba(212, 164, 154, .45); opacity: 0; }
+.zaslona.okno .zaslona-okno { opacity: 1; }
+
+/* ---------- #12 tło toru zmienia kolor za przesuwem (--tor-tlo z js/petardy.js) ---------- */
+.tor-on .tor3-scena { background: var(--ziarno), var(--winieta), var(--tor-tlo, var(--granat)); }
+
+/* ---------- #13 kula światła prowadzona głowicą linii kroków (520 px, blur 60 px, .55, screen) ---------- */
+@media (min-width: 901px) {
+  #visite .kula.kula-glowa { left: 0; top: 0; width: 520px; height: 520px; aspect-ratio: auto; margin: 0; background: none;
+    filter: blur(60px); opacity: .55; mix-blend-mode: screen; z-index: 0; }
+  .kula-glowa::before, .kula-glowa::after { content: ''; position: absolute; inset: 0; border-radius: 50%; }
+  .kula-glowa::before { background: radial-gradient(closest-side, rgba(212, 164, 154, .95), rgba(212, 164, 154, .35) 55%, rgba(212, 164, 154, 0)); opacity: calc(1 - var(--kp, 0)); }
+  .kula-glowa::after { background: radial-gradient(closest-side, rgba(246, 240, 228, .85), rgba(246, 240, 228, .28) 55%, rgba(246, 240, 228, 0)); opacity: var(--kp, 0); }
+}
+
+/* ---------- #14 pas światła przed kontaktem: różowe złoto → kość słoniowa → granat, blur 40 px ---------- */
+.pas-smuga { top: -70px; height: 140px; filter: blur(40px);
+  background: linear-gradient(90deg, rgba(212, 164, 154, 0) 4%, rgba(212, 164, 154, .62) 26%, rgba(246, 240, 228, .55) 50%, rgba(31, 51, 97, .5) 74%, rgba(10, 20, 44, 0) 96%); }
+
+/* bezpieczniki SILNIKI-2: telefon i ograniczony ruch nigdy nie widzą nowych warstw */
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .menu-przycisk, .menu-pelne, .panel-ekran, .polysk, .monika-noc, .k-cien { display: none !important; }
+}
+
+/* ---------- tor: tylko dwa zabiegi są numerowane („01 / 02”); pierwsza wizyta zamyka tor bez numeru (Daniel 03.10.2026) ---------- */
+.panel-nad { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; font: 600 12px/1.4 var(--bez); letter-spacing: .28em;
+  text-transform: uppercase; color: var(--rz); }
+.panel-nad::before { content: ''; width: 28px; height: 1px; background: var(--rz); flex: none; }
+.tor-on .panel-nad { margin-bottom: 2.2vh; font-size: 13px; }
+.tor-on .tor3-licznik { transition: opacity .45s var(--e-ui); }
+.tor-on .tor3-licznik.tor3-licznik-off { opacity: 0; }
+/* analizator składu ciała przed kabiną (pomiary pierwszej wizyty); ekran z napisami przyciemniony i rozmyty: kopia obrazu
+   z filtrem, przycięta do ekranu urządzenia (img/rtx/analizator-*.webp ma polskie napisy i liczby) */
+.urzadzenie-przod { position: absolute; z-index: 2; left: 4%; top: 8%; bottom: 2%; }
+.urzadzenie-przod .urzadzenie-img { height: 100%; }
+.urzadzenie-przod .urzadzenie-ekran { position: absolute; left: 0; top: 0; -webkit-box-reflect: none;
+  filter: blur(7px) brightness(.38) saturate(.5);
+  clip-path: polygon(19% 0%, 77% 1.2%, 77% 29%, 21% 29%); pointer-events: none; }
+.urzadzenie-przod::before { background: radial-gradient(closest-side, rgba(212, 164, 154, .22), rgba(212, 164, 154, .06) 55%, rgba(212, 164, 154, 0) 100%); }
+@media (min-width: 901px) {
+  .tor-on .panel-kadr .urzadzenie-przod { left: auto; right: 31%; top: auto; bottom: 4vh; transform: perspective(1600px) translate3d(var(--ix, 0px), 0, 0) rotateY(var(--ry, 0deg)); }
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-img { height: min(66vh, 680px); }
+}
+@media (min-width: 901px) and (max-height: 720px) {
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-img { height: min(60vh, 680px); }
+}
+.panel-obraz .urzadzenie-przod .urzadzenie-img { width: auto; max-width: none; object-fit: contain; }
+.panel-obraz .urzadzenie-przod .urzadzenie-ekran { position: absolute; left: 0; top: 0; }
+@media (min-width: 901px) {
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-img { position: static; left: auto; top: auto; width: auto; transform: none; }
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-ekran { position: absolute; left: 0; top: 0; }
 }
 
 /* krawędzie stopni gasną razem z podpisami, gdy noc je przykrywa (bez wiszących kresek) */

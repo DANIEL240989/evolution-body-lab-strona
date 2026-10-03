@@ -41,6 +41,7 @@ window.T = {
     // Tor 3 paneli (#soins, js/petardy.js): wielki napis w tle i link trzeciego panelu
     tor_fond: 'Evolution Body Lab',
     tor_3_lien: 'Le déroulé de la visite',
+    tor_3_nad: 'Avant tout soin · consultation',   // podpis nad „Première visite” w torze: zamknięcie toru, nie trzeci zabieg
     s_ems_t: 'EMS', s_ems_d: 'Électrostimulation musculaire en séance encadrée : un entraînement régulier, planifié avec vous.',
     s_cryo_t: 'Cryolipolyse', s_cryo_d: 'Un froid contrôlé, appliqué sur une zone précise. 180 € une zone, 350 € deux zones, 500 € trois zones.',
     duree: 'min', prix_tbc: 'Tarif à confirmer (TEST)', par_seance: 'la séance', a_partir: 'à partir de', reserver_soin: 'Réserver ce soin',
@@ -119,7 +120,9 @@ window.T = {
     footer_slogan: 'Chaque soin a sa *méthode*.',
     footer_pages: 'Pages', footer_contact: 'Contact',
     // Kursor-soczewka (js/efekty.js, tylko komputer z myszą): słowo w złotym kółku nad kartami, torem i zdjęciami
-    kursor_voir: 'Voir', kursor_reserver: 'Réserver', kursor_glisser: 'Glisser'
+    kursor_voir: 'Voir', kursor_reserver: 'Réserver', kursor_glisser: 'Glisser',
+    // Menu plein écran (js/silnik2.js, ordinateur) : bouton du bandeau, fermeture, nom de la navigation, langues
+    menu_ouvrir: 'Ouvrir le menu', menu_fermer: 'Fermer le menu', menu_nav: 'Navigation', menu_langues: 'Langues'
   },
   en: {}, es: {}, pl: {}, ru: {}, de: {}
 };

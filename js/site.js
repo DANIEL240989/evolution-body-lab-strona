@@ -43,7 +43,10 @@
             sizes: '(max-width: 900px) 46vh, 54vh', w: 933, h: 1400 },
     /* pierwsza wizyta (Daniel 03.10.2026, ma pierwszeństwo przed kadrami RTX): kabina nocą, czarne ściany, złote
        podświetlenia, lustro, róże; kadr z tłem wtapiany w granat. Pętla img/rtx/kabina-swiatlo.mp4 zostaje w repo. */
-    visite: { kadr: true, src: 'img/rtx/kabina-daniel-1200.webp', srcset: 'img/rtx/kabina-daniel-1200.webp 1200w, img/rtx/kabina-daniel-1920.webp 1920w, img/rtx/kabina-daniel-2880.webp 2880w',
+    /* przed kabiną: analizator składu ciała (pomiary z pierwszej wizyty), przezroczyste tło; ekran urządzenia ma napisy
+       i liczby, więc na stronie jest przyciemniony i rozmyty (kopia obrazu z filtrem, przycięta do ekranu: ekran) */
+    visite: { kadr: true, przod: { src: 'img/rtx/analizator-900.webp', srcset: 'img/rtx/analizator-900.webp 592w, img/rtx/analizator-1400.webp 920w',
+              sizes: '(max-width: 900px) 30vw, 40vh', w: 920, h: 1400 }, src: 'img/rtx/kabina-daniel-1200.webp', srcset: 'img/rtx/kabina-daniel-1200.webp 1200w, img/rtx/kabina-daniel-1920.webp 1920w, img/rtx/kabina-daniel-2880.webp 2880w',
               sizes: '(max-width: 900px) 100vw, 70vw', w: 1920, h: 1280 }
   };
   window.EBL_RTX = RTX;
@@ -55,7 +58,9 @@
   function obrazRtx(r) {
     if (typeof r === 'string') r = { src: r, w: 1536, h: 1024 };
     var h;
-    if (r.kadr) h = '<span class="kadr">' + obrazek(r, 'kadr-wideo') + '<span class="kadr-granat" aria-hidden="true"></span></span>';
+    if (r.kadr) h = '<span class="kadr">' + obrazek(r, 'kadr-wideo') + '<span class="kadr-granat" aria-hidden="true"></span></span>' +
+      (r.przod ? '<span class="urzadzenie urzadzenie-obok urzadzenie-przod">' + obrazek(r.przod, 'urzadzenie-img') +
+        obrazek(r.przod, 'urzadzenie-img urzadzenie-ekran').replace('<img', '<img aria-hidden="true"') + '</span>' : '');
     else if (r.wideo) h = '<span class="kadr"><video class="kadr-wideo" muted loop playsinline preload="none" aria-hidden="true" poster="' + r.plakat + '" data-src="' + r.wideo +
       '" width="' + r.w + '" height="' + r.h + '"></video><span class="kadr-granat" aria-hidden="true"></span></span>';
     else if (r.wolny) h = (r.obok ? '<span class="urzadzenie urzadzenie-obok">' + obrazek(r.obok, 'urzadzenie-img') + '</span>' : '') +

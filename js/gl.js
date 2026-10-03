@@ -6,8 +6,9 @@
       przy przewijaniu kamera „wjeżdża” (zoom zależny od głębi). Telefon: bez WebGL, granat z CSS.
    2. Płyn pod kursorem (komputer z myszą): symulacja na teksturach ping-pong w 1/6 rozdzielczości (adwekcja, wir,
       dywergencja, ciśnienie Jacobiego, odjęcie gradientu). Mysz wstrzykuje prędkość i „tusz” odcinkiem (bez kropek przy
-      szybkim ruchu). Ślad rysuje ŚWIATŁO na granacie: połysk jak jedwab / ciekłe złoto (różowe złoto → 24K), włókna
-      wzdłuż ruchu, refrakcja Moniki i napisu z rozszczepieniem barw na krawędzi; na twarzy Moniki prawie zero.
+      szybkim ruchu). Od SILNIKI-2 (03.10.2026) ślad jest MASKĄ jak u Lando: w tle ledwo podnosi granat, na postaci
+      odsłania Monikę w świetle różowego złota, nad blokiem tekstu (H1, przyciski) go nie ma, twarz bez efektu;
+      tusz ×0,3, smuga gaśnie ≤ 600 ms. Po kurtynie przelot światła przez rysunek (2 s, potem słabszy co 8–10 s).
    3. Karty zabiegów (#soins) i medaliony ilustracji: przy wjeździe w ekran i przy najechaniu obraz faluje w shaderze,
       kanały RGB rozchodzą się przy krawędziach. Jeden wspólny kontekst poza DOM, wynik kopiowany do lekkiego płótna 2D
       tylko na czas efektu; po efekcie wraca zwykły <img>.
@@ -120,12 +121,15 @@
 
     /* pierwszy ekran (od 03.10.2026 bez kamienia, Daniel: „czysty ciemnogranatowy tło”): granat liczony w shaderze
        (ciemniejsze brzegi, dwie ledwo widoczne poświaty, ziarno), na nim gigantyczny napis i Monika z paralaksą 2,5D.
-       Płyn: ślad kursora jest ŚWIATŁEM, nie farbą: połysk jak jedwab / ciekłe złoto (normalna z gradientu śladu,
-       odblask za kursorem, włókna wzdłuż ruchu, jaśniejszy brzeg fałdy), dodawany do granatu, a Monika i napis są
-       w śladzie lekko załamane (refrakcja z rozszczepieniem barw na krawędzi). Na Monice światło przygaszone,
-       na twarzy prawie zero (maska owalu twarzy w kadrze img/monika-rys-hero.webp + alfa postaci). */
-    hero: P + 'varying vec2 vUv;uniform sampler2D uTusz,uV,uMon,uMonGl,uNap;uniform vec2 uRes,uPar,uSwiatlo,uParM,uParW,uTx;uniform vec4 uMonK,uNapK;' +
-      'uniform float uZoom,uPlyn,uCzas,uRefr,uMonOn;' +
+       SILNIKI-2 #1 (03.10.2026, pomiar na wideo: nasz płyn 3,6× mocniejszy niż Lando i na całym ekranie): płyn jest MASKĄ,
+       nie farbą (wzór Lando: wynik = mix(tex1, tex2, smoothstep(dye))):
+       - w tle smuga tylko podnosi granat #101C3A → #1A2747 (kontrast ok. 1,2:1) z ledwo widocznym połyskiem jedwabiu;
+       - na postaci odsłania DRUGĄ teksturę: tę samą Monikę w świetle różowego złota (włosy, ramiona); twarz bez efektu;
+       - nad blokiem tekstu (etykieta, H1, przyciski: uBlok) płynu nie ma wcale, brzeg miękki 40 px;
+       - bez refrakcji i rozszczepienia barw (napis „Evolution” i Monika nie falują).
+       SILNIKI-2 #10: przelot światła przez rysunek (uPrz: x = położenie pasa 0..1, y = siła), twarz pominięta. */
+    hero: P + 'varying vec2 vUv;uniform sampler2D uTusz,uV,uMon,uMonGl,uNap;uniform vec2 uRes,uPar,uSwiatlo,uParM,uParW,uTx,uPrz;uniform vec4 uMonK,uNapK,uBlok;' +
+      'uniform float uZoom,uPlyn,uCzas,uMonOn;' +
       'vec2 gM,gW;' +
       'float wn(vec2 u){return step(0.,u.x)*step(u.x,1.)*step(0.,u.y)*step(u.y,1.);}' +
       'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}' +
@@ -134,36 +138,40 @@
       'vec3 c=mix(vec3(.043,.082,.188),vec3(.020,.039,.090),smoothstep(.15,1.05,length((u-vec2(.56,.46))*vec2(1.,1.3))));' +
       'vec2 d1=(u-vec2(.74,.52)-o)*vec2(1.6,1.);c+=vec3(.831,.643,.604)*.055*exp(-dot(d1,d1)*7.);' +
       'vec2 d2=(u-vec2(.18,.22)+o)*vec2(1.3,1.);c+=vec3(.12,.20,.38)*.09*exp(-dot(d2,d2)*5.);return c;}' +
-      'vec3 kol(vec2 q){vec3 c=tlo(q);if(uMonOn>.5){' +
-      'vec2 qw=.5*uRes+(q-.5*uRes)/(1.+uZoom*.7);vec2 uw=(qw-uNapK.xy)/uNapK.zw+gW;vec4 w=texture2D(uNap,uw)*wn(uw);c=mix(c,w.rgb,w.a);' +
-      'vec2 qm=.5*uRes+(q-.5*uRes)/(1.+uZoom*1.4);vec2 um=(qm-uMonK.xy)/uMonK.zw+gM;vec4 m=texture2D(uMon,um)*wn(um);c=mix(c,m.rgb,m.a);}return c;}' +
       'vec3 zloto(float x){x=clamp(x,0.,1.);' +
       'vec3 c=mix(vec3(.30,.17,.13),vec3(.831,.643,.604),smoothstep(0.,.45,x));' +                 /* różowe złoto #D4A49A */
       'return mix(c,vec3(.984,.906,.631),smoothstep(.45,1.,x));}' +                                  /* 24K #FBE7A1 */
       'void main(){vec2 px=vec2(vUv.x,1.-vUv.y)*uRes;' +
-      'gM=vec2(0.);gW=vec2(0.);float fa=0.,ma=0.;if(uMonOn>.5){vec2 qm0=.5*uRes+(px-.5*uRes)/(1.+uZoom*1.4);vec2 um0=(qm0-uMonK.xy)/uMonK.zw;' +
+      'vec3 c=tlo(px);float fa=0.,ma=0.;vec3 mc=vec3(0.);vec2 uq=vec2(0.);' +
+      'if(uMonOn>.5){' +
+      'vec2 qw=.5*uRes+(px-.5*uRes)/(1.+uZoom*.7);gW=-uParW/uNapK.zw;vec2 uw=(qw-uNapK.xy)/uNapK.zw+gW;vec4 w=texture2D(uNap,uw)*wn(uw);c=mix(c,w.rgb,w.a);' +
+      'vec2 qm0=.5*uRes+(px-.5*uRes)/(1.+uZoom*1.4);vec2 um0=(qm0-uMonK.xy)/uMonK.zw;' +
       /* głowa i twarz (owal liczony PRZED przesunięciem, więc stały): cała postać przesuwa się jak jedna warstwa,
          głębia działa tylko poza głową (włosy po bokach, ramiona) → twarz nigdy się nie rozciąga (Daniel 03.10.2026) */
       'float gh=smoothstep(1.35,.9,length((um0-vec2(.55,.26))/vec2(.36,.34)));' +
-      'float dm=texture2D(uMonGl,um0).r;gM=-uParM*(.9+.4*(dm-.5)*(1.-gh))/uMonK.zw;dm=texture2D(uMonGl,um0+gM).r;gM=-uParM*(.9+.4*(dm-.5)*(1.-gh))/uMonK.zw;gW=-uParW/uNapK.zw;' +
-      'vec2 uq=um0+gM;ma=texture2D(uMon,uq).a*wn(uq);fa=smoothstep(1.2,.72,length((uq-vec2(.52,.27))/vec2(.27,.25)));}' +
-      'vec3 baza=kol(px);vec3 c=baza;' +
-      'if(uPlyn>.5){vec4 tz=texture2D(uTusz,vUv);float m=smoothstep(.03,.6,tz.r);float kr=m*(1.-m)*4.;' +
-      'if(m+kr>.002){vec2 v=texture2D(uV,vUv).xy;' +
-      'float tw=1.-.92*fa;float att=(1.-.5*ma)*tw;' +                                                  /* twarz: prawie bez światła i refrakcji */
-      'vec2 rf=v*uRefr*tw;float lr=length(rf);if(lr>.012)rf*=.012/lr;vec2 dir=lr>1e-5?rf/lr:vec2(1.,0.);' +
-      'vec2 pq=px+rf*(m+kr)*uRes;vec2 ca=dir*kr*1.6;' +
-      'vec3 zr=vec3(kol(pq+ca).r,kol(pq).g,kol(pq-ca).b);' +
-      /* normalna z gradientu śladu: fałdy jedwabiu */
+      'float dm=texture2D(uMonGl,um0).r;gM=-uParM*(.9+.4*(dm-.5)*(1.-gh))/uMonK.zw;dm=texture2D(uMonGl,um0+gM).r;gM=-uParM*(.9+.4*(dm-.5)*(1.-gh))/uMonK.zw;' +
+      'uq=um0+gM;vec4 m4=texture2D(uMon,uq)*wn(uq);ma=m4.a;mc=m4.rgb;c=mix(c,mc,ma);' +
+      'fa=smoothstep(1.2,.72,length((uq-vec2(.52,.27))/vec2(.27,.25)));}' +
+      'float poza=ma*(1.-fa);' +                                                                      /* postać bez twarzy */
+      /* druga tekstura: Monika w świetle różowego złota (jasność rysunku → złoto) */
+      'float lum=dot(mc,vec3(.3,.59,.11));vec3 drug=zloto(.12+lum*1.15)*(.30+lum*.95);' +
+      'if(uPlyn>.5){float d=texture2D(uTusz,vUv).r;' +
+      'vec2 bd=max(abs(px-uBlok.xy-.5*uBlok.zw)-.5*uBlok.zw,0.);float wolne=smoothstep(0.,40.,length(bd));' +   /* nad tekstem 0 */
+      'float m=smoothstep(.03,.26,d)*wolne;' +
+      'if(m>.002){' +
       'float hx=texture2D(uTusz,vUv+vec2(uTx.x,0.)).r-texture2D(uTusz,vUv-vec2(uTx.x,0.)).r;' +
       'float hy=texture2D(uTusz,vUv+vec2(0.,uTx.y)).r-texture2D(uTusz,vUv-vec2(0.,uTx.y)).r;' +
-      'vec3 n=normalize(vec3(-hx*7.,hy*7.,1.));vec3 hv=normalize(normalize(vec3(uSwiatlo,.85))+vec3(0.,0.,1.));' +
-      'float bl=pow(max(dot(n,hv),0.),42.);float rim=clamp(1.-n.z,0.,1.);' +
-      'float wl=.85+.15*sin(dot(px,vec2(-dir.y,dir.x))*.16+tz.r*6.+uCzas*.4);' +            /* włókna wzdłuż ruchu */
-      'float I=(.22*m+.30*rim*smoothstep(0.,.35,m)+.80*bl*m+.05*kr)*wl*att;' +
-      'c=mix(baza,zr,clamp(kr*.9+m*.35,0.,1.)*tw);' +
-      'c+=zloto(.25+.55*m+.6*bl)*I;' +
-      'c=mix(c,c*vec3(1.06,.99,.93),m*.5*att);}}' +
+      'vec3 n=normalize(vec3(-hx*5.,hy*5.,1.));vec3 hv=normalize(normalize(vec3(uSwiatlo,.85))+vec3(0.,0.,1.));' +
+      'float bl=pow(max(dot(n,hv),0.),36.);' +
+      /* tło: granat #101C3A → #1A2747 + ledwo widoczny połysk jedwabiu (szary, bez złota) */
+      'c+=(vec3(.039,.043,.051)*m+vec3(.035,.038,.045)*bl*m)*(1.-ma);' +
+      /* postać: odsłonięta druga tekstura (maska), twarz nietknięta */
+      'c=mix(c,drug,m*poza*.85);}}' +
+      /* przelot światła przez rysunek (jedwab / ciekłe złoto), raz po kurtynie i słabiej co 8–10 s */
+      'if(uPrz.y>.001&&poza>.002){float sd=dot(uq-vec2(.5,.55),vec2(.78,-.62));float bc=mix(-.85,.85,uPrz.x);' +
+      'float pas=exp(-pow((sd-bc)/.075,2.))+.35*exp(-pow((sd-bc+.13)/.05,2.));' +
+      'float fal=.8+.2*sin(dot(uq,vec2(31.,17.))+uCzas*1.3);' +
+      'c+=zloto(.45+.5*lum)*pas*fal*poza*uPrz.y*(.6+.9*lum);}' +
       'c=min(c,vec3(1.));' +
       /* ziarno ok. ±1,5/255: na granacie bez pasów gradientu */
       'c+=(hash(px+fract(uCzas*.37))-.5)*3./255.;gl_FragColor=vec4(c,1.);}',
@@ -197,8 +205,13 @@
     var POSTAC = [(innerHeight * Math.min(devicePixelRatio || 1, 1.5) > 1000 ? 'img/monika-rys-hero-2048.webp' : 'img/monika-rys-hero.webp'), 'img/glebia/monika-rys-glebia.webp'];
     var czcionkiGotowe = Promise.race([(document.fonts && document.fonts.ready) || Promise.resolve(), new Promise(function (r) { setTimeout(r, 2500); })]);
     /* parametry (komputer / telefon) */
-    var PAR = [22, 14], SYM = 6, ITER = 14,
-        ZANIK_V = 1.1, ZANIK_T = .85, WIR = 16, PROM = .0016, SILA = 1.5, TUSZ = .55, REFR = 2.4e-5;
+    /* SILNIKI-2 #1: tusz ×0,3 (TUSZ .55 → .165), zanik tuszu ZANIK_T 6,7/s = ok. 0,90 na klatkę przy 60 kl./s (smuga gaśnie
+       w ≤ 600 ms: 0,9^36 ≈ 0,02), prędkość gaśnie szybciej (2,6/s); symulacja stoi 1,2 s po ostatnim ruchu myszy */
+    var PAR = [22, 14], SYM = 6, ITER = 14, CISZA_S = 1.2,
+        ZANIK_V = 2.6, ZANIK_T = 6.7, WIR = 12, PROM = .0016, SILA = 1.5, TUSZ = .55 * .3;
+    /* SILNIKI-2 #10: paralaksa głębi Moniki ±8 px (wygładzenie ok. 0,45 s ≈ quickTo 1,4 s power3.out);
+       przelot światła: pierwszy 2,0 s po kurtynie (power2.inOut), potem co 8–10 s słabszy (40%) */
+    var PAR_M = 8, TAU_M = .45, PRZ_DL = 2, PRZ_CO = [8, 10], PRZ_SLABY = .4;
 
     function zbuduj() {
       trojkat(gl);
@@ -265,8 +278,11 @@
        i wersja bez WebGL były w tym samym kadrze. Mapa głębi Moniki: img/glebia/monika-rys-glebia.webp (tymczasowa
        z alfy; podmiana na mapę z RTX = ten sam plik). */
     var monImg = fala.querySelector('.hero-monika'), napEl = fala.querySelector('.hero-imie');
-    var monOn = false, monK = [0, 0, 1, 1], napK = [0, 0, 1, 1], napCv = null;
+    var monOn = false, monK = [0, 0, 1, 1], napK = [0, 0, 1, 1], napCv = null, blok = [-1e4, -1e4, 0, 0];
+    var trescEl = hero.querySelector('.hero-tresc');
     function miejsca() {
+      /* blok tekstu (etykieta, H1, przyciski): płyn nad nim nie istnieje (uBlok w shaderze) */
+      if (trescEl && trescEl.offsetWidth) blok = [trescEl.offsetLeft, trescEl.offsetTop, trescEl.offsetWidth, trescEl.offsetHeight];
       if (!monOn || !monImg) return;
       monK = [monImg.offsetLeft, monImg.offsetTop, monImg.offsetWidth || 1, monImg.offsetHeight || 1];
       if (napEl) napK = [napEl.offsetLeft, napEl.offsetTop, napEl.offsetWidth || 1, napEl.offsetHeight || 1];
@@ -306,7 +322,13 @@
     }
 
     /* ---------------------------------------------------------------- wejście: mysz, żyroskop, przewijanie */
-    var mx = 0, my = 0, sx = 0, sy = 0;                   /* cel i wygładzona paralaksa (-1..1) */
+    var mx = 0, my = 0, sx = 0, sy = 0, smx = 0, smy = 0;   /* cel i wygładzona paralaksa (-1..1); smx/smy: Monika */
+    /* przelot światła (SILNIKI-2 #10): start po kurtynie (zdarzenie z js/ruch.js), potem co 8–10 s */
+    var prz = { t0: -1, I: 1, nast: 0 }, poKurt = false;
+    function przelot(t, I) { stat.przeloty = (stat.przeloty || 0) + 1; prz.t0 = t; prz.I = I; prz.nast = t + (PRZ_DL + PRZ_CO[0] + Math.random() * (PRZ_CO[1] - PRZ_CO[0])) * 1000; }
+    function poKurtynie() { if (!poKurt) { poKurt = true; prz.nast = performance.now() + 150; prz.I = -1; } }
+    document.addEventListener('ebl:po-kurtynie', poKurtynie);
+    if (W.EBL_PO_KURTYNIE) poKurtynie();
     var pA = [0, 0], pB = [0, 0], ruch = false, ostRuch = -1e9, czasPlynu = 0, start = 0, swiatlo = [0, 0];
     function kurtyna() { return H.classList.contains('kurtyna-on'); }
     function mysz(e) {
@@ -390,23 +412,30 @@
         if (stat.srMs > 90 && zdegradowane) { zatrzymaj(true); return; }
         if (stat.srMs > 45 && plyn) { plyn = false; stat.plyn = false; zdegradowane = 1; wypelnione = 0; suma = 0; pomiar.fill(0); }
       }
-      var k = 1 - Math.exp(-dt / .35);
-      sx += (mx - sx) * k; sy += (my - sy) * k;
+      var k = 1 - Math.exp(-dt / .35), km = 1 - Math.exp(-dt / TAU_M);
+      sx += (mx - sx) * k; sy += (my - sy) * k; smx += (mx - smx) * km; smy += (my - smy) * km;
       var p = PAR;
       var dryfX = Math.sin(czas * .21) * .22 + Math.sin(czas * .057) * .12, dryfY = Math.cos(czas * .17) * .18;
       if (TEL.matches) { dryfX *= 2.2; dryfY *= 2.2; }
       var przew = Math.max(0, Math.min(1.2, (W.scrollY || 0) / (innerHeight || 1)));
       var wjazd = Math.pow(Math.max(0, 1 - czas / 2.6), 3);    /* kamera osiada po starcie (kurtyna, okno w logo) */
       if (plyn) {
-        if (ruch || czasPlynu < 6) { krok(dt, Math.max(dt, Math.min(dtR / 1000, .25))); czasPlynu += dt; }
+        if (ruch || czasPlynu < CISZA_S) { krok(dt, Math.max(dt, Math.min(dtR / 1000, .25))); czasPlynu += dt; }
         else if (czasPlynu < 1e9) { wyczysc(); czasPlynu = 1e9; }
       }
+      if (nrK % 30 === 0) miejsca();                             /* blok tekstu po czcionkach i podziale linii H1 */
       var u = uzyj(pr.hero);
       gl.uniform2f(u.uRes, cssW, cssH);
       gl.uniform2f(u.uPar, (sx + dryfX) * p[0], (sy + dryfY) * p[1] + przew * p[1] * 1.4);
       gl.uniform2f(u.uSwiatlo, sx * .55, -sy * .55);
       if (fbo) gl.uniform2f(u.uTx, 1 / fbo.tw, 1 / fbo.th);
-      gl.uniform1f(u.uZoom, przew * .07 + wjazd * .06); gl.uniform1f(u.uCzas, czas); gl.uniform1f(u.uRefr, REFR);
+      gl.uniform1f(u.uZoom, przew * .07 + wjazd * .06); gl.uniform1f(u.uCzas, czas);
+      gl.uniform4f(u.uBlok, blok[0], blok[1], blok[2], blok[3]);
+      /* przelot światła: pierwszy pełny, kolejne słabsze; tylko gdy pierwszy ekran jest u góry (bez pinu ramki) */
+      var pp = -1;
+      if (poKurt && t >= prz.nast && przew < .3) przelot(t, prz.I < 0 ? 1 : PRZ_SLABY);
+      if (prz.t0 >= 0) { var x = (t - prz.t0) / (PRZ_DL * 1000); if (x <= 1) pp = x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
+      gl.uniform2f(u.uPrz, pp < 0 ? 0 : pp, pp < 0 ? 0 : prz.I);
       /* Monika: większa paralaksa niż fala (bliżej kamery), przy przewijaniu unosi się szybciej; napis: mniejsza */
       gl.uniform1f(u.uMonOn, monOn ? 1 : 0);
       var hs = hero.style, fp = parseFloat(hs.getPropertyValue('--fp')) || 0, msx = fp * (parseFloat(hs.getPropertyValue('--msx')) || 0);
@@ -415,12 +444,12 @@
       var msy = fp && !isNaN(mty) ? Math.max(0, (mty - cssH / 2) / Zm + cssH / 2 - monK[1]) : 0;
       gl.uniform4f(u.uMonK, monK[0] + msx, monK[1] + msy, monK[2], monK[3]); gl.uniform4f(u.uNapK, napK[0], napK[1], napK[2], napK[3]);
       /* bez unoszenia Moniki z przewijaniem: w ramce kadr ustawia js/ruch.js (--msy), głowa zawsze w ramce */
-      gl.uniform2f(u.uParM, (sx + dryfX * .6) * 22, (sy + dryfY * .6) * 13);
+      gl.uniform2f(u.uParM, (smx + dryfX * .6) * PAR_M, (smy + dryfY * .6) * PAR_M);
       gl.uniform2f(u.uParW, sx * 9, sy * 5 + przew * 40);
       tex2(4, tex.mon, u.uMon); tex2(5, tex.monGl, u.uMonGl); tex2(6, tex.nap, u.uNap);
       var aktywny = plyn && czasPlynu < 1e9;
       gl.uniform1f(u.uPlyn, aktywny ? 1 : 0);
-      tex2(2, aktywny ? fbo.tusz.a.t : tex.zero, u.uTusz); tex2(3, aktywny ? fbo.v.a.t : tex.zero, u.uV);
+      tex2(2, aktywny ? fbo.tusz.a.t : tex.zero, u.uTusz);
       rysujDo(null);
       if (!gotowe) { gotowe = true; requestAnimationFrame(function () { hero.classList.add('gl-on'); }); }
     }

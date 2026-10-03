@@ -70,6 +70,38 @@
     return gsap.fromTo(s.lines, { yPercent: 118 }, { yPercent: 0, duration: o.duration || 1.15, ease: 'ebl',
       stagger: o.stagger || .1, delay: o.delay || 0, onComplete: function () { s.revert(); } });
   }
+  /* SILNIKI-2 #5: bloki odsłaniają wielkie nagłówki (Lando): na każdą linię blok rośnie od lewej (scaleX 0→1, .45 s
+     power3.inOut, co .08 s), w chwili pełnego bloku pojawia się tekst, blok chowa się w prawo (1→0, .6 s expo.inOut,
+     co .1 s). Blok różowe złoto #D4A49A na granacie, granat #0A142C na lnie. Raz; podział cofany po animacji. */
+  var BLOK = { rosnie: .45, co1: .08, znika: .6, co2: .1 };
+  function bloki(el, o) {
+    o = o || {};
+    var s = SplitText.create(el, { type: 'lines', linesClass: 'ebl-linia blok-linia', reduceWhiteSpace: false });
+    el.classList.remove('czeka');
+    /* na lnie granat; #monika wchodzi jeszcze w nocy (SILNIKI-2 #6), wtedy blok w różowym złocie */
+    var noc = el.closest('section') && el.closest('section').querySelector(':scope > .monika-noc');
+    var naLnie = !!el.closest('.jasna') && !(noc && +getComputedStyle(noc).opacity > .5);
+    var kol = naLnie ? '#0A142C' : '#D4A49A', teksty = [], bl = [];
+    s.lines.forEach(function (l) {
+      var t = document.createElement('span'); t.className = 'blok-tekst';
+      while (l.firstChild) t.appendChild(l.firstChild);
+      var b = document.createElement('span'); b.className = 'blok'; b.setAttribute('aria-hidden', 'true'); b.style.background = kol;
+      var w = document.createElement('span'); w.className = 'blok-ramka'; w.appendChild(t); w.appendChild(b); l.appendChild(w);
+      teksty.push(t); bl.push(b);
+    });
+    gsap.set(teksty, { opacity: 0 }); gsap.set(bl, { scaleX: 0, transformOrigin: '0% 50%' });
+    var tl = gsap.timeline({ delay: o.delay || 0, onComplete: function () { s.revert(); if (o.koniec) o.koniec(); } });
+    bl.forEach(function (b, i) {
+      var t0 = i * BLOK.co1, t1 = BLOK.rosnie + i * BLOK.co2;
+      tl.to(b, { scaleX: 1, duration: BLOK.rosnie, ease: 'power3.inOut' }, t0)
+        .set(teksty[i], { opacity: 1 }, t0 + BLOK.rosnie)
+        .set(b, { transformOrigin: '100% 50%' }, Math.max(t0 + BLOK.rosnie, t1))
+        .to(b, { scaleX: 0, duration: BLOK.znika, ease: 'expo.inOut' }, Math.max(t0 + BLOK.rosnie, t1));
+    });
+    return tl;
+  }
+  window.EBL_BLOKI = bloki;   /* js/petardy.js: tytuły paneli w torze (EMS, Cryolipolyse, Première visite) */
+
   function wytrzyj(el, d) {
     el.classList.remove('czeka');
     var srodek = getComputedStyle(el).justifyContent === 'center';
@@ -98,6 +130,7 @@
         return;
       }
       if (o.rodzaj === 'linie') linie(el, { delay: d });
+      else if (o.rodzaj === 'bloki') bloki(el, { delay: d });
       else if (o.rodzaj === 'etykieta') wytrzyj(el, d);
       else if (o.rodzaj === 'obraz') gsap.to(el, { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, duration: 1.4, delay: d, ease: 'ebl', clearProps: 'clipPath,transform' });
       else if (o.rodzaj === 'podpis') rysuj(el, { delay: .35 + d, duration: 2.2 });
@@ -218,8 +251,18 @@
 
   H.classList.add('ruch-js');
 
-  /* ---------- kurtyna ---------- */
+  /* ---------- kurtyna (SILNIKI-2 #2, 03.10.2026; pomiar na wideo: do treści 5,3 s, 1,8 s stało gotowe logo, 415 ms puste
+     kółko, a okno pokazywało pusty granat). Teraz jak okno logo u Lando, razem ok. 2,0 s od startu skryptu:
+     0–0,9 s   logo buduje się od dołu jak pasek postępu (jjettas), pod nim jego cień w 12% jasności;
+     do 1,2 s  postój (≤ 0,3 s); logo stoi DOKŁADNIE nad twarzą Moniki z pierwszego ekranu (komputer), więc
+     1,2 s     w medalionie otwiera się okno i od pierwszej klatki widać przez nie twarz (żywe płótno js/gl.js);
+     1,55 s    okno razem z obręczą logo rośnie 0,45 s expo.in do skali ≥ 30 (bez pustego kółka i bez pauzy);
+     1,9 s     H1 rusza 0,1 s przed końcem okna. Telefon: logo na środku, ten sam rytm (efekty telefonu bez zmian).
+     Bezpiecznik: najpóźniej po 4 s kurtyny nie ma (bez skryptu gaśnie po 4 s z CSS). */
   var poKurtynie = Promise.resolve();
+  var KURT = { buduj: .9, okno: 1.2, otworz: .3, rosnie: .45, skala: 30, h1: .1 };
+  var LOGO_KOLO = { x: .520, y: .410, r: .400 };   /* medalion Moniki w kapeluszu (03.10.2026 wieczór): wnętrze złotej obręczy na 600×770 */
+  var TWARZ = { x: .55, y: .27 };
   function zdejmij() {
     if (!kurtyna) return; kurtyna.remove(); kurtyna = null; kurtynaTrwa = false;
     H.classList.remove('kurtyna-on', 'k-okno-on', 'k-tlo'); if (lenis) lenis.start();
@@ -227,73 +270,82 @@
   if (kurtyna && H.classList.contains('kurtyna-on')) {
     kurtynaTrwa = true; if (lenis) lenis.stop();
     var otwarta; poKurtynie = new Promise(function (r) { otwarta = r; });
-    setTimeout(function () { zdejmij(); otwarta(); }, 6000);   /* bezpiecznik: najpóźniej po 6 s kurtyny nie ma */
+    setTimeout(function () { zdejmij(); otwarta(); }, 4000);   /* bezpiecznik: najpóźniej po 4 s kurtyny nie ma */
     try { sessionStorage.setItem('ebl-kurtyna', '1'); } catch (e) {}
     try {
-      /* znak: napis (litery spod maski) albo obraz logo (cały spod maski .k-znak); bez celu GSAP sypał ostrzeżeniami */
-      var znak = Q('.k-znak span', kurtyna) || Q('.k-znak img', kurtyna), pod = Q('.k-pod span', kurtyna), kl = Q('.k-linia', kurtyna),
-          gora = Q('.k-gora', kurtyna), dol = Q('.k-dol', kurtyna),
-          sz = { chars: !znak ? [] : znak.tagName === 'SPAN' ? SplitText.create(znak, { type: 'chars', mask: 'chars', aria: 'none' }).chars : [znak] };
+      var znak = Q('.k-znak img', kurtyna), pod = Q('.k-pod span', kurtyna), kl = Q('.k-linia', kurtyna);
+      if (!znak) throw new Error('brak logo');
+      przyTwarzy(znak);
+      /* cień logo (12%, bez koloru) = „pusty pasek”, który logo wypełnia od dołu */
+      var cien = znak.cloneNode(); cien.className = 'k-cien'; cien.alt = ''; znak.parentNode.insertBefore(cien, znak);
       gsap.timeline()
-        .fromTo(sz.chars, { yPercent: 118 }, { yPercent: 0, duration: 1.05, ease: 'ebl', stagger: .035 }, .1)
-        .fromTo(kl, { scaleX: 0 }, { scaleX: 1, duration: 1.3, ease: 'ebl-io' }, .25)
-        .fromTo(pod, { yPercent: -118 }, { yPercent: 0, duration: .8, ease: 'ebl' }, .8);
-      var czcionkiK = Promise.race([(document.fonts && document.fonts.ready) || Promise.resolve(), new Promise(function (r) { setTimeout(r, 1500); })]);
-      Promise.all([czcionkiK, new Promise(function (r) { setTimeout(r, 1900); })]).then(function () {
+        .fromTo(znak, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: KURT.buduj, ease: 'power2.inOut' }, 0)
+        .fromTo(kl, { scaleX: 0 }, { scaleX: 1, duration: KURT.buduj, ease: 'ebl-io' }, .1)
+        .fromTo(pod, { yPercent: -118 }, { yPercent: 0, duration: .6, ease: 'ebl' }, .3);
+      gsap.delayedCall(KURT.okno, function () {
         if (!kurtyna) return;
-        if (znak && znak.tagName === 'IMG') { try { okno(znak, pod, kl); } catch (e) { zdejmij(); otwarta(); } return; }
-        gsap.timeline({ onComplete: zdejmij })
-          .to(sz.chars, { yPercent: -118, duration: .42, ease: 'power3.in', stagger: .015 }, 0)
-          .to(pod, { yPercent: -118, duration: .36, ease: 'power3.in' }, 0)
-          .to(kl, { scaleX: 2.4, opacity: 0, duration: 1.1, ease: 'ebl-io' }, .4)
-          .to(gora, { yPercent: -100, duration: 1.2, ease: 'ebl-io' }, .58)
-          .to(dol, { yPercent: 100, duration: 1.2, ease: 'ebl-io' }, .58)
-          .add(function () { kurtynaTrwa = false; otwarta(); }, .9);
+        try { okno(znak, cien, pod, kl); } catch (e) { zdejmij(); otwarta(); }
       });
     } catch (e) { zdejmij(); otwarta(); }
   } else if (kurtyna) { kurtyna.remove(); kurtyna = null; H.classList.remove('kurtyna-on'); }
 
-  /* Okno logo (Lando, SILNIKI #3): koło medalionu z damą otwiera się jak przesłona i staje się oknem na falę
-     pierwszego ekranu (maska kurtyny z dziurą w kształcie koła), potem okno z różowozłotą obręczą rośnie do pełnego
-     ekranu (krzywa „cover”, 1,25 s; telefon ok. 0,9 s). Logo nie jest przerysowane: znika spod maski, obręcz to kreska CSS.
+  /* logo nad twarzą Moniki (komputer): przesunięcie całej kompozycji kurtyny (logo, linia, podpis), żeby środek medalionu
+     wypadł na środku owalu twarzy z img/monika-rys-hero.webp (te same ułamki co owal twarzy w js/gl.js: .55 / .27) */
+  function przyTwarzy(img) {
+    if (innerWidth <= 900 || !monH || !monH.offsetWidth || !hero) return;
+    var hr = hero.getBoundingClientRect(), b = img.getBoundingClientRect(); if (!b.width) return;
+    var fx = hr.left + monH.offsetLeft + monH.offsetWidth * TWARZ.x, fy = hr.top + monH.offsetTop + monH.offsetHeight * TWARZ.y;
+    var dx = fx - (b.left + b.width * LOGO_KOLO.x), dy = fy - (b.top + b.height * LOGO_KOLO.y);
+    if (fy - b.height * LOGO_KOLO.y < 8) dy += 8 - (fy - b.height * LOGO_KOLO.y);   /* logo nie wychodzi nad ekran */
+    kurtyna.style.setProperty('--kdx', dx.toFixed(1) + 'px'); kurtyna.style.setProperty('--kdy', dy.toFixed(1) + 'px');
+    kurtyna.classList.add('k-przy-twarzy');
+  }
+
+  /* Okno logo (Lando): wnętrze medalionu staje się oknem na pierwszy ekran (maska kurtyny z dziurą w kształcie koła),
+     a potem okno razem z obręczą logo rośnie do pełnego ekranu krzywą expo.in (0,45 s; telefon tak samo).
+     Logo nie jest przerysowane: obręcz to ten sam obraz w skali okna.
      LOGO_KOLO: środek i promień wnętrza koła w img/logo-dama-zlota.webp (ułamki szerokości/wysokości obrazu). */
-  var LOGO_KOLO = { x: .520, y: .410, r: .400 };   /* medalion Moniki w kapeluszu (03.10.2026 wieczór): wnętrze złotej obręczy na 600×770 */
-  function okno(img, pod, kl) {
+  function okno(img, cien, pod, kl) {
     var b = img.getBoundingClientRect();
     if (!b.width) throw new Error('brak logo');
     var ox = b.left + b.width * LOGO_KOLO.x, oy = b.top + b.height * LOGO_KOLO.y, r0 = b.width * LOGO_KOLO.r;
     var rMax = Math.hypot(Math.max(ox, innerWidth - ox), Math.max(oy, innerHeight - oy)) + 6;
-    var k = innerWidth <= 900 ? .72 : 1, m = { r: 0 };
-    var obr = document.createElement('span'); obr.className = 'k-obrecz'; kurtyna.appendChild(obr);
+    var rK = Math.max(rMax, r0 * KURT.skala), m = { r: 0 };
     kurtyna.style.setProperty('--ox', ox.toFixed(1) + 'px'); kurtyna.style.setProperty('--oy', oy.toFixed(1) + 'px');
-    obr.style.left = ox + 'px'; obr.style.top = oy + 'px';
-    var ustaw = function () {
-      kurtyna.style.setProperty('--or', m.r.toFixed(1) + 'px');
-      obr.style.width = obr.style.height = (2 * m.r + 4).toFixed(1) + 'px';
-    };
+    var ustaw = function () { kurtyna.style.setProperty('--or', m.r.toFixed(1) + 'px'); };
     ustaw(); kurtyna.classList.add('k-okno'); H.classList.add('k-okno-on', 'k-tlo');
+    gsap.set([img, cien], { transformOrigin: (LOGO_KOLO.x * 100) + '% ' + (LOGO_KOLO.y * 100) + '%' });
+    var t1 = KURT.otworz, t2 = KURT.otworz + KURT.rosnie;
     gsap.timeline({ onComplete: zdejmij })
-      .to(pod, { yPercent: -118, duration: .36, ease: 'power3.in' }, 0)
-      .to(kl, { scaleX: 0, opacity: 0, duration: .6, ease: 'ebl-io' }, 0)
-      .to(m, { r: r0, duration: .8 * k, ease: 'reveal', onUpdate: ustaw }, .1)
-      .to(obr, { opacity: 1, duration: .35, ease: 'ui' }, .4 * k)
-      .to(img, { opacity: 0, duration: .4, ease: 'ui' }, .72 * k)
-      .to(m, { r: rMax, duration: 1.25 * k, ease: 'cover', onUpdate: ustaw }, .95 * k)
-      .to(obr, { opacity: 0, duration: .5 * k, ease: 'ui' }, 1.6 * k)
-      .add(function () { H.classList.remove('k-okno-on'); }, 1.3 * k)
-      .add(function () { kurtynaTrwa = false; otwarta(); }, 1.5 * k);
+      .to([pod, kl], { opacity: 0, duration: .25, ease: 'ui' }, 0)
+      .to(cien, { opacity: 0, duration: .2, ease: 'ui' }, 0)
+      .to(m, { r: r0, duration: KURT.otworz, ease: 'power2.out', onUpdate: ustaw }, 0)
+      .to(m, { r: rK, duration: KURT.rosnie, ease: 'expo.in', onUpdate: function () {
+        ustaw(); gsap.set(img, { scale: Math.max(1, m.r / r0) });
+      } }, t1)
+      .to(img, { opacity: 0, duration: KURT.rosnie * .45, ease: 'power2.in' }, t1 + KURT.rosnie * .55)
+      .add(function () { H.classList.remove('k-okno-on'); }, t1 + KURT.rosnie * .5)
+      .add(function () { kurtynaTrwa = false; otwarta(); }, t2 - KURT.h1);
   }
 
   function czcionki(ms) { return Promise.race([(document.fonts && document.fonts.ready) || Promise.resolve(), new Promise(function (r) { setTimeout(r, ms); })]); }
   Promise.all([poKurtynie, czcionki(1200)]).then(function () {
+    /* js/gl.js: przelot światła przez Monikę (SILNIKI-2 #10) rusza po kurtynie */
+    window.EBL_PO_KURTYNIE = true;
+    try { document.dispatchEvent(new CustomEvent('ebl:po-kurtynie')); } catch (e) {}
     if (heroEt) wytrzyj(heroEt);
-    if (h1) linie(h1, { duration: 1.3, stagger: .12, delay: .1 });
+    if (h1) linie(h1, { duration: 1.2, stagger: .1, delay: 0 });
     if (lead) { lead.classList.remove('czeka'); gsap.fromTo(lead, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 1.1, delay: .45, ease: 'ebl', clearProps: 'opacity,transform' }); }
     if (podpisH) rysuj(podpisH, { delay: .5, duration: 2.6 });
   });
 
   /* ---------- nagłówki, etykiety, akapity, zdjęcia ---------- */
-  kolejka('main > section:not(.hero) h2', 'linie', 'top 88%');
+  /* wielkie nagłówki sekcji na komputerze: bloki (SILNIKI-2 #5, start 'top 80%'); reszta i telefon: linie spod maski */
+  var H2_BLOKI = 'h2.h-blok';   /* index.html: „Comment se passe la première visite”, karta, Monika, pytania, „Prendre rendez-vous” */
+  if (matchMedia(KOMPUTER).matches) {
+    kolejka(QA('main > section:not(.hero) h2').filter(function (h) { return !h.matches(H2_BLOKI); }), 'linie', 'top 88%');
+    kolejka(H2_BLOKI, 'bloki', 'top 80%');
+  } else kolejka('main > section:not(.hero) h2', 'linie', 'top 88%');
   /* etykieta manifestu w teleporcie wchodzi razem z manifestem po drugiej stronie portalu (js/petardy.js) */
   kolejka('main > section:not(.hero) .etykieta:not(.portal-druga .etykieta)', 'etykieta', 'top 92%');
   kolejka('.cytat', 'akapit', 'top 90%', 30);   /* cudzysłowy z CSS: bez podziału na linie */
@@ -334,27 +386,48 @@
     gsap.fromTo('.duo-r', { xPercent: -6 }, { xPercent: 6, ease: 'none', scrollTrigger: { trigger: duo, start: 'top bottom', end: 'bottom 20%', scrub: true } });
     gsap.fromTo('.duo-kreska', { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: duo, start: 'top 85%', end: 'top 40%', scrub: true } });
   }
-  gsap.fromTo('#visite .kula', { yPercent: -38, scale: .78, opacity: .55 }, { yPercent: -60, scale: 1.08, opacity: 1, ease: 'none',
-    scrollTrigger: { trigger: '#visite', start: 'top bottom', end: 'bottom top', scrub: true } });
+  /* kula światła: telefon jak dotąd (płynie z przewijaniem); komputer: SILNIKI-2 #13 (Orchid) większa kula prowadzona
+     głowicą linii kroków (niżej, rysujK) */
+  var kula = Q('#visite .kula'), kulaX = null, kulaY = null, kulaOn = false;
+  if (kula) mm.add({ pc: KOMPUTER, tel: TELEFON }, function (c) {
+    if (c.conditions.tel) {
+      gsap.fromTo(kula, { yPercent: -38, scale: .78, opacity: .55 }, { yPercent: -60, scale: 1.08, opacity: 1, ease: 'none',
+        scrollTrigger: { trigger: '#visite', start: 'top bottom', end: 'bottom top', scrub: true } });
+      return;
+    }
+    kula.classList.add('kula-glowa'); kulaOn = true; gsap.set(kula, { xPercent: -50, yPercent: -50 });   /* środek kuli = głowica */
+    kulaX = gsap.quickTo(kula, 'x', { duration: .8, ease: 'power3.out' }); kulaY = gsap.quickTo(kula, 'y', { duration: .8, ease: 'power3.out' });
+    if (window.EBL_KULA) window.EBL_KULA();
+    return function () { kulaOn = false; kulaX = kulaY = null; kula.classList.remove('kula-glowa'); gsap.set(kula, { clearProps: 'transform' }); kula.style.removeProperty('--kp'); };
+  });
   kolejka('#visite .kroki li', 'akapit', 'top 92%', 80);
 
   /* Linia przez kroki wizyty ze świecącą głowicą (Orchid „How it works”, SILNIKI #16): różowozłota linia rysuje się
      scrubem, głowica świeci na jej końcu, krok zapala się (numer w złocie 24K), gdy głowica go mija.
      Cztery kroki w rzędzie: linia pozioma nad kartami; dwie kolumny i telefon: pionowa wzdłuż lewej krawędzi kart. */
-  var kroki = Q('#visite .kroki');
+  var kroki = Q('#visite .kroki'), wiz0 = Q('#visite');
   if (kroki) {
     var krokiLi = QA('li', kroki), progi = [], stanK = { p: 0 };
+    var kOff = [0, 0], kWym = [0, 0], kPion = false;
     var mierzK = function () {
       var pion = krokiLi.length > 1 && krokiLi[1].offsetTop !== krokiLi[0].offsetTop;
-      kroki.classList.toggle('pion', pion);
+      kroki.classList.toggle('pion', pion); kPion = pion;
+      var wr = wiz0 && wiz0.getBoundingClientRect(), kr = kroki.getBoundingClientRect();
+      if (wr) { kOff = [kr.left - wr.left, kr.top - wr.top]; kWym = [kr.width, kr.height]; }
       var dl = (pion ? kroki.offsetHeight : kroki.offsetWidth) || 1;
       progi = krokiLi.map(function (li) { return ((pion ? li.offsetTop : li.offsetLeft) + 12) / dl; });
     };
     var rysujK = function () {
       kroki.style.setProperty('--kp', stanK.p.toFixed(4));
+      /* kula idzie za głowicą linii (quickTo .8 s = scrub .8), kolor różowe złoto → kość słoniowa (--kp w CSS) */
+      if (kulaOn && kulaX) {
+        kulaX(kOff[0] + (kPion ? 0 : stanK.p * kWym[0])); kulaY(kOff[1] + (kPion ? stanK.p * kWym[1] : -22));
+        kula.style.setProperty('--kp', stanK.p.toFixed(3));
+      }
       krokiLi.forEach(function (li, i) { li.classList.toggle('zapalony', stanK.p >= progi[i]); });
     };
     kroki.classList.add('z-linia'); mierzK(); rysujK();
+    window.EBL_KULA = function () { mierzK(); rysujK(); };
     gsap.to(stanK, { p: 1, ease: 'none', onUpdate: rysujK,
       scrollTrigger: { trigger: kroki, start: SCRUB.start, end: SCRUB.end, scrub: SCRUB.scrub, onRefresh: function () { mierzK(); rysujK(); } } });
   }
@@ -376,6 +449,23 @@
       ScrollTrigger.removeEventListener('refreshInit', ust);
       mon.classList.remove('skos'); wiz.classList.remove('pod-skosem');
       ['--skos-o', '--sl', '--sr'].forEach(function (v) { mon.style.removeProperty(v); wiz.style.removeProperty(v); });
+    };
+  });
+
+  /* SILNIKI-2 #6 (Lando: tło zmienia kolor w trakcie przewijania): #monika wchodzi w granacie i na 60 vh przechodzi w len
+     (krzywa „editorial”, scrub .6), tekst w tym samym odcinku z kości słoniowej #F6F0E4 do swojego koloru na lnie
+     (#1E1A1C). Warstwa nocy .monika-noc leży pod treścią; skośna krawędź z różowozłotą linią zostaje. Tylko komputer. */
+  if (mon) mm.add(KOMPUTER, function () {
+    var noc = document.createElement('div'); noc.className = 'monika-noc'; noc.setAttribute('aria-hidden', 'true');
+    mon.insertBefore(noc, mon.firstChild); mon.classList.add('z-noca');
+    var tx = QA('#monika h2, #monika .cytat p, #monika .monika-tekst > p:not(.etykieta)');
+    var kol = tx.map(function (e) { return getComputedStyle(e).color; });
+    var st = { trigger: mon, start: 'top 88%', end: function () { return '+=' + Math.round(innerHeight * .6); }, scrub: SCRUB.scrub, invalidateOnRefresh: true };
+    var t1 = gsap.fromTo(noc, { opacity: 1 }, { opacity: 0, ease: 'editorial', scrollTrigger: st });
+    var t2 = tx.map(function (e, i) { return gsap.fromTo(e, { color: '#F6F0E4' }, { color: kol[i], ease: 'editorial', scrollTrigger: Object.assign({}, st) }); });
+    return function () {
+      [t1].concat(t2).forEach(function (t) { if (t.scrollTrigger) t.scrollTrigger.kill(); t.kill(); });
+      gsap.set(tx, { clearProps: 'color' }); noc.remove(); mon.classList.remove('z-noca');
     };
   });
 

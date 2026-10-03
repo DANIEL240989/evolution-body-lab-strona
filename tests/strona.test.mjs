@@ -61,7 +61,7 @@ test('ruch: ograniczony ruch i brak bibliotek = nic nie ukryte, bezpieczniki cza
   assert.match(ruch, /if \(!ok\) \{ H\.classList\.remove\('ruch', 'kurtyna-on'\)/);
   assert.match(css, /html\.kurtyna-on:not\(\.ruch-js\) \.kurtyna \{ animation: kurtyna-awaryjna \.5s 4s forwards/);
   assert.match(css, /html\.ruch:not\(\.ruch-js\)[^{]+\{ opacity: 0; animation: ruch-awaryjnie \.01s 3s forwards/);
-  assert.match(ruch, /setTimeout\(function \(\) \{ zdejmij\(\); otwarta\(\); \}, 6000\)/);
+  assert.match(ruch, /setTimeout\(function \(\) \{ zdejmij\(\); otwarta\(\); \}, 4000\)/);   // SILNIKI-2 #2: kurtyna ≤ 4 s
 });
 
 test('plakietka „Image de synthèse” przy obrazach AI, zdjęcie Moniki bez plakietki', () => {
@@ -148,7 +148,7 @@ test('granat zamiast kamienia (03.10.2026): obrazy kamienia nie są ładowane, p
   // shader pierwszego ekranu: tło liczone, przygaszenie na twarzy Moniki
   const gl = kod('js/gl.js');
   assert.match(gl, /vec3 tlo\(vec2 q\)/);
-  assert.match(gl, /float tw=1\.-\.92\*fa;/);
+  assert.match(gl, /float poza=ma\*\(1\.-fa\);/);                             // SILNIKI-2: płyn i przelot światła omijają twarz
 });
 
 test('Monika wycięta na końcu strony: prawdziwe zdjęcie bez plakietki, pliki pod stałymi nazwami', () => {

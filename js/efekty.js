@@ -5,14 +5,14 @@
       „Voir”, nad renderem w torze „Réserver” (klik = przycisk panelu), nad torem „Glisser”, nad medalionami soczewka
       (rozjaśnia), nad linkami rośnie. Przyciski pill przyciągają się do kursora (±10 px, power3.out). W kontakcie
       (#contact, kreator) i nad polami formularza pierścień znika, kursor zostaje natywny.
-   2. Przejście kolorem (Lando): klik myszą w menu / „Prendre rendez-vous” → granatowa zasłona z różowozłotą krawędzią
-      rośnie elipsą od miejsca kliknięcia (.75 s, cubic-bezier(.65,.05,0,1)), w środku medalion logo; pod zasłoną skok
-      do celu (Lenis immediate), potem zasłona zwija się w górę (.45 s). Razem 1,2 s; Esc albo klik przerywa.
+   2. Przejście medalionem (Lando, SILNIKI-2 #11): klik myszą w menu / „Prendre rendez-vous” → granatowe koło z różowozłotą
+      krawędzią rośnie od środka (.4 s expo.in), w środku medalion logo; pod zasłoną skok do celu (Lenis immediate),
+      potem w medalionie otwiera się okno na nowe miejsce (.33 s expo.out). Razem ≤ .9 s; Esc albo klik przerywa.
    3. Złoty pył WebGL: kilkaset punktów (jedno wywołanie gl.POINTS, ruch liczony w shaderze wierzchołków) w trzech
       głębiach, addytywnie; pierwszy ekran (w ramce .hero-fala, nad twarzą Moniki prawie nic) i teleport (pył leci na
       kamerę razem z przewijaniem). Mysz odpycha, przewijanie przesuwa warstwy wg głębi.
-   4. Połysk złota na nagłówkach H2 po wejściu (linie spod maski robi ruch.js) i liczniki cen w cenniku (0 → cena
-      z js/dane.js, 1,2 s, power2.out) z połyskiem.
+   4. Połysk złota na nagłówkach H2 po wejściu (linie spod maski robi ruch.js) i na cenach w cenniku. Ceny stoją od
+      razu (SILNIKI-2: licznik od zera wyłączony, „cena jak wygrana”).
    5. Cele krążą wokół tytułu (Orchid): 4 karty na orbicie 3D, obrót z przewijaniem, pauza po najechaniu.
    6. „Première | visite” rozsypuje się w złote kropki i składa przy przewijaniu (jjettas), napis wchodzi skośną maską.
    7. Medaliony i logo: połysk złota przesuwa się po obręczy (maska ze złotych pikseli obrazu + gradient);
@@ -112,22 +112,28 @@
     };
   });
 
-  /* ================================================================ 2. PRZEJŚCIE KOLOREM (ZASŁONA-ELIPSA) */
+  /* ================================================================ 2. PRZEJŚCIE MEDALIONEM (SILNIKI-2 #11) */
+  /* Lando zakrywa ekran znakiem „4” i odkrywa nową stronę tym samym znakiem. U nas znak marki to medalion (koło z obręczą
+     różowego złota): klik myszą w menu / stopkę / przycisk z kotwicą → granatowy medalion rośnie od środka ekranu
+     (skala .2 → 40 średnicy znaku, .4 s expo.in), w środku logo; pod zasłoną skok Lenisa do celu; potem w medalionie
+     otwiera się okno na nowe miejsce (.33 s expo.out). Razem ≤ .9 s (było: elipsa 1,2 s). Esc albo klik przerywa. */
+  var ZASL = { znak: 75, od: .2, do: 40, zakryj: .4, odkryj: .33, przerwa: .06 };
   mm.add(KOMPUTER, function () {
     var z = document.createElement('div'); z.className = 'zaslona'; z.setAttribute('aria-hidden', 'true');
-    z.innerHTML = '<span class="zaslona-poswiata"></span><span class="zaslona-brzeg"></span><span class="zaslona-tlo"></span>' +
+    z.innerHTML = '<span class="zaslona-brzeg"></span><span class="zaslona-tlo"></span><span class="zaslona-okno"></span>' +
       '<span class="zaslona-znak"><img src="img/logo-dama-zlota.webp" width="600" height="770" alt="" decoding="async"></span>';
     document.body.appendChild(z);
-    var znak = Q('.zaslona-znak', z), stanZ = { x: 0, y: 0, r: 0 }, tl = null, skok = null, bezpiecznik = 0;
-    var EX = 1.22;   /* elipsa: szersza niż wyższa */
+    var znak = Q('.zaslona-znak', z), stanZ = { r: 0, o: 0 }, tl = null, skok = null, bezpiecznik = 0;
     function rysuj() {
-      z.style.setProperty('--zx', stanZ.x.toFixed(1) + 'px'); z.style.setProperty('--zy', stanZ.y.toFixed(1) + 'px');
-      z.style.setProperty('--zr', Math.max(0, stanZ.r).toFixed(1) + 'px'); z.style.setProperty('--ze', Math.max(0, stanZ.r * EX).toFixed(1) + 'px');
+      z.style.setProperty('--zr', Math.max(0, stanZ.r).toFixed(1) + 'px');
+      z.style.setProperty('--zo', Math.max(0, stanZ.o).toFixed(1) + 'px');
+      z.classList.toggle('okno', stanZ.o > .5);
     }
     function koniec() {
       clearTimeout(bezpiecznik); if (tl) { tl.kill(); tl = null; }
       if (skok) { var s = skok; skok = null; s(); }
       z.classList.remove('jest'); H.classList.remove('zaslona-on'); gsap.set(znak, { clearProps: 'all' }); z.style.opacity = '';
+      stanZ.r = stanZ.o = 0; rysuj();
       W.removeEventListener('keydown', klawisz, true); W.removeEventListener('pointerdown', przerwij, true);
     }
     function przerwij() { if (!tl) return; tl.kill(); tl = null; if (skok) { var s = skok; skok = null; s(); } gsap.to(z, { opacity: 0, duration: .2, ease: 'power1.out', onComplete: koniec }); }
@@ -140,9 +146,8 @@
       var h = a.getAttribute('href'), c = cel(h); if (!c) return;
       e.preventDefault();
       if (tl) { przerwij(); return; }   /* ponowny klik w trakcie: od razu do celu */
-      var x = e.clientX || innerWidth / 2, y = e.clientY || innerHeight / 2;
-      var R = Math.hypot(Math.max(x, innerWidth - x) / EX, Math.max(y, innerHeight - y)) + 40;
-      stanZ.x = x; stanZ.y = y; stanZ.r = 0; rysuj();
+      var R = Math.hypot(innerWidth, innerHeight) / 2 + 8, r0 = ZASL.znak, rMax = Math.max(R, r0 * ZASL.do);
+      stanZ.r = r0 * ZASL.od; stanZ.o = 0; rysuj();
       z.classList.add('jest'); H.classList.add('zaslona-on'); stat.zaslona++;
       skok = function () {
         if (location.hash !== h) history.pushState(null, '', h);
@@ -151,13 +156,14 @@
         ScrollTrigger.update();
       };
       W.addEventListener('keydown', klawisz, true); W.addEventListener('pointerdown', przerwij, true);
+      var t1 = ZASL.zakryj + ZASL.przerwa;
       tl = gsap.timeline({ onComplete: koniec })
-        .to(stanZ, { r: R, duration: .75, ease: W.CustomEase ? 'zaslona' : 'power3.inOut', onUpdate: rysuj }, 0)
-        .fromTo(znak, { opacity: 0, scale: .82, yPercent: 8 }, { opacity: 1, scale: 1, yPercent: 0, duration: .34, ease: 'power3.out' }, .38)
-        .add(function () { if (skok) { var s = skok; skok = null; s(); } }, .75)
-        .to(stanZ, { x: innerWidth / 2, y: -innerHeight * .18, r: 0, duration: .45, ease: 'power3.inOut', onUpdate: rysuj }, .75)
-        .to(znak, { opacity: 0, yPercent: -40, scale: 1.04, duration: .28, ease: 'power2.in' }, .75);
-      bezpiecznik = setTimeout(koniec, 1600);   /* nigdy nie blokuje dłużej niż 1,6 s */
+        .to(stanZ, { r: rMax, duration: ZASL.zakryj, ease: 'expo.in', onUpdate: rysuj }, 0)
+        .fromTo(znak, { opacity: 0, scale: .86 }, { opacity: 1, scale: 1, duration: .16, ease: 'power3.out' }, ZASL.zakryj - .12)
+        .add(function () { if (skok) { var s = skok; skok = null; s(); } }, ZASL.zakryj)
+        .to(stanZ, { o: R + 4, duration: ZASL.odkryj, ease: 'expo.out', onUpdate: rysuj }, t1)
+        .to(znak, { opacity: 0, scale: 1.12, duration: .14, ease: 'power2.in' }, t1);
+      bezpiecznik = setTimeout(koniec, 1200);   /* nigdy nie blokuje dłużej niż 1,2 s */
     }
     document.addEventListener('click', klik, true);   /* faza przechwytywania: przed płynnym przejazdem z ruch.js */
     return function () { document.removeEventListener('click', klik, true); koniec(); z.remove(); };
@@ -317,24 +323,13 @@
         })();
       } }));
     });
-    /* ceny w cenniku: od 0 do ceny z js/dane.js (1,2 s, power2.out), potem połysk */
-    var D = W.EBL || {}, ceny = [];
-    (D.zabiegi || []).forEach(function (z) { (z.ceny || [{ cena: z.cena }]).forEach(function (c) { ceny.push(c.cena); }); });
-    var el = QA('#cennik .cennik-cena'), oryg = el.map(function (e) { return e.textContent; });
-    var fmt = function (n) { try { return new Intl.NumberFormat(H.lang || 'fr').format(n); } catch (e) { return String(n); } };
-    if (el.length && el.length === ceny.length) {
-      var szablon = function (i, n) { return oryg[i].replace(/\d[\d\s  .,]*\d|\d/, fmt(n)); };
-      el.forEach(function (e, i) { if (e.getBoundingClientRect().top > innerHeight) e.textContent = szablon(i, 0); });
-      st.push(ScrollTrigger.create({ trigger: '#cennik', start: 'top 82%', once: true, onEnter: function () {
-        el.forEach(function (e, i) {
-          var o = { n: 0 }; e.classList.add('licznik');
-          gsap.to(o, { n: ceny[i], duration: 1.2, delay: .12 * i, ease: 'power2.out',
-            onUpdate: function () { e.textContent = szablon(i, Math.round(o.n)); },
-            onComplete: function () { e.textContent = oryg[i]; e.classList.remove('licznik'); blysk(e, false); stat.ceny++; } });
-        });
-      } }));
-    }
-    return function () { st.forEach(function (s) { s.kill(); }); el.forEach(function (e, i) { e.textContent = oryg[i]; e.classList.remove('licznik'); }); };
+    /* ceny w cenniku stoją od razu (SILNIKI-2: licznik od zera wyłączony, „cena jak wygrana”); po wejściu w kadr
+       przelatuje po nich tylko połysk złota, co .12 s */
+    var el = QA('#cennik .cennik-cena');
+    if (el.length) st.push(ScrollTrigger.create({ trigger: '#cennik', start: 'top 82%', once: true, onEnter: function () {
+      el.forEach(function (e, i) { setTimeout(function () { blysk(e, false); stat.ceny++; }, 120 * i); });
+    } }));
+    return function () { st.forEach(function (s) { s.kill(); }); };
   });
 
   /* ================================================================ 5. CELE NA ORBICIE WOKÓŁ TYTUŁU */
@@ -358,9 +353,9 @@
         var o = wr[i].style;
         o.transform = 'translate(-50%, -50%) translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) perspective(900px) rotateY(' + (-Math.sin(a) * 24).toFixed(2) + 'deg) scale(' + s.toFixed(4) + ')';
         /* z tyłu i za tytułem prawie znika: tytuł i etykieta zawsze czytelne */
-        o.opacity = ((.32 + .68 * Math.pow(p, 1.3)) * (zz < 0 ? 1 - .7 * Math.pow(1 - Math.abs(Math.sin(a)), 1.5) : 1)).toFixed(3);
+        o.opacity = ((.5 + .5 * Math.pow(p, 1.3)) * (zz < 0 ? 1 - .55 * Math.pow(1 - Math.abs(Math.sin(a)), 1.5) : 1)).toFixed(3);
         o.zIndex = zz > 0 ? 3 : 1;
-        o.filter = p < .5 ? 'blur(' + ((.5 - p) * 3.2).toFixed(2) + 'px)' : '';
+        o.filter = p < .5 ? 'blur(' + ((.5 - p) * 2).toFixed(2) + 'px)' : '';
         wr[i].classList.toggle('z-przodu', p > .82);
       }
     }

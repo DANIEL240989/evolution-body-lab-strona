@@ -112,7 +112,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
         <p class="etykieta" data-t="soins_label"></p>
         <h2 data-t="soins_titre"></h2>
       </div>
-      <p class="tor3-licznik" aria-hidden="true"><span class="tor3-nr"><span class="tor3-nr-akt">01</span></span><span class="tor3-z">/ 03</span></p>
+      <p class="tor3-licznik" aria-hidden="true"><span class="tor3-nr"><span class="tor3-nr-akt">01</span></span><span class="tor3-z">/ 02</span></p>
       <div class="tor3-tasma">
         <div class="karty" id="karty-zabiegow"></div>
         <article class="panel panel-wizyta" data-zabieg="visite">
@@ -126,7 +126,8 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
             <span class="plakietka" data-t="image_synthese"></span>
           </div>
           <div class="panel-tresc">
-            <span class="panel-nr">03</span>
+            <!-- zamknięcie toru, nie trzeci zabieg (biznesplan: dwa zabiegi): bez numeru i bez udziału w liczniku -->
+            <p class="panel-nad" data-t="tor_3_nad"></p>
             <h3 class="panel-tytul" data-t="visite_label"></h3>
             <p class="panel-opis" data-t="soins_fin"></p>
             <p class="panel-cena panel-meta" data-t="visite_pratique"></p>
@@ -144,7 +145,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
   <section class="noc" id="tarifs">
     <div class="tarifs-glowa">
       <p class="etykieta" data-t="tarifs_label"></p>
-      <h2 data-t="tarifs_titre"></h2>
+      <h2 class="h-blok" data-t="tarifs_titre"></h2>
     </div>
     <div class="cennik" id="cennik"></div>
     <div class="tarifs-dol">
@@ -169,7 +170,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
     </figure>
     <div class="visite-naglowek">
       <p class="etykieta" data-t="visite_label"></p>
-      <h2 data-t="visite_titre"></h2>
+      <h2 class="h-blok" data-t="visite_titre"></h2>
     </div>
     <ol class="kroki">
       <li><span class="nr">01</span><h3 data-t="v1_t"></h3><p data-t="v1_d"></p></li>
@@ -191,7 +192,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
       </figure>
       <div class="monika-tekst">
         <p class="etykieta" data-t="monika_label"></p>
-        <h2 data-t="monika_titre"></h2>
+        <h2 class="h-blok" data-t="monika_titre"></h2>
         <blockquote class="cytat"><p data-t="monika_citation"></p></blockquote>
         <p data-t="monika_txt"></p>
         <p class="info ciemna" data-t="monika_langues"></p>
@@ -203,7 +204,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
     <div class="faq-uklad">
       <div class="faq-glowa">
         <p class="etykieta" data-t="faq_label"></p>
-        <h2 data-t="faq_titre"></h2>
+        <h2 class="h-blok" data-t="faq_titre"></h2>
         <figure class="ilustracja ilustracja-czarny">
           <div class="ilustracja-obraz">
             <img src="img/ilustracje/dama-czarny-kapelusz-600.webp" srcset="img/ilustracje/dama-czarny-kapelusz-600.webp 600w, img/ilustracje/dama-czarny-kapelusz-900.webp 900w"
@@ -224,7 +225,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
 
   <section class="noc" id="contact">
     <p class="etykieta" data-t="contact_label"></p>
-    <h2 data-t="contact_titre"></h2>
+    <h2 class="h-blok" data-t="contact_titre"></h2>
     <p class="lead" data-t="rdv_lead"></p>
     <div class="rdv-uklad">
     <div class="rdv" id="rdv">
@@ -380,5 +381,6 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
 <script src="js/gl.js"></script>
 <script src="js/petardy.js"></script>
 <script src="js/efekty.js"></script>
+<script src="js/silnik2.js"></script>
 </body>
 </html>
