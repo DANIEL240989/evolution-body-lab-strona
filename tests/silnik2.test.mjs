@@ -84,7 +84,7 @@ test('#6–#8 orbita jaśniejsza, #monika z granatu w len, pętle wideo RTX z we
   assert.match(ruch, /noc\.className = 'monika-noc'/);
   assert.match(ruch, /color: '#F6F0E4' \}, \{ color: kol\[i\], ease: 'editorial'/);
   assert.match(ruch, /innerHeight \* \.6/);
-  for (const f of ['krio-mgla.mp4', 'krio-mgla-plakat.webp', 'kabina-swiatlo.mp4', 'kabina-swiatlo-plakat.webp']) {
+  for (const f of ['ems-petla.mp4', 'ems-petla-plakat.webp', 'krio-petla.mp4', 'krio-petla-plakat.webp', 'kabina-petla.mp4', 'kabina-petla-plakat.webp']) {
     assert.ok(existsSync(new URL('../img/rtx/' + f, import.meta.url)), f); assert.match(pet, new RegExp(f.replace('.', '\\.')));
   }
   assert.match(pet, /muted loop playsinline preload="none"/);

@@ -319,12 +319,16 @@
     /* SILNIKI-2 #7 i #8 (jjettas: wideo jest wszędzie): pętle wideo z RTX w panelach 02 i 03 jako ekran obok renderu;
        wejście jak włączenie starego telewizora (kreska → pas → obraz, błysk), raz na panel; wideo pobierane dopiero przy
        panelu, gra tylko w kadrze; plakat = pierwsza klatka; plakietka „Image de synthèse”. */
-    var WIDEO = { cryo: { src: 'img/rtx/krio-mgla.mp4', plakat: 'img/rtx/krio-mgla-plakat.webp' },
-                  visite: { src: 'img/rtx/kabina-swiatlo.mp4', plakat: 'img/rtx/kabina-swiatlo-plakat.webp' } };
+    /* pętle z RTX 03.10.2026 (Wan 2.2 na RTX 5080, 12 wersji, wybrane 3): EMS = światło na złotych krawędziach,
+       krio = para z aplikatorów, kabina = powolny najazd kamery; odtwarzane tam i z powrotem, więc bez skoku na szwie.
+       pion: urządzenie stoi wąsko w kadrze 16:9, więc ekran pionowy 3:4 (boki przycięte), żeby nie było małej kopii renderu */
+    var WIDEO = { ems: { src: 'img/rtx/ems-petla.mp4', plakat: 'img/rtx/ems-petla-plakat.webp', pion: true },
+                  cryo: { src: 'img/rtx/krio-petla.mp4', plakat: 'img/rtx/krio-petla-plakat.webp', pion: true },
+                  visite: { src: 'img/rtx/kabina-petla.mp4', plakat: 'img/rtx/kabina-petla-plakat.webp' } };
     var ekrany = [], wlaczone = [];
     cz.forEach(function (c, i) {
       var wd = WIDEO[c.p.getAttribute('data-zabieg')]; if (!wd) return;
-      var f = document.createElement('figure'); f.className = 'panel-ekran'; f.setAttribute('aria-hidden', 'true');
+      var f = document.createElement('figure'); f.className = 'panel-ekran' + (wd.pion ? ' ekran-pion' : ''); f.setAttribute('aria-hidden', 'true');
       f.innerHTML = '<span class="panel-ekran-obraz"><video muted loop playsinline preload="none" disablepictureinpicture width="1280" height="704"></video></span>' +
         '<span class="plakietka"></span>';
       var v = Q('video', f); v.poster = wd.plakat; v.muted = true;
