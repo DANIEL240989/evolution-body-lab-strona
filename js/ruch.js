@@ -250,7 +250,7 @@
      pierwszego ekranu (maska kurtyny z dziurą w kształcie koła), potem okno z różowozłotą obręczą rośnie do pełnego
      ekranu (krzywa „cover”, 1,25 s; telefon ok. 0,9 s). Logo nie jest przerysowane: znika spod maski, obręcz to kreska CSS.
      LOGO_KOLO: środek i promień wnętrza koła w img/logo-dama-zlota.webp (ułamki szerokości/wysokości obrazu). */
-  var LOGO_KOLO = { x: .530, y: .399, r: .413 };   /* medalion Moniki z czarnym kołem (4dc3f95): środek czarnego dysku 318×307 px, r = 248 px na 600×770 (tuż wewnątrz złotej obręczy) */
+  var LOGO_KOLO = { x: .520, y: .410, r: .400 };   /* medalion Moniki w kapeluszu (03.10.2026 wieczór): wnętrze złotej obręczy na 600×770 */
   function okno(img, pod, kl) {
     var b = img.getBoundingClientRect();
     if (!b.width) throw new Error('brak logo');

@@ -90,5 +90,5 @@ test('pierwszy ekran: Monika narysowana na granacie, bez plakietki, mapa głębi
   for (const f of ['img/monika-rys.webp', 'img/monika-rys-hero.webp', 'img/monika-rys-hero-2048.webp', 'img/rtx/ems-urzadzenie-2000.webp', 'img/rtx/krio-urzadzenie-2000.webp', 'img/rtx/kabina-daniel-2880.webp', 'img/rtx/witryna-2880.webp', 'img/glebia/monika-rys-glebia.webp', 'narzedzia/monika_hero.py']) assert.ok(jest(f), f);
   assert.ok(gl.includes("'img/monika-rys-hero-2048.webp' : 'img/monika-rys-hero.webp'), 'img/glebia/monika-rys-glebia.webp'"));   // HD z mastera 8K na dużych ekranach
   assert.match(pal, /\.hero-imie, \.hero-monika \{ display: none; \}/);     // telefon bez zmian
-  assert.match(ruch, /var LOGO_KOLO = \{ x: \.530, y: \.399, r: \.413 \}/);   // okno kurtyny w obręczy nowego logo
+  assert.match(ruch, /var LOGO_KOLO = \{ x: \.520, y: \.410, r: \.400 \}/);   // okno kurtyny w obręczy nowego logo
 });
