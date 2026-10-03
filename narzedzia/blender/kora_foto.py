@@ -89,14 +89,18 @@ w_pek = M('MULTIPLY', M('SUBTRACT', 1.0, zakres(pole, 0.0, 1.6)), M('LESS_THAN',
 zywica = M('MAXIMUM', M('LESS_THAN', pole, 0.0), w_pek, clamp=True)
 # różowe złoto: cienka obwódka tam, gdzie żywica spotyka drewno
 obw = M('SUBTRACT', M('MAXIMUM', M('LESS_THAN', pole, 0.11), M('MULTIPLY', M('SUBTRACT', 1.0, zakres(pole, 0.0, 1.7)), M('LESS_THAN', dw, 0.36)), clamp=True), zywica)
-zloto = M('MAXIMUM', obw, 0.0, clamp=True)
+# kintsugi: różowe złoto w najgłębszych pęknięciach drewna, tylko w części desek
+kz_maska = node('ShaderNodeTexNoise'); kz_maska.inputs['Scale'].default_value = 0.5; L.new(ob, kz_maska.inputs['Vector'])
+kintsugi = M('MULTIPLY', M('LESS_THAN', dw, 0.2), M('GREATER_THAN', kz_maska.outputs['Fac'], 0.5))
+kintsugi = M('MULTIPLY', kintsugi, M('SUBTRACT', 1.0, zywica))
+zloto = M('MAXIMUM', obw, kintsugi, clamp=True)
 
 # drewno: skan odbarwiony do grafitu ze srebrnymi grzbietami (jak wzór), bez brązu
 hs = node('ShaderNodeHueSaturation'); hs.inputs['Saturation'].default_value = 0.06; hs.inputs['Value'].default_value = 1.25
 L.new(t_diff.outputs['Color'], hs.inputs['Color'])
 bc = node('ShaderNodeBrightContrast'); bc.inputs['Bright'].default_value = 0.0; bc.inputs['Contrast'].default_value = 0.22
 L.new(hs.outputs['Color'], bc.inputs['Color'])
-chl = node('ShaderNodeMix', data_type='RGBA', blend_type='MULTIPLY'); chl.inputs['Factor'].default_value = 0.35
+chl = node('ShaderNodeMix', data_type='RGBA', blend_type='MULTIPLY'); chl.inputs['Factor'].default_value = 0.55
 L.new(bc.outputs['Color'], chl.inputs['A']); chl.inputs['B'].default_value = lin('#B8C4D6')
 drewno = node('ShaderNodeBsdfPrincipled'); L.new(chl.outputs['Result'], drewno.inputs['Base Color'])
 if t_rough: L.new(t_rough.outputs['Color'], drewno.inputs['Roughness'])
@@ -105,7 +109,7 @@ nmap = node('ShaderNodeNormalMap'); nmap.inputs['Strength'].default_value = 1.4;
 L.new(nmap.outputs['Normal'], drewno.inputs['Normal'])
 
 # czysty błękit: gładka, lana żywica, głęboki lazur z lekkim przejściem, połysk lakieru
-gb = node('ShaderNodeTexNoise'); gb.inputs['Scale'].default_value = 0.45; gb.inputs['Detail'].default_value = 4; L.new(ob, gb.inputs['Vector'])
+gb = node('ShaderNodeTexNoise'); gb.inputs['Scale'].default_value = 0.3; gb.inputs['Detail'].default_value = 1; L.new(ob, gb.inputs['Vector'])
 rb = node('ShaderNodeValToRGB'); e = rb.color_ramp.elements
 e[0].position, e[0].color = 0.25, lin('#06307E'); e[1].position, e[1].color = 0.75, lin('#2A86E8')
 gl_b = M('ADD', M('MULTIPLY', gb.outputs['Fac'], 0.6), M('MULTIPLY', zakres(pole, -2.5, 0.0), 0.5))
@@ -123,7 +127,7 @@ m2 = node('ShaderNodeMixShader'); L.new(zloto, m2.inputs[0]); L.new(m1.outputs[0
 
 # wysokość: drewno ze skanu, żywica wylana płasko poniżej grzbietów drewna (cień krawędzi pada na błękit)
 wys = node('ShaderNodeMix', data_type='FLOAT'); L.new(zywica, wys.inputs['Factor'])
-L.new(dw, wys.inputs['A']); wys.inputs['B'].default_value = 0.42
+L.new(M('ADD', dw, M('MULTIPLY', zloto, 0.12)), wys.inputs['A']); wys.inputs['B'].default_value = 0.42
 disp = node('ShaderNodeDisplacement'); disp.inputs['Scale'].default_value = 0.16; disp.inputs['Midlevel'].default_value = 0.5
 L.new(wys.outputs['Result'], disp.inputs['Height'])
 out = node('ShaderNodeOutputMaterial'); L.new(m2.outputs[0], out.inputs['Surface']); L.new(disp.outputs[0], out.inputs['Displacement'])
@@ -136,6 +140,7 @@ def lampa(nazwa, loc, rot, moc, rozm, kol):
 lampa('klucz', (-5, 5, 5), (-45, 0, 225), 1800, 6, lin('#EEF2F8'))      # miękkie, z lewej góry
 lampa('kontra', (8, 1, 1.4), (80, 0, 100), 2200, 1.5, lin('#FFE0D2'))   # nisko z prawej: relief drewna i blik złota
 lampa('wypelnienie', (0, -6, 4), (55, 0, 0), 220, 8, lin('#9FB8E8'))
+lampa('zlota_krawedz', (-6, -0.5, 1.2), (80, 0, -95), 1400, 1.2, lin('#FFE6DA'))   # nisko z lewej: blik na złotej krawędzi
 
 kd = bpy.data.cameras.new('kam'); kd.lens = 65; kd.dof.use_dof = True; kd.dof.aperture_fstop = 4.0
 ko = bpy.data.objects.new('kam', kd); sc.collection.objects.link(ko); sc.camera = ko
