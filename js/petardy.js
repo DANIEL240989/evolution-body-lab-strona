@@ -62,9 +62,12 @@
     'float an=e*e*.55;vec2 pr=mat2(cos(an),-sin(an),sin(an),cos(an))*(px-uOff*(1.-sm(0.,.5,t1)));' +
     'vec2 F=mix(vec2(.5),uFok,sm(0.,.55,t1));float k=.18+1.9*e;' +
     'vec2 par=(uMysz*.016+vec2(sin(uCzas*.23),cos(uCzas*.19))*.0025)*(1.-t1);' +
-    'vec2 q=pr/uS;vec2 uv=F+q/Z;for(int i=0;i<3;i++){float d=glb(uv);uv=F+q/(Z*(1.+k*(d-.5)))+par*(d-.45);}' +
+    'vec2 q=pr/uS;vec2 uv=F+q/Z;' +
+    /* twarz Moniki (owal w medalionie, liczony bez głębi): płaska warstwa, bez rozciągania głębią, rozmycia i rozszczepienia */
+    'float fm=sm(1.35,.95,length((uv-vec2(.53,.30))/vec2(.2,.25)));' +
+    'for(int i=0;i<3;i++){float d=mix(glb(uv),.5,fm);uv=F+q/(Z*(1.+k*(d-.5)))+par*(d-.45)*(1.-fm);}' +
     /* rozmycie promieniste wokół punktu ogniskowego + rozszczepienie barw */
-    'float bl=.5*sm(.3,.62,p)*(1.-sm(.62,.66,p));float ca=.012*sm(.25,.6,p)+.004*sm(.0,.3,p);' +
+    'float bl=.5*sm(.3,.62,p)*(1.-sm(.62,.66,p))*(1.-fm);float ca=(.012*sm(.25,.6,p)+.004*sm(.0,.3,p))*(1.-fm);' +
     'vec3 acc=vec3(0.);float aa=0.;float n=0.;' +
     'for(int i=0;i<20;i++){if(float(i)>=uN)break;float f=1.-bl*float(i)/max(uN,1.);vec2 d=(uv-F)*f;' +
     'vec4 cr=med(F+d*(1.+ca)),cg=med(F+d),cb=med(F+d*(1.-ca));acc+=vec3(cr.r,cg.g,cb.b);aa+=cg.a;n+=1.;}' +
@@ -273,7 +276,27 @@
       return { p: p, wolna: !im, img: im || Q('.panel-obraz > .kadr', p) || Q('.panel-obraz .urzadzenie:not(.urzadzenie-obok)', p) ||
         Q('.panel-obraz .zastep', p), obok: Q('.panel-obraz .urzadzenie-obok', p), plak: Q('.panel-obraz .plakietka', p), tyt: Q('.panel-tytul', p), nr: Q('.panel-nr', p), d: QA('.panel-opis, .panel-cena, .panel-cta', p) };
     });
-    function szer() { vw = tScena.clientWidth || innerWidth; tor.style.setProperty('--vw', vw + 'px'); }
+    function szer() { vw = tScena.clientWidth || innerWidth; tor.style.setProperty('--vw', vw + 'px'); dopasuj(); }
+    /* Numer i tytuł panelu nigdy na nagłówku sekcji (Daniel 03.10.2026: „01” i „03” wchodziły na „Chaque soin et son prix”
+       przy innej wysokości okna). Treść panelu zaczyna się pod nagłówkiem i licznikiem (+28 px); jeśli się nie mieści,
+       tytuł i numer maleją (do 45%), zamiast wychodzić w górę. Działa dla każdej wysokości okna. */
+    var glowaEl = Q('.tor3-glowa', tScena), licznikEl = Q('.tor3-licznik', tScena);
+    function dopasuj() {
+      var gora = 0;
+      [glowaEl, licznikEl].forEach(function (e) { if (e && e.offsetHeight) gora = Math.max(gora, e.offsetTop + e.offsetHeight); });
+      tor.style.setProperty('--tor-gora', Math.round(gora + 28) + 'px');
+      panele.forEach(function (p) {
+        var tr = Q('.panel-tresc', p), ty = Q('.panel-tytul', p), nr = Q('.panel-nr', p); if (!tr || !ty) return;
+        ty.style.fontSize = ''; if (nr) nr.style.fontSize = '';
+        for (var k = 0; k < 3; k++) {
+          var nad = tr.scrollHeight - tr.clientHeight; if (nad <= 1) break;
+          var fs = parseFloat(getComputedStyle(ty).fontSize), h = ty.offsetHeight + (nr ? nr.offsetHeight : 0);
+          var f = Math.max(.45, (h - nad - 4) / h);
+          ty.style.fontSize = (fs * f).toFixed(1) + 'px';
+          if (nr) nr.style.fontSize = (parseFloat(getComputedStyle(nr).fontSize) * f).toFixed(1) + 'px';
+        }
+      });
+    }
     szer();
     function rysuj() {
       var x = stan.x;
@@ -326,7 +349,8 @@
     rysuj();
     return function () {
       gsap.ticker.remove(tik);
-      tor.classList.remove('tor-on'); tor.style.removeProperty('--vw');
+      tor.classList.remove('tor-on'); tor.style.removeProperty('--vw'); tor.style.removeProperty('--tor-gora');
+      panele.forEach(function (p) { ['.panel-tytul', '.panel-nr'].forEach(function (s) { var e = Q(s, p); if (e) e.style.fontSize = ''; }); });
       tasma.style.transform = '';
       cz.forEach(function (c) {
         [c.img, c.obok, c.plak].forEach(function (el) { if (el) el.style.opacity = ''; });

@@ -47,6 +47,7 @@
     /* lerp .14 i wheelMultiplier .8 (jjettas .16/.72): krótszy „ogon” niż dawne .09, strona nie przejeżdża celu */
     lenis = new Lenis({ lerp: .14, wheelMultiplier: .8, smoothWheel: true, allowNestedScroll: true, stopInertiaOnNavigate: true });
     lenis.on('scroll', ScrollTrigger.update);
+    window.EBL_LENIS = lenis;   /* js/efekty.js: przejście kolorem skacze do celu pod zasłoną */
     gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
     gsap.ticker.lagSmoothing(0);
     /* link do sekcji kliknięty myszą: płynny przejazd; z klawiatury zwykły skok */
@@ -156,7 +157,13 @@
     st.setProperty('--pr', Math.max(Math.max(16, (W - 1180) / 2), lewa + 12).toFixed(1) + 'px');
     st.setProperty('--pb', Math.max(14, dol + 12).toFixed(1) + 'px');
     /* Monika (komputer) przesuwa się do środka ramki, gdy ekran kurczy się w ramkę (jak portret u Lando) */
-    if (monH && monH.offsetWidth) st.setProperty('--msx', (W / 2 - (monH.offsetLeft + monH.offsetWidth / 2)).toFixed(1) + 'px');
+    /* kadr na twarz, nie na środek obrazu: twarz (ok. 58% szerokości obrazu) na osi ramki, czubek głowy z zapasem 6% wysokości
+       pod górną krawędzią ramki (--mty: cel dla js/gl.js; --msy: przesunięcie warstwy DOM bez WebGL) */
+    if (monH && monH.offsetWidth) {
+      st.setProperty('--msx', (W / 2 - (monH.offsetLeft + monH.offsetWidth * .58)).toFixed(1) + 'px');
+      var mty = fy + Hh * .06 * p;
+      st.setProperty('--mty', mty.toFixed(1) + 'px'); st.setProperty('--msy', Math.max(0, mty - monH.offsetTop).toFixed(1) + 'px');
+    }
     if (o.rzedy && pasN) {
       var ps = pasN.style;
       ps.setProperty('--ml', lewa.toFixed(1) + 'px'); ps.setProperty('--mr', (W - lewa).toFixed(1) + 'px'); ps.setProperty('--ma', (1 - p).toFixed(3));
@@ -169,7 +176,7 @@
   }
   function bezRamy() {
     hero.classList.remove('hero-rama');
-    ['--fx', '--fy', '--fr', '--fs', '--fp', '--pr', '--pb', '--msx'].forEach(function (v) { hero.style.removeProperty(v); });
+    ['--fx', '--fy', '--fr', '--fs', '--fp', '--pr', '--pb', '--msx', '--mty', '--msy'].forEach(function (v) { hero.style.removeProperty(v); });
     if (pasN) ['--ml', '--mr', '--ma', '--pas-y'].forEach(function (v) { pasN.style.removeProperty(v); });
     if (tresc) { tresc.style.opacity = ''; tresc.style.transform = ''; }
   }

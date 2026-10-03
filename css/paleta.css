@@ -322,7 +322,7 @@ html.k-tlo body { background-color: var(--noc); }   /* do końca kurtyny: spod p
     font: 500 clamp(120px, 15.5vw, 280px)/.8 var(--szeryf); text-transform: uppercase; letter-spacing: -.02em; color: rgba(212, 164, 154, .16); }
   .hero-monika { display: block; position: absolute; bottom: 0; right: max(2vw, calc((100% - var(--szer)) / 2 - 60px)); height: 93%; width: auto;
     max-width: none; filter: drop-shadow(0 0 60px rgba(2, 3, 6, .6)); }
-  .hero.hero-rama .hero-monika { transform: translateX(calc(var(--fp, 0) * var(--msx, 0px))); }
+  .hero.hero-rama .hero-monika { transform: translate(calc(var(--fp, 0) * var(--msx, 0px)), var(--msy, 0px)); }
   .hero.gl-on.gl-postac .hero-imie, .hero.gl-on.gl-postac .hero-monika { visibility: hidden; }
   /* tekst po lewej czyta się na czerni także tam, gdzie postać jest blisko */
   .hero-tresc { text-shadow: 0 2px 24px rgba(2, 3, 6, .7); }
@@ -572,3 +572,130 @@ main p, .stopka p { text-wrap: pretty; }
 .schodki .st-t { bottom: calc(var(--h, 100%) - clamp(78px, 9.4vh, 100px)); font: 500 clamp(11px, .9vw, 14px)/1 var(--bez);
   letter-spacing: .26em; text-transform: uppercase; color: var(--mocno, #F3EEE4); }
 .schodki i:nth-child(6) .st-t { color: #F3D47A; }
+
+/* =====================================================================================================================
+   ULTRA (js/efekty.js, 03.10.2026; Daniel: „dawaj ultra bilionerskie efekty”). TYLKO komputer: wszystkie klasy dodaje
+   skrypt w (min-width: 901px) bez ograniczonego ruchu; telefon i bez skryptu: nic się nie zmienia. Kolory: granat,
+   biel, złoto 24K tylko na wypełnieniach i liczbach, różowe złoto na obrysach i kreskach. */
+
+/* ---------- 1. kursor-soczewka: pierścień różowego złota (opóźnienie quickTo .5 s), słowo w środku nad celami ---------- */
+.kursor { position: fixed; left: 0; top: 0; z-index: 9500; width: 0; height: 0; pointer-events: none; }
+.kursor-krag { position: absolute; left: -17px; top: -17px; width: 34px; height: 34px; border-radius: 50%; box-sizing: border-box;
+  border: 1px solid rgba(212, 164, 154, .85); background: rgba(10, 20, 44, 0);
+  box-shadow: 0 0 14px -4px rgba(212, 164, 154, .55);
+  transition: transform .55s var(--e-reveal), background-color .4s var(--e-ui), border-color .4s var(--e-ui), opacity .3s var(--e-ui),
+    -webkit-backdrop-filter .4s var(--e-ui), backdrop-filter .4s var(--e-ui); }
+.kursor-slowo { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%) scale(.6); opacity: 0; white-space: nowrap;
+  font: 600 11px/1 var(--bez); letter-spacing: .2em; text-transform: uppercase; color: #F6F0E4; padding-left: .2em;
+  transition: opacity .3s var(--e-ui), transform .5s var(--e-reveal); }
+.kursor[data-stan="ukryty"] .kursor-krag { opacity: 0; transform: scale(.4); }
+.kursor[data-stan="link"] .kursor-krag { transform: scale(1.45); border-color: #F1C9BE; }
+.kursor[data-stan="przycisk"] .kursor-krag { transform: scale(.26); background-color: #FBE7A1; border-color: #FBE7A1; }
+.kursor[data-stan="slowo"] .kursor-krag { transform: scale(2.7); background-color: rgba(10, 20, 44, .62); border-color: var(--rz);
+  -webkit-backdrop-filter: blur(6px) saturate(1.2); backdrop-filter: blur(6px) saturate(1.2); }
+.kursor[data-stan="slowo"] .kursor-slowo { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.kursor[data-stan="soczewka"] .kursor-krag { transform: scale(3.4); border-color: rgba(251, 231, 161, .7);
+  -webkit-backdrop-filter: brightness(1.16) saturate(1.18) contrast(1.04); backdrop-filter: brightness(1.16) saturate(1.18) contrast(1.04); }
+/* natywny kursor znika tylko tam, gdzie złote kółko pokazuje słowo; w kontakcie i nad polami zostaje */
+html.kursor-on .cel, html.kursor-on #soins.tor-on .tor3-scena, html.kursor-on #soins.tor-on .panel-obraz { cursor: none; }
+html.kursor-on #soins.tor-on .tor3-scena a, html.kursor-on #soins.tor-on .tor3-scena button { cursor: pointer; }
+/* tor: puste miejsca nad renderem przepuszczają kursor do obrazu (klik = przycisk panelu); przyciski zostają klikalne */
+html.kursor-on #soins.tor-on .panel-tresc { pointer-events: none; }
+html.kursor-on #soins.tor-on .panel-cta { pointer-events: auto; }
+.pill { will-change: auto; }
+
+/* ---------- 2. przejście kolorem: zasłona-elipsa od miejsca kliknięcia, różowozłota krawędź, medalion logo ---------- */
+.zaslona { position: fixed; inset: 0; z-index: 9400; pointer-events: none; visibility: hidden; }
+.zaslona.jest { visibility: visible; }
+.zaslona > span { position: absolute; inset: 0; display: block; }
+.zaslona-poswiata { background: radial-gradient(ellipse var(--ze, 0px) var(--zr, 0px) at var(--zx, 50%) var(--zy, 50%),
+  rgba(212, 164, 154, 0) calc(var(--ze, 0px) - 2px), rgba(251, 231, 161, .34) var(--ze, 0px), rgba(212, 164, 154, .12) calc(var(--ze, 0px) + 26px),
+  rgba(212, 164, 154, 0) calc(var(--ze, 0px) + 70px)); }
+.zaslona-brzeg { clip-path: ellipse(var(--ze, 0px) var(--zr, 0px) at var(--zx, 50%) var(--zy, 50%));
+  background: linear-gradient(115deg, #D4A49A 0%, #F1C9BE 30%, #FBE7A1 48%, #E3B547 58%, #D4A49A 80%); }
+.zaslona-tlo { clip-path: ellipse(max(0px, calc(var(--ze, 0px) - 2.5px)) max(0px, calc(var(--zr, 0px) - 2.5px)) at var(--zx, 50%) var(--zy, 50%));
+  background: var(--ziarno), radial-gradient(70% 70% at 50% 50%, var(--granat-swiatlo), var(--granat) 55%, var(--granat-gleboki)); }
+/* medalion logo: samo koło z obręczą (wycinek img/logo-dama-zlota.webp, środek .52/.41, promień obręczy ok. .47) */
+.zaslona-znak { left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important; width: 150px; height: 150px;
+  margin: -75px 0 0 -75px; border-radius: 50%; overflow: hidden; opacity: 0;
+  box-shadow: 0 0 0 1px rgba(212, 164, 154, .5), 0 0 60px -6px rgba(212, 164, 154, .45); }
+.zaslona-znak img { position: absolute; left: -8px; top: -9px; width: 160px; height: auto; max-width: none; }
+html.zaslona-on .kursor { visibility: hidden; }
+
+/* ---------- 3. złoty pył (WebGL): addytywnie, warstwa nad obrazem, pod treścią ---------- */
+.pyl { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; opacity: 0;
+  mix-blend-mode: screen; transition: opacity 1.4s var(--e-ui); }
+.pyl.pyl-on { opacity: 1; }
+.pyl-hero { z-index: 1; }
+.portal-on .pyl-portal { z-index: 1; }
+
+/* ---------- 4. połysk złota przesuwa się po napisie (nagłówki H2 po wejściu, ceny po liczniku) ---------- */
+@keyframes blysk-tekst { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+.blysk-tekst { --g1: #E3B547; --g2: #FBE7A1; --g3: #FFF8E4;
+  background-image: linear-gradient(100deg, var(--c, #fff) 0%, var(--c, #fff) 41%, var(--g1) 45.5%, var(--g2) 48%, var(--g3) 50%, var(--g2) 52%,
+    var(--g1) 54.5%, var(--c, #fff) 59%, var(--c, #fff) 100%);
+  background-size: 300% 100%; background-position: 100% 0; background-repeat: no-repeat;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: blysk-tekst 1.9s var(--e-editorial) forwards; }
+.blysk-tekst.blysk-ciemny { --g1: #8C6418; --g2: #B8892A; --g3: #D9A933; }
+.cennik-cena.licznik { font-variant-numeric: lining-nums tabular-nums; }
+
+/* ---------- 5. cele na orbicie 3D wokół tytułu (pin w js/efekty.js) ---------- */
+.cele.orbita { position: relative; height: 100vh; margin-top: 0; }
+.portal-on .cele.orbita { margin-top: 0; }
+.cele.orbita::before { content: ''; position: absolute; left: 50%; top: 56%; width: calc(2 * var(--orx, 400px)); height: calc(2 * var(--ory, 140px));
+  transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid rgba(212, 164, 154, .16); pointer-events: none;
+  box-shadow: 0 0 80px -30px rgba(212, 164, 154, .25), inset 0 0 80px -40px rgba(212, 164, 154, .2); }
+.orbita .cele-tytul { position: absolute; left: 50%; top: 44%; z-index: 2; width: min(780px, 80vw); margin: 0; transform: translate(-50%, -50%);
+  text-align: center; font-size: 0; letter-spacing: 0; pointer-events: none; }
+.orbita .cele-tytul span:first-child { display: block; font: 600 12px/1.4 var(--bez); letter-spacing: .3em; text-transform: uppercase; color: var(--rz); }
+.orbita .cele-tytul span:last-child { display: block; margin-top: 16px; font: 500 clamp(48px, 5.4vw, 92px)/1 var(--szeryf); letter-spacing: -.01em;
+  text-transform: none; color: #FFFFFF; text-shadow: 0 6px 50px rgba(5, 10, 23, .8); }
+.orbita .siatka4 { position: absolute; inset: 0; display: block; margin: 0; }
+.cel-orbita { position: absolute; left: 50%; top: 56%; width: clamp(240px, 20vw, 300px); will-change: transform, opacity; }
+.orbita .cel-orbita .cel { display: block; height: auto; padding: 24px 26px 26px; border: 1px solid rgba(212, 164, 154, .3); border-radius: 4px;
+  background: linear-gradient(160deg, rgba(24, 40, 82, .82), rgba(10, 20, 44, .78));
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .75), inset 0 1px 0 rgba(255, 255, 255, .05);
+  transition: border-color .4s var(--e-ui), box-shadow .5s var(--e-ui); }
+.orbita .cel-orbita.z-przodu .cel { border-color: rgba(212, 164, 154, .6); box-shadow: 0 34px 70px -30px rgba(0, 0, 0, .8), 0 0 50px -20px rgba(212, 164, 154, .35); }
+.orbita .cel-orbita .cel:hover, .orbita .cel-orbita .cel:focus-visible { border-color: var(--rz); }
+.orbita .cel h3 { margin: 10px 0 8px; }
+.orbita .cel .cel-nr { background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-size: 22px; }
+
+/* ---------- 6. „Première | visite” z kropek: płótno nad napisem, napis wchodzi skośną maską ---------- */
+#visite > canvas.kropki { position: absolute; left: 0; width: 100%; z-index: 2; pointer-events: none; display: block; }
+.duo.kropki-on .duo-l, .duo.kropki-on .duo-r { will-change: clip-path; }
+
+/* ---------- 7. połysk złota po obręczy medalionów i logo (maska ze złotych pikseli obrazu) ---------- */
+.z-obrecza { position: relative; }
+.obrecz-blysk { position: absolute; inset: 0; z-index: 2; display: block; pointer-events: none;
+  background: linear-gradient(118deg, rgba(255, 250, 236, 0) 38%, rgba(227, 181, 71, .35) 44%, rgba(251, 231, 161, .75) 47.5%, #FFFCF2 50%,
+    rgba(251, 231, 161, .75) 52.5%, rgba(227, 181, 71, .35) 56%, rgba(255, 250, 236, 0) 62%) 100% 100% / 320% 320% no-repeat;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  mix-blend-mode: plus-lighter; animation: obrecz-blysk 7s var(--e-editorial) infinite; animation-play-state: paused; }
+.obrecz-widac .obrecz-blysk { animation-play-state: running; }
+.logo-obraz .obrecz-blysk { animation-duration: 9s; animation-delay: 2.4s; opacity: .85; }
+.ilustracja-obraz .obrecz-blysk { border-radius: 0; }
+@keyframes obrecz-blysk { 0% { background-position: 100% 100%; } 42%, 100% { background-position: 0% 0%; } }
+
+/* ---------- 8. pas światła przed kontaktem: smuga różowe złoto → 24K po granacie, nad nią złota nić ---------- */
+#contact.z-pasem { isolation: isolate; }
+.pas-swiatla { position: absolute; left: 0; right: 0; top: 0; height: 64vh; z-index: -1; overflow: hidden; pointer-events: none; }
+.pas-smuga { position: absolute; left: -10%; width: 120%; top: -190px; height: 380px; display: block; mix-blend-mode: plus-lighter;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(251, 231, 161, .3) 0%, rgba(227, 181, 71, .16) 22%, rgba(212, 164, 154, .12) 44%, rgba(212, 164, 154, 0) 72%); }
+.pas-nic { position: absolute; left: 0; right: 0; top: 0; height: 1px; display: block;
+  background: linear-gradient(90deg, rgba(212, 164, 154, 0), rgba(212, 164, 154, .7) 28%, #FBE7A1 50%, rgba(212, 164, 154, .7) 72%, rgba(212, 164, 154, 0));
+  box-shadow: 0 0 18px 2px rgba(251, 231, 161, .35); }
+
+/* bezpieczniki: telefon i ograniczony ruch nigdy nie widzą warstw efektów (gdyby skrypt nie zdążył posprzątać) */
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .kursor, .zaslona, .pyl, .kropki, .obrecz-blysk, .pas-swiatla { display: none !important; }
+  html.kursor-on .cel, html.kursor-on #soins .tor3-scena, html.kursor-on #soins .panel-obraz { cursor: auto; }
+}
+
+/* ---------- tor: treść panelu zawsze pod nagłówkiem sekcji (--tor-gora liczy js/petardy.js), bez wychodzenia w górę ---------- */
+.tor-on .panel-tresc { top: var(--tor-gora, calc(var(--nav, 80px) + 120px)); justify-content: safe flex-end; }
+@media (min-width: 901px) and (max-height: 720px) {
+  .tor-on .panel-tresc { top: var(--tor-gora, calc(var(--nav, 80px) + 100px)); }
+}

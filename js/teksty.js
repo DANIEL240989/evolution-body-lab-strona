@@ -117,7 +117,9 @@ window.T = {
     rdv_mail_sujet: 'Demande de rendez-vous',
     footer_legal: 'Mentions légales', footer_siret: 'SIRET',
     footer_slogan: 'Chaque soin a sa *méthode*.',
-    footer_pages: 'Pages', footer_contact: 'Contact'
+    footer_pages: 'Pages', footer_contact: 'Contact',
+    // Kursor-soczewka (js/efekty.js, tylko komputer z myszą): słowo w złotym kółku nad kartami, torem i zdjęciami
+    kursor_voir: 'Voir', kursor_reserver: 'Réserver', kursor_glisser: 'Glisser'
   },
   en: {}, es: {}, pl: {}, ru: {}, de: {}
 };

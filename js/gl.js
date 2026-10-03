@@ -142,7 +142,10 @@
       'return mix(c,vec3(.984,.906,.631),smoothstep(.45,1.,x));}' +                                  /* 24K #FBE7A1 */
       'void main(){vec2 px=vec2(vUv.x,1.-vUv.y)*uRes;' +
       'gM=vec2(0.);gW=vec2(0.);float fa=0.,ma=0.;if(uMonOn>.5){vec2 qm0=.5*uRes+(px-.5*uRes)/(1.+uZoom*1.4);vec2 um0=(qm0-uMonK.xy)/uMonK.zw;' +
-      'float dm=texture2D(uMonGl,um0).r;gM=-uParM*(.55+.7*dm)/uMonK.zw;dm=texture2D(uMonGl,um0+gM).r;gM=-uParM*(.55+.7*dm)/uMonK.zw;gW=-uParW/uNapK.zw;' +
+      /* głowa i twarz (owal liczony PRZED przesunięciem, więc stały): cała postać przesuwa się jak jedna warstwa,
+         głębia działa tylko poza głową (włosy po bokach, ramiona) → twarz nigdy się nie rozciąga (Daniel 03.10.2026) */
+      'float gh=smoothstep(1.35,.9,length((um0-vec2(.55,.26))/vec2(.36,.34)));' +
+      'float dm=texture2D(uMonGl,um0).r;gM=-uParM*(.9+.4*(dm-.5)*(1.-gh))/uMonK.zw;dm=texture2D(uMonGl,um0+gM).r;gM=-uParM*(.9+.4*(dm-.5)*(1.-gh))/uMonK.zw;gW=-uParW/uNapK.zw;' +
       'vec2 uq=um0+gM;ma=texture2D(uMon,uq).a*wn(uq);fa=smoothstep(1.2,.72,length((uq-vec2(.52,.27))/vec2(.27,.25)));}' +
       'vec3 baza=kol(px);vec3 c=baza;' +
       'if(uPlyn>.5){vec4 tz=texture2D(uTusz,vUv);float m=smoothstep(.03,.6,tz.r);float kr=m*(1.-m)*4.;' +
@@ -166,14 +169,17 @@
       'c+=(hash(px+fract(uCzas*.37))-.5)*3./255.;gl_FragColor=vec4(c,1.);}',
 
     /* karty i medaliony: fala + rozejście kanałów RGB przy krawędziach (tekstury z premultiplikowaną alfą) */
-    karta: P + 'varying vec2 vUv;uniform sampler2D uImg;uniform vec2 uRes,uObr,uMysz;uniform float uWej,uNad,uCzas;' +
+    karta: P + 'varying vec2 vUv;uniform sampler2D uImg,uGl;uniform vec2 uRes,uObr,uMysz;uniform float uWej,uNad,uCzas,uMa;' +
       'void main(){vec2 p=vec2(vUv.x,1.-vUv.y);float ar=uRes.x/uRes.y,ai=uObr.x/uObr.y;vec2 sk=ar>ai?vec2(1.,ai/ar):vec2(ar/ai,1.);' +
       'vec2 uv=(p-.5)*sk+.5;' +
       'float a=uWej,t=uCzas;' +
       'vec2 f=vec2(sin(p.y*9.+t*2.1)+.6*sin(p.y*23.-t*3.3),sin(p.x*7.-t*1.7)+.5*sin(p.x*19.+t*2.6));' +
       'vec2 dsp=f*.011*a+vec2(0.,a*a*.05*sin(p.x*3.1416));' +
       'vec2 q=(p-uMysz)*vec2(ar,1.);float r=length(q);' +
-      'dsp+=(r>1e-4?q/r:vec2(0.))*sin(r*34.-t*5.5)*exp(-r*4.5)*.0065*uNad*sk;' +
+      'dsp+=(r>1e-4?q/r:vec2(0.))*sin(r*34.-t*5.5)*exp(-r*4.5)*.0065*uNad*sk*(1.-.75*uMa);' +
+      /* 2,5D z mapy głębi (medaliony, img/glebia/*-glebia.webp, jasne = blisko): bliskie warstwy idą za kursorem */
+      'vec2 pr=(uMysz-.5)*uNad*uMa*vec2(.05,.04);float dg=texture2D(uGl,uv).r;vec2 g=-pr*(dg-.42);' +
+      'dg=texture2D(uGl,uv+g).r;g=-pr*(dg-.42);dsp+=g;' +
       'float kr=smoothstep(.18,.72,length((p-.5)*vec2(1.,1./max(ar,.5))));' +
       'vec2 o=(vec2(.010,.004)*a+vec2(.0045,.0018)*uNad)*(.25+kr);' +
       'vec4 cr=texture2D(uImg,uv+dsp+o),cg=texture2D(uImg,uv+dsp),cb=texture2D(uImg,uv+dsp-o);' +
@@ -403,9 +409,13 @@
       gl.uniform1f(u.uZoom, przew * .07 + wjazd * .06); gl.uniform1f(u.uCzas, czas); gl.uniform1f(u.uRefr, REFR);
       /* Monika: większa paralaksa niż fala (bliżej kamery), przy przewijaniu unosi się szybciej; napis: mniejsza */
       gl.uniform1f(u.uMonOn, monOn ? 1 : 0);
-      var hs = hero.style, msx = (parseFloat(hs.getPropertyValue('--fp')) || 0) * (parseFloat(hs.getPropertyValue('--msx')) || 0);
-      gl.uniform4f(u.uMonK, monK[0] + msx, monK[1], monK[2], monK[3]); gl.uniform4f(u.uNapK, napK[0], napK[1], napK[2], napK[3]);
-      gl.uniform2f(u.uParM, (sx + dryfX * .6) * 30, (sy + dryfY * .6) * 18 - przew * 70);
+      var hs = hero.style, fp = parseFloat(hs.getPropertyValue('--fp')) || 0, msx = fp * (parseFloat(hs.getPropertyValue('--msx')) || 0);
+      /* ramka: czubek głowy ma stać z zapasem pod górną krawędzią ramki (--mty z js/ruch.js), z poprawką na zoom kamery */
+      var Zm = 1 + (przew * .07 + wjazd * .06) * 1.4, mty = parseFloat(hs.getPropertyValue('--mty'));
+      var msy = fp && !isNaN(mty) ? Math.max(0, (mty - cssH / 2) / Zm + cssH / 2 - monK[1]) : 0;
+      gl.uniform4f(u.uMonK, monK[0] + msx, monK[1] + msy, monK[2], monK[3]); gl.uniform4f(u.uNapK, napK[0], napK[1], napK[2], napK[3]);
+      /* bez unoszenia Moniki z przewijaniem: w ramce kadr ustawia js/ruch.js (--msy), głowa zawsze w ramce */
+      gl.uniform2f(u.uParM, (sx + dryfX * .6) * 22, (sy + dryfY * .6) * 13);
       gl.uniform2f(u.uParW, sx * 9, sy * 5 + przew * 40);
       tex2(4, tex.mon, u.uMon); tex2(5, tex.monGl, u.uMonGl); tex2(6, tex.nap, u.uNap);
       var aktywny = plyn && czasPlynu < 1e9;
@@ -480,9 +490,31 @@
     stat.karty = K.v2 ? 'webgl2' : 'webgl1';
     var stany = cele.map(function (el) {
       return { el: el, img: el.querySelector('img'), cv: null, ctx: null, t: null, w: 0, h: 0, wej: -1, nad: 0, nadCel: 0,
-               mx: .5, my: .5, akt: false, czas0: 0 };
+               mx: .5, my: .5, akt: false, czas0: 0, gl: null, glZr: glebia(el) };
     });
     function gotowy(s) { return s.img && s.img.complete && s.img.naturalWidth > 0; }
+    /* mapa głębi ilustracji marki (ta sama nazwa co obraz, wersja 900): 2,5D przy najechaniu; brak mapy = szary piksel */
+    function glebia(el) {
+      var i = el.querySelector('img'), m = i && /img\/ilustracje\/(dama-[a-z-]+?)-(?:600|900)\.webp/.exec(i.getAttribute('src') || '');
+      return m ? 'img/glebia/' + m[1] + '-900-glebia.webp' : null;
+    }
+    var szary = null;
+    function mapaGlebi(s) {
+      if (!szary) { szary = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, szary);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([107, 107, 107, 255])); }
+      if (s.gl || !s.glZr || s.glLad) return;
+      s.glLad = true;
+      obraz(s.glZr).then(function (im) {
+        if (gl.isContextLost()) return;
+        var t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im);
+        gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+        s.gl = t;
+      }, function () {});
+    }
     function przygotuj(s) {
       if (!s.cv) {
         s.cv = document.createElement('canvas'); s.cv.className = 'gl-plotno'; s.cv.setAttribute('aria-hidden', 'true');
@@ -504,7 +536,7 @@
     function wlacz(s) {
       if (!gotowy(s)) return;
       if (s.t && s.src !== s.img.currentSrc) { gl.deleteTexture(s.t); s.t = null; }
-      przygotuj(s);
+      przygotuj(s); mapaGlebi(s);
       if (!s.akt) { s.akt = true; aktywne.push(s); }
       if (!raf && !document.hidden) raf = requestAnimationFrame(petla);
     }
@@ -517,7 +549,9 @@
       gl.viewport(0, 0, s.w, s.h); gl.clear(gl.COLOR_BUFFER_BIT);
       gl.uniform2f(u.uRes, s.w, s.h); gl.uniform2f(u.uObr, s.img.naturalWidth, s.img.naturalHeight);
       gl.uniform2f(u.uMysz, s.mx, s.my); gl.uniform1f(u.uWej, a); gl.uniform1f(u.uNad, s.nad); gl.uniform1f(u.uCzas, czas);
-      gl.bindTexture(gl.TEXTURE_2D, s.t);
+      gl.uniform1f(u.uMa, s.gl ? 1 : 0);
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, s.gl || szary);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, s.t);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       if (s.img.style.transform !== s.cv.style.transform) s.cv.style.transform = s.img.style.transform;   /* tor poziomy (GSAP) */
       s.ctx.clearRect(0, 0, s.w, s.h);
@@ -527,7 +561,7 @@
     }
     function petla(t) {
       raf = 0;
-      gl.useProgram(pk.p); gl.activeTexture(gl.TEXTURE0); gl.uniform1i(pk.u.uImg, 0);
+      gl.useProgram(pk.p); gl.activeTexture(gl.TEXTURE0); gl.uniform1i(pk.u.uImg, 0); if (pk.u.uGl) gl.uniform1i(pk.u.uGl, 1);
       for (var i = aktywne.length - 1; i >= 0; i--) {
         var s = aktywne[i];
         if (!rysuj(s, t)) { s.akt = false; s.nad = 0; s.ost = 0; s.el.classList.remove('gl-fx'); aktywne.splice(i, 1); }
@@ -563,7 +597,7 @@
     cv.addEventListener('webglcontextlost', function (e) {
       e.preventDefault(); if (raf) cancelAnimationFrame(raf); raf = 0;
       aktywne.forEach(function (s) { s.akt = false; s.el.classList.remove('gl-fx'); }); aktywne.length = 0;
-      stany.forEach(function (s) { s.t = null; }); pk = null; stat.karty = 'utracony';
+      stany.forEach(function (s) { s.t = null; s.gl = null; s.glLad = false; }); szary = null; pk = null; stat.karty = 'utracony';
     });
     cv.addEventListener('webglcontextrestored', function () { if (init()) stat.karty = K.v2 ? 'webgl2' : 'webgl1'; });
     /* karty przebudowuje site.js tylko przy starcie (zmiana języka = przeładowanie), więc lista celów jest stała */
