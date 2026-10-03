@@ -84,3 +84,14 @@ Poprzednio (03.10 wieczór, „spoko pod 4”): złota postać z koroną, `img/l
 i kreskach (`css/paleta.css`, ostatni arkusz). Zero „musztardowego” (złoto szampańskie odrzucone).
 
 Podpis „Monika” (SVG kreską) usunięty ze strony 03.10.2026 (Daniel: „nie jest super”). Nie przywracać.
+
+## Decyzje z wieczoru 03.10.2026 (nie cofać bez polecenia Daniela)
+- Zero krótkich kresek przed napisami (etykiety sekcji, podpis nad „Première visite”): reguła na końcu `css/paleta.css`.
+  Daniel: „usuń te kreski”. Łączników w nagłówkach też nie chce: po francusku zmieniać sformułowanie, nie pisownię
+  (kontakt: „Réserver votre visite”).
+- Tor zabiegów: pętle wideo z RTX (Wan 2.2) `img/rtx/{ems,krio,kabina}-petla.mp4` + plakaty; ekrany EMS i krio pionowe
+  3:4 pod wielkim tytułem. Stare `krio-mgla.mp4`, `kabina-swiatlo.mp4` nieużywane.
+- Ekran analizatora (Daniel: „nie tak prostacko”, „ultra ma być”): wideo `img/rtx/analizator-skan.mp4` (hologram
+  ciała, bez napisów i liczb) wpasowane w perspektywę szkła przez matrix3d z 4 zmierzonych rogów (`js/site.js`, EKRAN).
+  Nigdy płaskie grafiki/SVG przyklejone prostokątem na ekranie urządzenia; nigdy liczby udające wyniki.
+- Stopka: pierwszy link „Accueil” (#top). Monika w stopce bez poświaty i złotego konturu (dawały „matowe” zdjęcie).
