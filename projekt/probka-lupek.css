@@ -1,0 +1,16 @@
+/* Próbka „Łupek z żywicą” (02.10.2026). Wstrzykiwana tylko w zrzucie (projekt/), nie w strony.
+   Tło pierwszego ekranu: img/materialy/lupek-pc.webp / lupek-tel.webp (narzedzia/lupek.py).
+   Pozostałe ciemne sekcje: gładka noc łupka #0B1018, karty #121A26. */
+:root { --noc: #0B1018; --mat: #0B1018; --mat-karta: #121A26; --mat-linia: rgba(246, 240, 228, .10); }
+.naglowek { background: rgba(9, 13, 20, .96); }
+.plakietka { background: rgba(11, 16, 24, .82); }
+.hero-obraz, .monika-foto, .karta-obraz {
+  background: radial-gradient(110% 80% at 70% 15%, rgba(120, 150, 190, .16), transparent 60%),
+              linear-gradient(165deg, #172338, #080C13);
+}
+.hero { background: #070B11 url("img/materialy/lupek-pc.webp") right center / cover no-repeat; }
+@media (max-width: 900px) {
+  .hero { background-image: url("img/materialy/lupek-tel.webp"); background-position: center top; background-size: cover; }
+  .pasek-dol { background: #0B1018; }
+  .hero .pill.solid, .pasek-dol a.solid { box-shadow: 0 0 0 2px #0B1018, 0 0 0 3px var(--rz); }
+}

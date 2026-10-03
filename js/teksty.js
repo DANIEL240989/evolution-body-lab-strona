@@ -40,6 +40,7 @@ window.T = {
     visite_pratique: 'Prévoir environ 1 h. Tenue confortable, aucune préparation particulière.',
     monika_label: 'Votre praticienne',
     monika_titre: 'Monika',
+    monika_alt: "Monika, Evolution Body Lab",
     monika_txt: 'Présentation, parcours et certifications à venir (TEST).',
     monika_langues: 'Langues : français, polonais.',
     faq_label: 'Questions fréquentes',
