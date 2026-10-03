@@ -887,3 +887,15 @@ html.ruch:not(.ruch-js) .kurtyna .k-pod, html.ruch:not(.ruch-js) .kurtyna .k-lin
 
 /* Etykiety sekcji bez kresek (Daniel 03.10.2026: „tu też jest ta kreska, usuń ją”) */
 .etykieta::before, .etykieta::after, .panel-nad::before, .panel-nad::after { display: none !important; content: none !important; }
+
+/* ekran analizatora: animowany skan składu ciała (js/site.js, EKRAN_SKAN), nad rozmytym ekranem z obrazu */
+.urzadzenie-przod .ekran-skan { position: absolute; left: 0; top: 0; height: 100%; width: auto; aspect-ratio: 920 / 1400; pointer-events: none; overflow: visible; }
+.ekran-skan .sk-skan { animation: sk-skan 3.6s cubic-bezier(.45, 0, .55, 1) infinite; }
+.ekran-skan .sk-krag { transform-box: fill-box; transform-origin: center; animation: sk-krag 6s linear infinite; }
+.ekran-skan .sk-bar { transform-box: fill-box; transform-origin: left center; animation: sk-bar 3.5s ease-in-out infinite alternate; }
+.ekran-skan .sk-strefa { opacity: 0; animation: sk-strefa 3.6s ease-in-out infinite; }
+@keyframes sk-skan { 0% { transform: translateY(30px); } 100% { transform: translateY(400px); } }
+@keyframes sk-krag { to { transform: rotate(360deg); } }
+@keyframes sk-bar { 0% { transform: scaleX(.35); } 100% { transform: scaleX(.92); } }
+@keyframes sk-strefa { 0%, 100% { opacity: 0; } 40%, 60% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .ekran-skan * { animation: none !important; } .ekran-skan .sk-skan { transform: translateY(200px); } }

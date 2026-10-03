@@ -8,7 +8,7 @@ window.T = {
   fr: {
     meta_title: 'Evolution Body Lab · Remodelage de la silhouette à Nice',
     meta_desc: 'EMS et cryolipolyse à Nice. Tarifs affichés, première visite sur rendez-vous, du lundi au vendredi.',
-    nav_soins: 'Soins', nav_tarifs: 'Tarifs', nav_visite: 'Première visite', nav_monika: 'Monika', nav_faq: 'Questions', nav_contact: 'Contact',
+    nav_accueil: 'Accueil', nav_soins: 'Soins', nav_tarifs: 'Tarifs', nav_visite: 'Première visite', nav_monika: 'Monika', nav_faq: 'Questions', nav_contact: 'Contact',
     cta_rdv: 'Prendre rendez-vous', cta_rdv_court: 'Rendez-vous', cta_soins: 'Voir les soins', cta_appeler: 'Appeler', cta_whatsapp: 'WhatsApp',
     demo: 'Version de démonstration : coordonnées, tarifs et images sont provisoires.',
     traduction: 'Traduction en préparation : le texte s’affiche en français.',
