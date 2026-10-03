@@ -10,6 +10,10 @@
    - ilustracje marki (manifest, pierwsza wizyta): medalion odsłania się kołem, potem lekko płynie z przewijaniem;
    - stopka: ciemny panel unosi się nad poświatą;
    - Lenis tylko z myszą (telefon i dotyk przewijają natywnie);
+   SILNIKI P1 (03.10.2026, projekt/wzory/SILNIKI.md): nazwane krzywe (reveal/editorial/ui/cover), Lenis lerp .14,
+   okno logo w kurtynie (Lando), pierwszy ekran kurczy się do ramki między rzędami napisu (Lando), skośna kurtyna
+   #visite → #monika (jjettas), linia przez kroki wizyty ze świecącą głowicą (Orchid); P2: kursor-latarka na fali,
+   unoszenie kart zabiegów;
    - przyciski, dane kontaktu i FAQ bez animacji wejścia: są gotowe od razu;
    - ograniczony ruch albo brak bibliotek: nic nie jest ukryte, kurtyny nie ma, układ pionowy. */
 (function () {
@@ -20,8 +24,18 @@
   if (!ok) { H.classList.remove('ruch', 'kurtyna-on'); if (kurtyna) kurtyna.remove(); return; }
 
   gsap.registerPlugin(ScrollTrigger, SplitText, CustomEase);
-  CustomEase.create('ebl', '0.16,1,0.3,1');
-  CustomEase.create('ebl-io', '0.65,0,0.35,1');
+  /* ---------- tokeny ruchu (SILNIKI.md #1, wzór jjettas): nazwane krzywe w jednym miejscu ----------
+     reveal    wejścia (szybki start, długie miękkie lądowanie)       = dawne „ebl”
+     editorial zmiany tła i koloru, menu
+     ui        hovery i drobne przełączenia (0,3 s)
+     cover     kurtyny, skosy, okno logo (wolny start i koniec, szybki środek)
+     ebl-io    przejazdy do kotwic i linia kurtyny (zostaje z poprzedniej wersji)
+     Te same krzywe są w CSS jako --e-reveal, --e-editorial, --e-ui, --e-cover (css/paleta.css). */
+  var KRZYWE = { reveal: '0.16,1,0.3,1', editorial: '0.65,0.05,0.36,1', ui: '0.4,0,0.2,1', cover: '0.85,0,0.15,1',
+    ebl: '0.16,1,0.3,1', 'ebl-io': '0.65,0,0.35,1' };
+  Object.keys(KRZYWE).forEach(function (n) { CustomEase.create(n, KRZYWE[n]); });
+  /* domyślny scrub dla efektów „przy przewijaniu” (jjettas): od 80% do 60% ekranu, opóźnienie .6 s */
+  var SCRUB = { start: 'top 80%', end: 'bottom 60%', scrub: .6 };
   var EIO = gsap.parseEase('ebl-io');
   ScrollTrigger.config({ ignoreMobileResize: true });
   var Q = function (s, r) { return (r || document).querySelector(s); };
@@ -30,7 +44,8 @@
   /* ---------- płynne przewijanie: tylko mysz ---------- */
   var lenis = null, kurtynaTrwa = false;
   if (window.Lenis && matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    lenis = new Lenis({ lerp: .09, smoothWheel: true, allowNestedScroll: true, stopInertiaOnNavigate: true });
+    /* lerp .14 i wheelMultiplier .8 (jjettas .16/.72): krótszy „ogon” niż dawne .09, strona nie przejeżdża celu */
+    lenis = new Lenis({ lerp: .14, wheelMultiplier: .8, smoothWheel: true, allowNestedScroll: true, stopInertiaOnNavigate: true });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
     gsap.ticker.lagSmoothing(0);
@@ -125,6 +140,50 @@
   [h1, heroEt, lead].forEach(function (el) { if (el) el.classList.add('czeka'); });
   if (podpisH) gsap.set(podpisH, { '--p1': 1, '--p2': 1 });
 
+  /* ---------- pierwszy ekran kurczy się do ramki między dwoma rzędami napisu (Lando, SILNIKI #4) ----------
+     Fala przechodzi z tła sekcji na osobną warstwę .hero-fala (index.html), którą przycina clip-path: inset().
+     Komputer: sekcja przypięta na ok. 90 vh; ramka inset(18% 30%) + skala .92, tekst gaśnie i ucieka w górę, dwa rzędy
+     napisu zjeżdżają na środek i chowają się „za” ramkę (maska rzędów gaśnie tylko w pasie ramki).
+     Telefon: bez pinu, lekkie zwężenie zwykłym scrubem. Plakietka „Image de synthèse” jedzie z rogiem ramki. */
+  var fala = Q('.hero-fala'), pasN = Q('.pas-napisu'), tresc = Q('.hero-tresc');
+  var RAMA_PC = { fx: 30, fy: 18, s: .08, r: 6, rzedy: true, tekst: true }, RAMA_TEL = { fx: 5, fy: 3, s: 0, r: 14 };
+  function rama(p, o) {
+    var W = hero.clientWidth, Hh = hero.clientHeight, s = 1 - o.s * p, st = hero.style;
+    var fx = W * o.fx / 100 * p, fy = Hh * o.fy / 100 * p;
+    var lewa = W / 2 - (W / 2 - fx) * s, dol = Hh / 2 - (Hh / 2 - fy) * s;
+    st.setProperty('--fx', fx.toFixed(1) + 'px'); st.setProperty('--fy', fy.toFixed(1) + 'px');
+    st.setProperty('--fr', (o.r * p).toFixed(2) + 'px'); st.setProperty('--fs', s.toFixed(4)); st.setProperty('--fp', p.toFixed(3));
+    st.setProperty('--pr', Math.max(Math.max(16, (W - 1180) / 2), lewa + 12).toFixed(1) + 'px');
+    st.setProperty('--pb', Math.max(14, dol + 12).toFixed(1) + 'px');
+    if (o.rzedy && pasN) {
+      var ps = pasN.style;
+      ps.setProperty('--ml', lewa.toFixed(1) + 'px'); ps.setProperty('--mr', (W - lewa).toFixed(1) + 'px'); ps.setProperty('--ma', (1 - p).toFixed(3));
+      ps.setProperty('--pas-y', ((Hh / 2 - (pasN.offsetTop + pasN.offsetHeight / 2)) * gsap.parseEase('power2.inOut')(p)).toFixed(1) + 'px');
+    }
+    if (o.tekst && tresc) {
+      var q = Math.min(1, p / .5);
+      tresc.style.opacity = q ? (1 - q).toFixed(3) : ''; tresc.style.transform = q ? 'translateY(' + (-56 * q).toFixed(1) + 'px)' : '';
+    }
+  }
+  function bezRamy() {
+    hero.classList.remove('hero-rama');
+    ['--fx', '--fy', '--fr', '--fs', '--fp', '--pr', '--pb'].forEach(function (v) { hero.style.removeProperty(v); });
+    if (pasN) ['--ml', '--mr', '--ma', '--pas-y'].forEach(function (v) { pasN.style.removeProperty(v); });
+    if (tresc) { tresc.style.opacity = ''; tresc.style.transform = ''; }
+  }
+  if (hero && fala) mm.add({ pc: KOMPUTER, tel: TELEFON }, function (c) {
+    var o = c.conditions.pc ? RAMA_PC : RAMA_TEL, stan = { p: 0 }, nag = Q('.naglowek');
+    hero.classList.add('hero-rama');
+    var rysujR = function () { rama(stan.p, o); };
+    gsap.to(stan, { p: 1, ease: 'none', onUpdate: rysujR, scrollTrigger: c.conditions.pc ? {
+      trigger: hero, start: function () { return 'top ' + (nag ? nag.offsetHeight : 0) + 'px'; },
+      end: function () { return '+=' + Math.round(innerHeight * .9); }, pin: true, scrub: SCRUB.scrub, anticipatePin: 1,
+      invalidateOnRefresh: true, onRefresh: rysujR
+    } : { trigger: hero, start: 'top top', end: 'bottom top', scrub: SCRUB.scrub, onRefresh: rysujR } });
+    rysujR();
+    return bezRamy;
+  });
+
   /* pas napisu: dwa rzędy w przeciwnych kierunkach; przewijanie przyspiesza i odwraca kierunek (jak u wzoru) */
   var tasmy = QA('.pas-tasma').map(function (t, i) {
     var tw = gsap.fromTo(t, { xPercent: i ? -50 : 0 }, { xPercent: i ? 0 : -50, duration: 46, ease: 'none', repeat: -1 });
@@ -147,9 +206,6 @@
     gsap.to('.pas-rzad.r1', { xPercent: -8, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
     gsap.to('.pas-rzad.r2', { xPercent: 8, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
   }
-  mm.add(KOMPUTER, function () {
-    gsap.to('.hero-tresc', { yPercent: -10, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
-  });
 
   H.classList.add('ruch-js');
 
@@ -157,7 +213,7 @@
   var poKurtynie = Promise.resolve();
   function zdejmij() {
     if (!kurtyna) return; kurtyna.remove(); kurtyna = null; kurtynaTrwa = false;
-    H.classList.remove('kurtyna-on'); if (lenis) lenis.start();
+    H.classList.remove('kurtyna-on', 'k-okno-on', 'k-tlo'); if (lenis) lenis.start();
   }
   if (kurtyna && H.classList.contains('kurtyna-on')) {
     kurtynaTrwa = true; if (lenis) lenis.stop();
@@ -175,6 +231,8 @@
         .fromTo(pod, { yPercent: -118 }, { yPercent: 0, duration: .8, ease: 'ebl' }, .8);
       var czcionkiK = Promise.race([(document.fonts && document.fonts.ready) || Promise.resolve(), new Promise(function (r) { setTimeout(r, 1500); })]);
       Promise.all([czcionkiK, new Promise(function (r) { setTimeout(r, 1900); })]).then(function () {
+        if (!kurtyna) return;
+        if (znak && znak.tagName === 'IMG') { try { okno(znak, pod, kl); } catch (e) { zdejmij(); otwarta(); } return; }
         gsap.timeline({ onComplete: zdejmij })
           .to(sz.chars, { yPercent: -118, duration: .42, ease: 'power3.in', stagger: .015 }, 0)
           .to(pod, { yPercent: -118, duration: .36, ease: 'power3.in' }, 0)
@@ -185,6 +243,37 @@
       });
     } catch (e) { zdejmij(); otwarta(); }
   } else if (kurtyna) { kurtyna.remove(); kurtyna = null; H.classList.remove('kurtyna-on'); }
+
+  /* Okno logo (Lando, SILNIKI #3): koło medalionu z damą otwiera się jak przesłona i staje się oknem na falę
+     pierwszego ekranu (maska kurtyny z dziurą w kształcie koła), potem okno z różowozłotą obręczą rośnie do pełnego
+     ekranu (krzywa „cover”, 1,25 s; telefon ok. 0,9 s). Logo nie jest przerysowane: znika spod maski, obręcz to kreska CSS.
+     LOGO_KOLO: środek i promień wnętrza koła w img/logo-dama-zlota.webp (ułamki szerokości/wysokości obrazu). */
+  var LOGO_KOLO = { x: .495, y: .382, r: .45 };
+  function okno(img, pod, kl) {
+    var b = img.getBoundingClientRect();
+    if (!b.width) throw new Error('brak logo');
+    var ox = b.left + b.width * LOGO_KOLO.x, oy = b.top + b.height * LOGO_KOLO.y, r0 = b.width * LOGO_KOLO.r;
+    var rMax = Math.hypot(Math.max(ox, innerWidth - ox), Math.max(oy, innerHeight - oy)) + 6;
+    var k = innerWidth <= 900 ? .72 : 1, m = { r: 0 };
+    var obr = document.createElement('span'); obr.className = 'k-obrecz'; kurtyna.appendChild(obr);
+    kurtyna.style.setProperty('--ox', ox.toFixed(1) + 'px'); kurtyna.style.setProperty('--oy', oy.toFixed(1) + 'px');
+    obr.style.left = ox + 'px'; obr.style.top = oy + 'px';
+    var ustaw = function () {
+      kurtyna.style.setProperty('--or', m.r.toFixed(1) + 'px');
+      obr.style.width = obr.style.height = (2 * m.r + 4).toFixed(1) + 'px';
+    };
+    ustaw(); kurtyna.classList.add('k-okno'); H.classList.add('k-okno-on', 'k-tlo');
+    gsap.timeline({ onComplete: zdejmij })
+      .to(pod, { yPercent: -118, duration: .36, ease: 'power3.in' }, 0)
+      .to(kl, { scaleX: 0, opacity: 0, duration: .6, ease: 'ebl-io' }, 0)
+      .to(m, { r: r0, duration: .8 * k, ease: 'reveal', onUpdate: ustaw }, .1)
+      .to(obr, { opacity: 1, duration: .35, ease: 'ui' }, .4 * k)
+      .to(img, { opacity: 0, duration: .4, ease: 'ui' }, .72 * k)
+      .to(m, { r: rMax, duration: 1.25 * k, ease: 'cover', onUpdate: ustaw }, .95 * k)
+      .to(obr, { opacity: 0, duration: .5 * k, ease: 'ui' }, 1.6 * k)
+      .add(function () { H.classList.remove('k-okno-on'); }, 1.3 * k)
+      .add(function () { kurtynaTrwa = false; otwarta(); }, 1.5 * k);
+  }
 
   function czcionki(ms) { return Promise.race([(document.fonts && document.fonts.ready) || Promise.resolve(), new Promise(function (r) { setTimeout(r, ms); })]); }
   Promise.all([poKurtynie, czcionki(1200)]).then(function () {
@@ -282,6 +371,82 @@
   gsap.fromTo('#visite .kula', { yPercent: -38, scale: .78, opacity: .55 }, { yPercent: -60, scale: 1.08, opacity: 1, ease: 'none',
     scrollTrigger: { trigger: '#visite', start: 'top bottom', end: 'bottom top', scrub: true } });
   kolejka('#visite .kroki li', 'akapit', 'top 92%', 80);
+
+  /* Linia przez kroki wizyty ze świecącą głowicą (Orchid „How it works”, SILNIKI #16): różowozłota linia rysuje się
+     scrubem, głowica świeci na jej końcu, krok zapala się (numer w złocie 24K), gdy głowica go mija.
+     Cztery kroki w rzędzie: linia pozioma nad kartami; dwie kolumny i telefon: pionowa wzdłuż lewej krawędzi kart. */
+  var kroki = Q('#visite .kroki');
+  if (kroki) {
+    var krokiLi = QA('li', kroki), progi = [], stanK = { p: 0 };
+    var mierzK = function () {
+      var pion = krokiLi.length > 1 && krokiLi[1].offsetTop !== krokiLi[0].offsetTop;
+      kroki.classList.toggle('pion', pion);
+      var dl = (pion ? kroki.offsetHeight : kroki.offsetWidth) || 1;
+      progi = krokiLi.map(function (li) { return ((pion ? li.offsetTop : li.offsetLeft) + 12) / dl; });
+    };
+    var rysujK = function () {
+      kroki.style.setProperty('--kp', stanK.p.toFixed(4));
+      krokiLi.forEach(function (li, i) { li.classList.toggle('zapalony', stanK.p >= progi[i]); });
+    };
+    kroki.classList.add('z-linia'); mierzK(); rysujK();
+    gsap.to(stanK, { p: 1, ease: 'none', onUpdate: rysujK,
+      scrollTrigger: { trigger: kroki, start: SCRUB.start, end: SCRUB.end, scrub: SCRUB.scrub, onRefresh: function () { mierzK(); rysujK(); } } });
+  }
+
+  /* Skośna kurtyna #visite → #monika (jjettas, SILNIKI #8): len wjeżdża po przekątnej na noc wizyty.
+     #monika nachodzi na koniec #visite o O (komputer 40 vh, telefon 18 vh; tyle samo pustej nocy dochodzi na dole wizyty,
+     więc treść nie zmienia miejsca); clip-path: polygon z górną krawędzią od (0, O) do (100%, .22·O) prostuje się do 0.
+     Na krawędzi cienka różowozłota linia. Bez skryptu i przy ograniczonym ruchu: zwykła prosta granica. */
+  var mon = Q('#monika'), wiz = Q('#visite');
+  if (mon && wiz) mm.add({ pc: KOMPUTER, tel: TELEFON }, function (c) {
+    var O = function () { return Math.round(innerHeight * (c.conditions.pc ? .4 : .18)); };
+    var ust = function () { var o = O() + 'px'; mon.style.setProperty('--skos-o', o); wiz.style.setProperty('--skos-o', o); };
+    ust(); mon.classList.add('skos'); wiz.classList.add('pod-skosem');
+    ScrollTrigger.addEventListener('refreshInit', ust);
+    gsap.fromTo(mon, { '--sl': function () { return O() + 'px'; }, '--sr': function () { return Math.round(O() * (c.conditions.pc ? .22 : .35)) + 'px'; } },
+      { '--sl': '0px', '--sr': '0px', ease: 'cover',
+        scrollTrigger: { trigger: mon, start: 'top 88%', end: 'top 12%', scrub: SCRUB.scrub, invalidateOnRefresh: true } });
+    return function () {
+      ScrollTrigger.removeEventListener('refreshInit', ust);
+      mon.classList.remove('skos'); wiz.classList.remove('pod-skosem');
+      ['--skos-o', '--sl', '--sr'].forEach(function (v) { mon.style.removeProperty(v); wiz.style.removeProperty(v); });
+    };
+  });
+
+  /* Unoszenie kart zabiegów (jjettas, SILNIKI #14): ±6 px i ±0,4° w pętli 6,4 / 7,5 / 8,6 s w różnych fazach, tylko gdy
+     sekcja jest w kadrze. Animowane są właściwości translate/rotate, więc nie gryzą się z transformem wejścia (GSAP). */
+  var kartyZ = QA('#soins .karta');
+  if (kartyZ.length) ScrollTrigger.create({ trigger: '#soins', start: 'top bottom', end: 'bottom top',
+    onToggle: function (st) { kartyZ.forEach(function (k) { k.classList.add('unosi'); k.classList.toggle('w-kadrze', st.isActive); }); } });
+
+  /* Kursor-latarka na fali (Lando, lekka wersja SILNIKI #5): nad falą ta sama fala rozjaśniona w różowe złoto,
+     odsłaniana miękkim kołem pod kursorem (mask-image); pozycja przez quickTo .7 s power3.out, promień rośnie z prędkością
+     myszy. Tylko komputer z myszą; telefon i dotyk: zwykły obraz. */
+  mm.add('(min-width: 901px) and (hover: hover) and (pointer: fine)', function () {
+    if (!hero || !fala) return;
+    var l = document.createElement('i'); l.className = 'hero-latarka'; l.setAttribute('aria-hidden', 'true'); fala.appendChild(l);
+    var poz = { x: fala.offsetWidth * .62, y: fala.offsetHeight * .45, r: 0 }, cisza, ost = null;
+    var rys = function () {
+      l.style.setProperty('--lx', poz.x.toFixed(1) + 'px'); l.style.setProperty('--ly', poz.y.toFixed(1) + 'px');
+      l.style.setProperty('--lr', (230 + poz.r).toFixed(0) + 'px');
+    };
+    var qx = gsap.quickTo(poz, 'x', { duration: .7, ease: 'power3.out', onUpdate: rys }),
+        qy = gsap.quickTo(poz, 'y', { duration: .7, ease: 'power3.out', onUpdate: rys }),
+        qr = gsap.quickTo(poz, 'r', { duration: .9, ease: 'power3.out', onUpdate: rys });
+    var ruszaj = function (e) {
+      if (kurtynaTrwa) return;
+      var b = fala.getBoundingClientRect(), sk = b.width / (fala.offsetWidth || 1);
+      qx((e.clientX - b.left) / sk); qy((e.clientY - b.top) / sk);
+      if (ost) qr(Math.min(150, Math.hypot(e.clientX - ost.x, e.clientY - ost.y) * 3));
+      ost = { x: e.clientX, y: e.clientY };
+      clearTimeout(cisza); cisza = setTimeout(function () { qr(0); }, 140);
+      l.classList.add('wl');
+    };
+    var wyjdz = function () { l.classList.remove('wl'); ost = null; };
+    rys();
+    hero.addEventListener('mousemove', ruszaj); hero.addEventListener('mouseleave', wyjdz);
+    return function () { hero.removeEventListener('mousemove', ruszaj); hero.removeEventListener('mouseleave', wyjdz); clearTimeout(cisza); l.remove(); };
+  });
 
   /* ---------- Monika i stopka: wielkie słowo w tle jedzie, panel stopki się unosi ---------- */
   gsap.fromTo('#monika .slowo-tlo', { xPercent: 4 }, { xPercent: -14, ease: 'none', scrollTrigger: { trigger: '#monika', start: 'top bottom', end: 'bottom top', scrub: true } });

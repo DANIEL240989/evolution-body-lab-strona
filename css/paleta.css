@@ -156,3 +156,82 @@
 .ilustracja-czarny .ilustracja-obraz::before { background: radial-gradient(closest-side, rgba(212,164,154,.22), rgba(247,243,234,0) 100%); }
 .ilustracja-czarny img { filter: drop-shadow(0 18px 34px rgba(30,26,28,.18)); }
 @media (max-width: 900px) { .ilustracja-czarny { width: min(64vw, 260px); margin: 28px auto 8px; } }
+
+/* =====================================================================================================================
+   SILNIKI P1 (projektant ruchu 03.10.2026; Daniel: „rób całą stronę, wzoruj się silnikami tamtych stron”).
+   Odtworzona MECHANIKA landonorris / jjettas / orchid (projekt/wzory/SILNIKI.md), nie ich kod ani obrazy.
+   Wszystko poniżej włącza dopiero js/ruch.js klasą; bez skryptu i przy ograniczonym ruchu strona wygląda jak dotąd. */
+:root {
+  --e-reveal: cubic-bezier(.16, 1, .3, 1); --e-editorial: cubic-bezier(.65, .05, .36, 1);
+  --e-ui: cubic-bezier(.4, 0, .2, 1); --e-cover: cubic-bezier(.85, 0, .15, 1);
+}
+
+/* #3 okno logo w kurtynie: dziura w masce kurtyny (środek --ox/--oy, promień --or) + różowozłota obręcz */
+.kurtyna.k-okno {
+  -webkit-mask-image: radial-gradient(circle at var(--ox, 50%) var(--oy, 50%), transparent var(--or, 0px), #000 calc(var(--or, 0px) + 1.5px));
+          mask-image: radial-gradient(circle at var(--ox, 50%) var(--oy, 50%), transparent var(--or, 0px), #000 calc(var(--or, 0px) + 1.5px)); }
+/* pasek górny chowa się na czas okna (przez okno widać samą falę), wraca miękko, gdy okno rośnie */
+.naglowek, .pasek-demo, .pasek-tlum { transition: opacity .8s var(--e-ui); }
+html.k-okno-on .naglowek, html.k-okno-on .pasek-demo, html.k-okno-on .pasek-tlum { opacity: 0; transition: none; }
+html.k-tlo body { background-color: var(--noc); }   /* do końca kurtyny: spod półprzezroczystego paska nie prześwituje len */
+.k-obrecz { position: absolute; border-radius: 50%; transform: translate(-50%, -50%); opacity: 0; pointer-events: none;
+  border: 1.5px solid var(--rz); box-shadow: 0 0 22px rgba(212, 164, 154, .45), inset 0 0 22px rgba(212, 164, 154, .25); }
+
+/* #4 pierwszy ekran kurczy się do ramki: fala na własnej warstwie, ramka z clip-path (zmienne liczy js/ruch.js) */
+.hero-fala { display: none; }
+.hero.hero-rama { background: var(--noc); }
+.hero.hero-rama .hero-fala { display: block; position: absolute; inset: 0; z-index: -2; pointer-events: none; overflow: hidden;
+  background: #020306 url(../img/materialy/fala-pc.webp) 70% 50% / cover no-repeat;
+  clip-path: inset(var(--fy, 0px) var(--fx, 0px) round var(--fr, 0px)); transform: scale(var(--fs, 1)); }
+.hero.hero-rama::before { opacity: calc(1 - var(--fp, 0)); }
+.hero.hero-rama .hero-obraz .plakietka { right: var(--pr, 16px); bottom: var(--pb, 14px); }
+.hero.hero-rama .pas-napisu { transform: translateY(var(--pas-y, 0px));
+  -webkit-mask-image: linear-gradient(90deg, #000 var(--ml, 50%), rgba(0,0,0,var(--ma, 1)) var(--ml, 50%), rgba(0,0,0,var(--ma, 1)) var(--mr, 50%), #000 var(--mr, 50%));
+          mask-image: linear-gradient(90deg, #000 var(--ml, 50%), rgba(0,0,0,var(--ma, 1)) var(--ml, 50%), rgba(0,0,0,var(--ma, 1)) var(--mr, 50%), #000 var(--mr, 50%)); }
+@media (max-width: 900px) {
+  .hero.hero-rama .hero-fala { background: #020306 url(../img/materialy/fala-tel.webp) 50% -330px / 150% auto no-repeat; }
+}
+/* kursor-latarka (P2 #5): ta sama fala rozjaśniona w różowe złoto pod miękkim kołem kursora */
+.hero-latarka { position: absolute; inset: 0; background: inherit; opacity: 0; transition: opacity .6s var(--e-ui); pointer-events: none;
+  filter: grayscale(1) sepia(1) saturate(1.6) hue-rotate(-30deg) brightness(1.8);
+  -webkit-mask-image: radial-gradient(circle var(--lr, 230px) at var(--lx, 60%) var(--ly, 45%), #000 0%, rgba(0,0,0,.5) 42%, transparent 100%);
+          mask-image: radial-gradient(circle var(--lr, 230px) at var(--lx, 60%) var(--ly, 45%), #000 0%, rgba(0,0,0,.5) 42%, transparent 100%); }
+.hero-latarka.wl { opacity: 1; }
+
+/* #8 skośna kurtyna #visite → #monika: len nachodzi na noc o --skos-o, górna krawędź po przekątnej (--sl lewa, --sr prawa) */
+#visite.pod-skosem::after { content: ''; display: block; height: var(--skos-o, 0px); }
+#monika.skos { z-index: 2; margin-top: calc(-1 * var(--skos-o, 0px)); border-top-color: transparent;
+  clip-path: polygon(0 var(--sl, 0px), 100% var(--sr, 0px), 100% 100%, 0 100%); }
+#monika.skos::after { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: var(--rz);
+  clip-path: polygon(0 var(--sl, 0px), 100% var(--sr, 0px), 100% calc(var(--sr, 0px) + 1.5px), 0 calc(var(--sl, 0px) + 1.5px)); }
+
+/* #16 linia przez kroki wizyty ze świecącą głowicą (--kp 0..1); krok „zapalony” = numer w złocie 24K */
+#visite .kroki.z-linia { position: relative; }
+.kroki.z-linia::before, .kroki.z-linia::after { content: ''; position: absolute; pointer-events: none; z-index: 2; }
+.kroki.z-linia::before { left: 0; right: 0; top: -22px; height: 1px;
+  background: linear-gradient(90deg, var(--rz) calc(var(--kp, 0) * 100%), rgba(212, 164, 154, .16) calc(var(--kp, 0) * 100%)); }
+.kroki.z-linia::after { left: calc(var(--kp, 0) * 100%); top: -22px; width: 9px; height: 9px; margin: -4px 0 0 -4.5px; border-radius: 50%;
+  background: #FFF6F1; opacity: min(1, calc(var(--kp, 0) * 40));
+  box-shadow: 0 0 0 3px rgba(212, 164, 154, .35), 0 0 18px 6px rgba(212, 164, 154, .6), 0 0 44px 10px rgba(227, 181, 71, .18); }
+.kroki.z-linia.pion::before { right: auto; top: 0; bottom: 0; width: 1px; height: auto;
+  background: linear-gradient(180deg, var(--rz) calc(var(--kp, 0) * 100%), rgba(212, 164, 154, .16) calc(var(--kp, 0) * 100%)); }
+.kroki.z-linia.pion::after { left: .5px; top: calc(var(--kp, 0) * 100%); }
+#visite .kroki.z-linia li { transition: border-color .5s var(--e-ui), box-shadow .6s var(--e-ui); }
+#visite .kroki.z-linia .nr { transition: opacity .5s var(--e-ui); }
+#visite .kroki.z-linia li:not(.zapalony) .nr { opacity: .4; }
+#visite .kroki.z-linia li.zapalony { border-top-color: var(--rz); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 -10px 34px -20px rgba(212, 164, 154, .7); }
+#visite .kroki.z-linia li.zapalony .nr { background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+#visite .kroki.z-linia.pion li.zapalony { border-left-color: var(--rz-linia); }
+
+/* P2 #14 unoszenie kart zabiegów (translate/rotate, nie transform: wejście z GSAP zostaje nietknięte) */
+@keyframes ebl-unos { 0%, 100% { translate: 0 0; rotate: 0deg; } 30% { translate: 0 -6px; rotate: -.35deg; } 70% { translate: 0 4px; rotate: .3deg; } }
+#soins .karta.unosi { animation: ebl-unos 6.4s cubic-bezier(.45, 0, .55, 1) infinite; animation-play-state: paused; }
+#soins .karta.unosi:nth-child(2n) { animation-duration: 7.5s; animation-delay: -2.4s; }
+#soins .karta.unosi:nth-child(3n) { animation-duration: 8.6s; animation-delay: -4.1s; }
+#soins .karta.unosi.w-kadrze { animation-play-state: running; }
+#soins .karta.unosi:hover, #soins .karta.unosi:focus-within { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  #soins .karta.unosi { animation: none; }
+  .hero-latarka { display: none; }
+}

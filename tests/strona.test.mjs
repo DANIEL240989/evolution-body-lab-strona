@@ -91,3 +91,19 @@ test('ilustracje marki: plakietka, alt z kluczy, srcset, poza sekcją Moniki', (
   const monika = html.slice(html.indexOf('id="monika"'), html.indexOf('</section>', html.indexOf('id="monika"')));
   assert.doesNotMatch(monika, /ilustracj/);
 });
+
+test('ruch: efekty P1 silników (tokeny, okno logo, ramka hero, skos, linia kroków) tylko z JS, bez ukrywania treści', () => {
+  const ruch = kod('js/ruch.js'), pal = kod('css/paleta.css');
+  for (const n of ['reveal', 'editorial', 'ui', 'cover']) assert.match(ruch, new RegExp(n + ": '[0-9.,]+'"), n);
+  for (const n of ['--e-reveal', '--e-editorial', '--e-ui', '--e-cover']) assert.match(pal, new RegExp(n + ':'), n);
+  assert.match(ruch, /lerp: \.1[2-6]/);                                     // Lenis krótszy niż dawne .09
+  assert.match(ruch, /matchMedia\('\(hover: hover\) and \(pointer: fine\)'\)\.matches\) \{\s*\n?\s*\/\*[^*]*\*\/\s*lenis = new Lenis/);
+  assert.match(html, /<section class="hero noc">\s*<div class="hero-fala" aria-hidden="true"><\/div>/);
+  // warstwy i klasy ruchu włącza dopiero skrypt: bez JS fala zostaje tłem sekcji, granica #visite/#monika prosta
+  assert.match(pal, /\.hero-fala \{ display: none; \}/);
+  for (const k of ['hero-rama', 'k-okno', 'skos', 'pod-skosem', 'z-linia', 'zapalony', 'unosi']) assert.match(ruch, new RegExp("'" + k + "'"), k);
+  assert.doesNotMatch(html, /class="[^"]*(hero-rama|skos|z-linia|unosi)/);
+  // plakietka hero jedzie z rogiem ramki, nie znika
+  assert.match(pal, /\.hero\.hero-rama \.hero-obraz \.plakietka \{ right: var\(--pr/);
+  assert.match(pal, /@media \(prefers-reduced-motion: reduce\) \{\s*#soins \.karta\.unosi \{ animation: none; \}/);
+});
