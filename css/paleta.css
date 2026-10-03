@@ -13,7 +13,9 @@
    img/logo-e.webp = plik Daniela z wyciętym tłem; img/logo-e-poziom.webp = te same elementy obok siebie na pasek.
    Logo z królową (img/logo.webp) zostaje w repo, na stronie nieużywane.
    Od 03.10.2026 (Daniel: „logo jako szyld zamiast E”): medalion z damą w kapeluszu (obręcz zostaje) + napis
-   EVOLUTION / BODY LAB z fasady: img/logo-dama-poziom.webp (pasek), img/logo-dama.webp (stopka, kurtyna). */
+   EVOLUTION / BODY LAB z fasady: img/logo-dama-poziom.webp (pasek), img/logo-dama.webp (stopka, kurtyna).
+   Od 03.10.2026 wieczór (Daniel: „spoko pod 4”): wariant 4, złota postać z koroną w obręczy (czytelna w 24 px) + napis
+   z fasady: img/logo-krolowa-poziom.webp (pasek), img/logo-krolowa.webp (stopka, kurtyna), img/ikona-64.png (karta). */
 .logo-obraz { display: inline-flex; align-items: center; line-height: 0; }
 .logo-obraz img { display: block; height: 54px; width: auto; }
 .stopka-logo .logo-obraz img { height: auto; width: min(240px, 56vw); margin: 0 auto; }
