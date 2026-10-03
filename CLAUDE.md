@@ -57,3 +57,5 @@ Biznesplanu (PDF, dane finansowe) nie wrzucamy do repo.
 Logo z fasady 1 do 1: monogram E w kole + EVOLUTION / BODY LAB (`img/logo-e.webp`, na pasku `img/logo-e-poziom.webp`).
 Nie przerysowywać. Kolory: czerń, biel, złoto 24K tylko na pełnych przyciskach i numerach, różowe złoto na obrysach
 i kreskach (`css/paleta.css`, ostatni arkusz). Zero „musztardowego” (złoto szampańskie odrzucone).
+
+Podpis „Monika” (SVG kreską) usunięty ze strony 03.10.2026 (Daniel: „nie jest super”). Nie przywracać.

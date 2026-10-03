@@ -3,7 +3,7 @@
    - jedna krzywa „ebl” na wejścia (szybki start, długie miękkie lądowanie), „ebl-io” na przejazdy i kurtynę;
    - kurtyna przy pierwszym wejściu w karcie: nazwa spod maski, różowozłota linia rośnie od środka, ekran się rozchyla;
    - nagłówki linia po linii spod maski (podział cofany po animacji), etykiety wycierane od kreski, zdjęcia spod maski;
-   - pierwszy ekran: pas napisu w dwóch rzędach (prędkość i kierunek idą za przewijaniem), podpis „Monika” rysuje się kreską;
+   - pierwszy ekran: pas napisu w dwóch rzędach (prędkość i kierunek idą za przewijaniem);
    - manifest: słowa rozjaśniają się przy przewijaniu, schodki z bloków w różowym złocie i nocy przechodzą do zabiegów;
    - zabiegi: przypięty poziomy tor (tylko komputer), wielkie słowo w tle jedzie wolniej niż karty;
    - pierwsza wizyta: dwie połówki rozjeżdżają się, kula światła płynie, szklane karty wpływają;
@@ -146,7 +146,6 @@
   }
   mm.add(KOMPUTER, function () {
     gsap.to('.hero-tresc', { yPercent: -10, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
-    gsap.to('.podpis-hero', { yPercent: -22, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
   });
 
   H.classList.add('ruch-js');
@@ -197,7 +196,6 @@
   kolejka('main > section:not(.hero) .etykieta', 'etykieta', 'top 92%');
   kolejka('.cytat', 'akapit', 'top 90%', 30);   /* cudzysłowy z CSS: bez podziału na linie */
   kolejka('.monika-foto img', 'obraz', 'top 90%');
-  kolejka('.podpis-monika, .podpis-stopka', 'podpis', 'top 85%');
   kolejka('.stopka-slogan', 'linie', 'top 90%');
 
   /* ---------- manifest: słowa rozjaśniają się przy przewijaniu ---------- */
