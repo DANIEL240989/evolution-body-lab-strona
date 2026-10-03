@@ -21,6 +21,7 @@ window.T = {
     h_wielki: 'Evolution',   // gigantyczny napis za Moniką w pierwszym ekranie (jak u Lando)
     h_pas_1: 'EMS · Cryolipolyse · Nice · ',
     h_pas_2: 'Silhouette · Fermeté · Côte d’Azur · ',
+    st_1: 'Rendez-vous', st_2: 'Bilan', st_3: 'Protocole', st_4: 'Séance', st_5: 'Suivi', st_6: 'Évolution',
     man_label: 'Notre approche',
     manifeste: 'Un protocole *clair*. Des tarifs *affichés*. Des soins *précis*, à Nice.',
     // Teleport (#approche, js/petardy.js): wskazówka nad medalionem
