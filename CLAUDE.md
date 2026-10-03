@@ -17,10 +17,13 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
   etykiety sekcji, podkreślenie języka i menu, ramki, obwódki przycisków (też Appeler/WhatsApp na telefonie), główny
   przycisk (napis w błękicie). Na jasnym tle różowe złoto jako tekst `#8C4F58`. Wcześniejsze: czarny mat (D), welur,
   Carrara, oliwka odrzucone; porównania w `projekt/`. Blok na końcu `css/style.css`.
-- **Pierwszy ekran = render 3D z RTX Daniela** (03.10.2026): jak wzór Daniela: po lewej mozaika ciemnej turkusowo-niebieskiej żywicy w gęstych czarnych spękaniach (pod tekstem, przyciemnienie .72), po prawej kora czarna jak węgiel z kintsugi z różowego złota (`lupek_kora.py`, `img/materialy/kora-3d-*.webp`); wcześniej: łupek, niebieska żywica jak lawa, krawędzie
-  w różowym złocie. Scena: `narzedzia/blender/lupek_scena.py` (Blender Cycles, bez AI), render na RTX 5080 przez
-  `narzedzia/blender/render_rtx.ps1`; na stronie webp w `img/materialy/lupek-3d-*.webp`, z plakietką „Image de synthèse”.
-  Desktop Commander na komputerze Daniela: `npx @wonderwhy-er/desktop-commander@latest remote` (w cmd, okno otwarte).
+- **Od 03.10.2026: obrazy Daniela (jego generacje, „arcydzieło”)** zamiast renderów z kodu/Blendera:
+  pierwszy ekran „fala”: czarny marmur z niebieskim kryształem i krawędziami w różowym złocie (`img/materialy/fala-pc.webp`
+  komputer, `fala-tel.webp` telefon); `#soins` na granatowym marmurze z korą i kintsugi (`granat-kora-3.webp`),
+  `#contact` na klifie z kryształem (`klif-lustro.webp`, przyciemnienie min. .76 pod danymi). Ciemne sekcje: czerń
+  z granatem `#05070D` / `#0C1322` zamiast turkusu Cap Bleu; różowe złoto, białe napisy, len w jasnych sekcjach zostają.
+  Każdy obraz z plakietką „Image de synthèse”. Sceny Blendera (`narzedzia/blender/`) i Desktop Commander zostają jako
+  narzędzia; render na RTX 5080 Daniela przez `render_rtx.ps1`.
 - Języki w kolejności: FR (domyślny), EN, ES, PL, RU, DE (`?lang=`). Monika mówi po francusku i polsku: tylko to piszemy
   jako języki obsługi, reszta to tłumaczenie oferty. Nigdy „6 langues”.
   Etap 1: FR kompletny do akceptacji; pozostałe języki tłumaczymy z francuskiego po akceptacji Moniki.

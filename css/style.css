@@ -308,16 +308,37 @@ section { padding: 96px max(16px, calc((100% - var(--szer)) / 2)); }
   }
 }
 
-/* Pierwszy ekran: render 3D z RTX Daniela (03.10.2026), narzedzia/blender/lupek_scena.py.
-   Łupek i kora, niebieska żywica świecąca jak lawa, krawędzie w różowym złocie. Tekst po lewej na przyciemnieniu,
-   karta obrazu przezroczysta (render jest obrazem), plakietka „Image de synthèse” zostaje. */
+/* Pierwszy ekran: obrazy Daniela (03.10.2026), „fala”: czarny marmur z niebieskim kryształem, krawędzie w różowym złocie.
+   Komputer: poziomy obraz, tekst na czystej czerni po lewej. Telefon: pionowy obraz, kryształ nad tekstem. */
 .hero { position: relative; isolation: isolate;
-  background: #05080F url(../img/materialy/kora-3d-pc-1600.webp) 50% 50% / cover no-repeat; }
-@media (min-width: 1601px) { .hero { background-image: url(../img/materialy/kora-3d-pc.webp); } }
+  background: #020306 url(../img/materialy/fala-pc.webp) 70% 50% / cover no-repeat; }
 .hero::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: linear-gradient(90deg, rgba(5,8,15,.72) 0%, rgba(5,8,15,.66) 38%, rgba(5,8,15,.25) 58%, rgba(5,8,15,0) 72%); }
+  background: linear-gradient(90deg, rgba(2,3,6,.45) 0%, rgba(2,3,6,.25) 40%, rgba(2,3,6,0) 60%); }
 .hero .hero-obraz { background: none; border: 0; }
+.hero .hero-obraz .plakietka { left: auto; right: 12px; }
 @media (max-width: 900px) {
-  .hero { background: #05080F url(../img/materialy/kora-3d-tel.webp) 50% 0 / 100% auto no-repeat; }
-  .hero::before { background: linear-gradient(180deg, rgba(5,8,15,0) 0%, rgba(5,8,15,.15) 28%, rgba(5,8,15,.88) 46%, #05080F 62%); }
+  .hero { background: #020306 url(../img/materialy/fala-tel.webp) 50% -330px / 150% auto no-repeat; }
+  .hero::before { background: linear-gradient(180deg, rgba(2,3,6,0) 0%, rgba(2,3,6,.05) 34%, rgba(2,3,6,.85) 50%, #020306 62%); }
 }
+}
+
+/* Czerń z granatem zamiast turkusu Cap Bleu (Daniel 03.10.2026: spójnie z obrazami fali i marmuru). Różowe złoto zostaje. */
+:root { --noc: #05070D; --noc-2: #0C1322; --mat: #05070D; --mat-karta: #0C1322; --tekst-noc-2: #A7B1C2; }
+.pasek-demo { background: #0B0F18; color: #C9CFDA; border-bottom: 1px solid rgba(212,164,154,.25); }
+.naglowek { background: rgba(3,4,8,.94); }
+.plakietka { background: rgba(5,7,13,.8); }
+.karta { background: rgba(12,19,34,.88); backdrop-filter: blur(2px); }
+.hero-obraz, .monika-foto, .karta-obraz { background: radial-gradient(110% 80% at 70% 15%, rgba(212,164,154,.12), transparent 60%), linear-gradient(165deg, #142038, #05070D); }
+.jasna.druga { background: #E6E8EC; }
+.cel { background: #E6E8EC; }
+.cel:hover { background: #DCDFE5; }
+/* tła sekcji z obrazów Daniela: zabiegi na granatowym marmurze z korą, kontakt na klifie (lustro: skała po prawej) */
+#soins { background: linear-gradient(rgba(5,7,13,.78), rgba(5,7,13,.86)), #05070D url(../img/materialy/granat-kora-3.webp) 50% 50% / cover no-repeat; }
+#contact { background: linear-gradient(90deg, rgba(5,7,13,.55) 0%, rgba(5,7,13,.2) 55%, rgba(5,7,13,0) 75%), #05070D url(../img/materialy/klif-lustro.webp) 70% 50% / cover no-repeat; }
+@media (max-width: 900px) {
+  #contact { background: linear-gradient(rgba(5,7,13,.7), rgba(5,7,13,.85)), #05070D url(../img/materialy/klif-lustro.webp) 80% 50% / cover no-repeat; }
+  .pasek-dol { background: #05070D; }
+  .hero .pill.solid, .pasek-dol a.solid { box-shadow: 0 0 0 2px #05070D, 0 0 0 3px var(--rz); }
+}
+.stopka { background: #05070D; }
+#contact { background: linear-gradient(90deg, rgba(5,7,13,.82) 0%, rgba(5,7,13,.78) 60%, rgba(5,7,13,.76) 100%), #05070D url(../img/materialy/klif-lustro.webp) 100% 50% / cover no-repeat; }
