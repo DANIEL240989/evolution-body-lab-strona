@@ -320,7 +320,6 @@ section { padding: 96px max(16px, calc((100% - var(--szer)) / 2)); }
   .hero { background: #020306 url(../img/materialy/fala-tel.webp) 50% -330px / 150% auto no-repeat; }
   .hero::before { background: linear-gradient(180deg, rgba(2,3,6,0) 0%, rgba(2,3,6,.05) 34%, rgba(2,3,6,.85) 50%, #020306 62%); }
 }
-}
 
 /* Czerń z granatem zamiast turkusu Cap Bleu (Daniel 03.10.2026: spójnie z obrazami fali i marmuru). Różowe złoto zostaje. */
 :root { --noc: #05070D; --noc-2: #0C1322; --mat: #05070D; --mat-karta: #0C1322; --tekst-noc-2: #A7B1C2; }
@@ -346,3 +345,238 @@ section { padding: 96px max(16px, calc((100% - var(--szer)) / 2)); }
 /* Prawdziwe zdjęcie Moniki (od Daniela 03.10.2026), bez plakietki AI. Złota nitka jak przy przyciskach. */
 .monika-foto { background: none; border-radius: 4px; box-shadow: 0 0 0 1px var(--rz-linia); }
 .monika-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; border-radius: 4px; }
+
+/* =====================================================================================================================
+   RUCH I UKŁAD „Lando” (Daniel 03.10.2026: „landonorris.com 1:1, połączyć z jjettas.com i orchid.security”).
+   Odtworzony rytm i efekty, nie pliki: własne napisy, podpis, obrazy Daniela. Kolory i kroje bez zmian.
+   Kolejność: pierwszy ekran z pasem napisu i podpisem → manifest (słowa odsłaniane przewijaniem, schodki) →
+   zabiegi w poziomym torze (komputer) → pierwsza wizyta (dwie połówki, szklane karty, kula światła) →
+   Monika (wielki cytat) → pytania → kontakt → stopka jako ciemny panel nad różowozłotą poświatą.
+   Bez skryptu, przy ograniczonym ruchu i na telefonie: zwykły pionowy układ, wszystko widać od razu.
+   ===================================================================================================================== */
+:root { --lin: 'Manrope', system-ui, sans-serif; --mocno: #F6F0E4; --szary: #A7B1C2; }
+html { scroll-behavior: auto; }
+body { overflow-x: clip; }
+
+/* ---------- pierwszy ekran ---------- */
+.hero { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); align-items: start; overflow: hidden;
+  min-height: calc(100svh - 92px); padding-top: clamp(36px, 6vh, 80px); padding-bottom: clamp(190px, 27vh, 270px); }
+.hero-tresc { position: relative; z-index: 2; max-width: 640px; }
+.hero h1 { font-size: clamp(42px, 5.8vw, 84px); line-height: 1.02; letter-spacing: -.01em; }
+.hero .hero-obraz { position: static; aspect-ratio: auto; align-self: center; z-index: 2; order: 2; overflow: visible; }
+.hero .plakietka { left: auto; right: max(16px, calc((100% - var(--szer)) / 2)); bottom: 14px; z-index: 3; }
+.podpis { display: block; fill: none; stroke: var(--rz); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+.podpis .p1, .podpis .p2, #podpis-m path { stroke-dasharray: 1; }
+#podpis-m .p1 { stroke-dashoffset: var(--p1, 0); }
+#podpis-m .p2 { stroke-dashoffset: var(--p2, 0); }
+.podpis-hero { width: min(92%, 500px); margin: 8vh 0 0 auto; filter: drop-shadow(0 0 18px rgba(5,7,13,.6)); }
+
+/* pas napisu w dwóch rzędach, w przeciwnych kierunkach (za treścią) */
+.pas-napisu { position: absolute; left: 0; right: 0; bottom: clamp(12px, 3vh, 36px); z-index: 1; pointer-events: none; user-select: none; }
+.pas-rzad { overflow: hidden; white-space: nowrap; }
+.pas-tasma { display: inline-flex; will-change: transform; animation: pas-lewo 70s linear infinite; }
+.r2 .pas-tasma { animation-name: pas-prawo; }
+.pas-tasma span { font: 500 clamp(60px, 9.2vw, 150px)/.9 var(--szeryf); text-transform: uppercase; letter-spacing: -.005em; padding-right: .18em; }
+.r1 span { color: rgba(212, 164, 154, .30); }
+.r2 span { color: transparent; -webkit-text-stroke: 1px rgba(246, 240, 228, .30); }
+@keyframes pas-lewo { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes pas-prawo { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+html.ruch-js .pas-tasma { animation: none; }
+
+/* ---------- etykiety wyśrodkowane: kreska po obu stronach ---------- */
+.etykieta.srodek, .manifest .etykieta, .visite-naglowek .etykieta { justify-content: center; }
+.manifest .etykieta::after, .visite-naglowek .etykieta::after { content: ''; width: 28px; height: 1px; background: var(--rz); }
+
+/* ---------- manifest ---------- */
+.manifest { position: relative; padding-top: clamp(96px, 16vh, 180px); padding-bottom: clamp(72px, 12vh, 140px); text-align: center; border-top: 1px solid rgba(212,164,154,.18); }
+.manifest-srodek { position: relative; z-index: 1; }
+.manifest-tekst { font: 600 clamp(34px, 5.3vw, 86px)/1.04 var(--lin); text-transform: uppercase; letter-spacing: -.025em; color: var(--mocno);
+  max-width: 14.5em; margin: 0 auto; text-wrap: balance; }
+.t-em .nw { white-space: nowrap; }
+.manifest-tekst em, .stopka-slogan em { font: italic 500 1.14em/1 var(--szeryf); color: var(--rz); letter-spacing: 0; padding-right: .04em; }
+.cele { margin-top: clamp(72px, 12vh, 140px); text-align: left; }
+.cele-tytul { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--szary); margin: 0 0 22px; }
+.manifest .siatka4 { gap: clamp(16px, 2.4vw, 36px); margin-top: 0; }
+.manifest .cel { background: none; border-top: 1px solid rgba(212,164,154,.45); border-radius: 0; padding: 20px 0 0; color: var(--mocno);
+  transition: border-color .4s; }
+.manifest .cel:hover { background: none; border-top-color: var(--rz); }
+.manifest .cel h3 { font-size: 27px; margin: 10px 0 6px; transition: transform .5s cubic-bezier(.16,1,.3,1); }
+.manifest .cel:hover h3 { transform: translateX(6px); }
+.manifest .cel p { color: var(--szary); }
+.cel-nr { font: italic 500 18px var(--szeryf); color: var(--rz); }
+/* schodki: przejście blokami (tylko komputer z ruchem; ruch.js je włącza) */
+.schodki { display: none; position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; height: 62vh; overflow: hidden; align-items: flex-end; }
+.schodki i { position: relative; flex: 1; height: 100%; }
+.schodki i::before, .schodki i::after { content: ''; position: absolute; left: -1px; right: -1px; bottom: 0; }
+/* różowe złoto rośnie od dołu stopniami, noc zjeżdża od góry i spycha je w krawędź zabiegów */
+.schodki i::before { height: var(--h, 100%); background: var(--rz); transform-origin: 50% 100%; transform: scaleY(var(--r, 0)); }
+.schodki i::after { top: -2px; bottom: -2px; background: #05070D; transform-origin: 50% 0; transform: scaleY(var(--n, 0)); }
+.schodki i:nth-child(1) { --h: 34%; } .schodki i:nth-child(2) { --h: 47%; } .schodki i:nth-child(3) { --h: 60%; }
+.schodki i:nth-child(4) { --h: 73%; } .schodki i:nth-child(5) { --h: 86%; } .schodki i:nth-child(6) { --h: 100%; }
+.manifest.ze-schodkami { padding-bottom: calc(62vh + clamp(72px, 12vh, 140px)); }
+
+/* ---------- zabiegi: tor (domyślnie pionowo; poziomo na komputerze z ruchem) ---------- */
+#soins { position: relative; overflow: hidden; }
+#soins .plakietka { left: auto; right: 16px; bottom: 14px; top: auto; z-index: 3; }
+.slowo-tlo { position: absolute; left: 0; top: 24px; margin: 0; z-index: 0; pointer-events: none; user-select: none; white-space: nowrap;
+  font: 500 clamp(140px, 30vw, 500px)/.8 var(--szeryf); text-transform: uppercase; letter-spacing: -.02em;
+  color: transparent; -webkit-text-stroke: 1px rgba(212, 164, 154, .16); }
+.tor { position: relative; z-index: 1; }
+.tor-wstep { max-width: 560px; }
+.tor-wskazowka { display: none; }
+#soins .karty { gap: clamp(16px, 2vw, 28px); margin-top: 40px; }
+#soins .karta { background: rgba(6, 9, 18, .72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(212, 164, 154, .5); border-radius: 2px; padding: 10px; transition: border-color .4s, box-shadow .4s; }
+#soins .karta:hover { border-color: var(--rz); box-shadow: 0 0 0 1px rgba(212,164,154,.35), 0 30px 60px -30px rgba(0,0,0,.8); }
+.karta-obraz { position: relative; overflow: hidden; aspect-ratio: 4 / 3; }
+.karta-obraz img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.16,1,.3,1); }
+#soins .karta:hover .karta-obraz img { transform: scale(1.05); }
+.karta-obraz .plakietka { left: 8px; right: auto; bottom: 8px; }
+#soins .karta-tresc { padding: 18px 10px 10px; }
+.karta-nr { font: italic 500 46px/1 var(--szeryf); color: var(--rz); }
+.tor-koniec { max-width: 460px; margin-top: 48px; }
+.tor-koniec-tekst { font: 500 clamp(26px, 2.4vw, 36px)/1.2 var(--szeryf); color: var(--mocno); margin: 0 0 24px; }
+@media (min-width: 901px) {
+  #soins.tor-poziomo { height: 100vh; padding: 0; }
+  .tor-poziomo .tor { display: flex; align-items: center; gap: clamp(40px, 5vw, 96px); height: 100%; width: max-content;
+    padding: 96px max(48px, 6vw) 48px max(16px, calc((100vw - var(--szer)) / 2)); }
+  .tor-poziomo .tor-wstep { width: min(36vw, 520px); flex: none; }
+  .tor-poziomo .tor-wskazowka { display: flex; align-items: center; gap: 10px; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--rz); margin-top: 36px; }
+  .tor-poziomo .karty { display: flex; gap: clamp(28px, 3.4vw, 64px); margin: 0; }
+  .tor-poziomo .karta { width: clamp(290px, min(24vw, 46vh), 400px); flex: none; position: relative; }
+  .tor-poziomo .karta:nth-child(odd) { top: -7vh; }
+  .tor-poziomo .karta:nth-child(even) { top: 8vh; }
+  .tor-poziomo .tor-koniec { width: min(30vw, 440px); flex: none; margin: 0 0 0 2vw; }
+  .tor-poziomo .slowo-tlo { top: 50%; transform: translateY(-50%); font-size: clamp(200px, 38vw, 640px); }
+}
+
+/* ---------- pierwsza wizyta: dwie połówki, kula światła, szklane karty ---------- */
+#visite { position: relative; overflow: hidden; background: #05070D; color: var(--mocno); padding-top: clamp(96px, 15vh, 170px); }
+#visite .kula { position: absolute; left: 50%; top: 46%; width: min(1100px, 92vw); aspect-ratio: 1; border-radius: 50%; pointer-events: none; z-index: 0;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(58, 104, 186, .52), rgba(32, 62, 128, .24) 46%, rgba(12, 19, 34, 0) 100%); filter: blur(30px); }
+#visite > *:not(.kula) { position: relative; z-index: 1; }
+.duo { display: flex; justify-content: center; align-items: center; gap: clamp(24px, 4vw, 72px); margin-bottom: clamp(40px, 8vh, 96px);
+  font: 600 clamp(48px, 9vw, 170px)/.86 var(--lin); text-transform: uppercase; letter-spacing: -.035em; white-space: nowrap; }
+.duo-l { color: var(--mocno); }
+.duo-r { font: italic 500 1.12em/.86 var(--szeryf); color: var(--rz); letter-spacing: -.01em; }
+.duo-kreska { width: 1px; height: .9em; background: linear-gradient(transparent, var(--rz), transparent); transform-origin: 50% 50%; }
+.visite-naglowek { text-align: center; max-width: 760px; margin: 0 auto; }
+#visite h2 { color: var(--mocno); }
+#visite .kroki { gap: clamp(14px, 1.6vw, 24px); margin: clamp(36px, 6vh, 64px) 0 40px; }
+#visite .kroki li { border: 1px solid rgba(246, 240, 228, .12); border-top-color: rgba(212, 164, 154, .55); border-radius: 18px; padding: 26px 24px 30px;
+  background: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15); box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
+#visite .kroki .nr { display: block; font: italic 500 40px/1 var(--szeryf); color: var(--rz); margin-bottom: 18px; }
+#visite .kroki h3 { color: var(--mocno); }
+#visite .kroki p { color: var(--szary); }
+.visite-dol { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px 28px; text-align: center; }
+.visite-dol .info { margin: 0; color: var(--szary); }
+
+/* ---------- Monika: wielki cytat ---------- */
+#monika { position: relative; overflow: hidden; }
+#monika .slowo-tlo { top: 32px; left: -1vw; -webkit-text-stroke: 1px rgba(140, 79, 88, .16); }
+.monika { position: relative; z-index: 1; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(40px, 7vw, 110px); }
+.monika-foto { margin: 0; position: relative; aspect-ratio: 4 / 5; max-width: 440px; overflow: visible; border-radius: 2px; box-shadow: none; }
+.monika-foto::before { content: ''; position: absolute; inset: 0; transform: translate(18px, 18px); border: 1px solid rgba(140, 79, 88, .45); z-index: -1; }
+.monika-foto img { border-radius: 2px; }
+.podpis-monika { position: absolute; width: 74%; right: -18%; bottom: -12%; stroke: var(--rz-ciemne); stroke-width: 2.2; }
+.cytat { margin: 8px 0 28px; padding: 0; }
+.cytat p { font: italic 500 clamp(30px, 3.6vw, 54px)/1.1 var(--szeryf); color: var(--tekst); margin: 0; quotes: '« ' ' »'; }
+.cytat p::before { content: open-quote; color: var(--rz-ciemne); }
+.cytat p::after { content: close-quote; color: var(--rz-ciemne); }
+.monika-tekst > p:not(.etykieta):not(.info) { font-size: 18px; color: var(--tekst-2); }
+
+/* ---------- pytania: czysto, dwie kolumny ---------- */
+.faq-uklad { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+.faq-glowa { position: sticky; top: 110px; }
+.faq { max-width: none; margin: 0; border-top: 1px solid rgba(140, 79, 88, .25); }
+.faq details { padding: 0; }
+.faq summary { padding: 26px 0; font: 600 clamp(18px, 1.5vw, 21px)/1.35 var(--lin); align-items: center; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after, .faq details[open] summary::after { content: '+'; flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+  border: 1px solid rgba(140, 79, 88, .45); font: 400 22px/1 var(--lin); transition: transform .45s cubic-bezier(.16,1,.3,1), background .3s, color .3s; }
+.faq details[open] summary::after { transform: rotate(45deg); background: var(--rz-ciemne); color: #F7F3EA; border-color: var(--rz-ciemne); }
+.faq summary:hover::after { border-color: var(--rz-ciemne); }
+.faq p { margin: 0 0 26px; max-width: 46em; }
+
+/* ---------- kontakt ---------- */
+#contact { position: relative; }
+#contact h2 { font-size: clamp(40px, 5.6vw, 88px); }
+#contact .plakietka { left: auto; right: 16px; bottom: 14px; }
+html.leniwe #soins:not(.blisko) { background-image: linear-gradient(rgba(5,7,13,.78), rgba(5,7,13,.86)); }
+html.leniwe #contact:not(.blisko) { background-image: linear-gradient(90deg, rgba(5,7,13,.82) 0%, rgba(5,7,13,.78) 60%, rgba(5,7,13,.76) 100%); }
+
+/* ---------- stopka: ciemny panel nad różowozłotą poświatą ---------- */
+.stopka { position: relative; overflow: hidden; text-align: center; border: 0; color: var(--tekst);
+  background: #F7F3EA url(../img/materialy/len.webp) 0 0 / 128px; padding: clamp(40px, 8vh, 96px) clamp(10px, 2.4vw, 36px) clamp(16px, 3vh, 36px); }
+.stopka::before { content: ''; position: absolute; left: 50%; bottom: -34%; width: 130%; height: 90%; transform: translateX(-50%); pointer-events: none;
+  background: radial-gradient(closest-side, rgba(212, 164, 154, .85), rgba(212, 164, 154, .32) 52%, rgba(212, 164, 154, 0) 100%); }
+.stopka-panel { position: relative; z-index: 1; max-width: 1440px; margin: 0 auto; border-radius: clamp(22px, 3vw, 44px); color: var(--mocno);
+  padding: clamp(56px, 10vh, 120px) clamp(20px, 5vw, 80px) 28px; box-shadow: 0 50px 90px -40px rgba(5, 7, 13, .7); }
+.stopka-slogan { font: 600 clamp(40px, 7.4vw, 124px)/.98 var(--lin); text-transform: uppercase; letter-spacing: -.035em; margin: 0 auto; max-width: 11em; text-wrap: balance; }
+.podpis-stopka { width: clamp(150px, 16vw, 250px); margin: 8px auto 0; stroke-width: 3.4; }
+.stopka-kolumny { display: grid; grid-template-columns: 1fr auto 1fr; gap: 32px; align-items: end; margin-top: clamp(40px, 8vh, 88px); font-size: 14px; }
+.stopka-kolumny p { margin: 0 0 4px; }
+.stopka-menu { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; }
+.stopka-menu a { text-decoration: none; text-transform: uppercase; letter-spacing: .1em; font-size: 13px; color: var(--mocno); padding: 2px 0;
+  background: linear-gradient(var(--rz), var(--rz)) 0 100% / 0 1px no-repeat; transition: background-size .5s cubic-bezier(.16,1,.3,1); }
+.stopka-menu a:hover { background-size: 100% 1px; }
+.stopka-tyt { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--rz); margin-bottom: 10px !important; }
+.stopka-logo .logo { font-size: 28px; color: var(--mocno); }
+.stopka-logo p:not(.logo) { color: var(--szary); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+.stopka-kontakt { text-align: right; color: var(--szary); }
+.stopka-prawne { margin: 36px 0 0; padding-top: 18px; border-top: 1px solid rgba(246, 240, 228, .12); font-size: 13px; color: var(--szary); }
+
+/* ---------- kurtyna przy pierwszym wejściu w karcie i bezpieczniki ---------- */
+.kurtyna { display: none; }
+html.kurtyna-on .kurtyna { display: block; position: fixed; inset: 0; z-index: 200; pointer-events: none; }
+.k-gora, .k-dol { position: absolute; left: 0; right: 0; height: 50.2%; background: #05070D; }
+.k-gora { top: 0; } .k-dol { bottom: 0; }
+.k-znak, .k-pod { position: absolute; left: 0; right: 0; margin: 0; text-align: center; overflow: hidden; }
+.k-znak { bottom: calc(50% + 14px); font: 500 clamp(38px, 6vw, 92px)/1.08 var(--szeryf); color: var(--mocno); padding: 0 16px .06em; }
+.k-znak em { color: var(--rz); }
+.k-znak span, .k-pod span { display: inline-block; }
+.k-linia { position: absolute; left: 12%; right: 12%; top: 50%; height: 1px; transform-origin: 50% 50%;
+  background: linear-gradient(90deg, rgba(212,164,154,0), var(--rz) 25%, #F4DAD0 50%, var(--rz) 75%, rgba(212,164,154,0)); }
+.k-pod { top: calc(50% + 16px); font: 600 12px/1.6 var(--lin); letter-spacing: .32em; text-transform: uppercase; color: var(--rz); }
+html.kurtyna-on:not(.ruch-js) .kurtyna { animation: kurtyna-awaryjna .5s 4s forwards; }
+@keyframes kurtyna-awaryjna { to { opacity: 0; visibility: hidden; } }
+html.ruch:not(.ruch-js) .hero h1, html.ruch:not(.ruch-js) .hero-tresc .etykieta, html.ruch:not(.ruch-js) .podpis-hero { opacity: 0; animation: ruch-awaryjnie .01s 3s forwards; }
+@keyframes ruch-awaryjnie { to { opacity: 1; } }
+html.ruch-js .czeka { opacity: 0; }
+.ebl-linia-maska { padding-bottom: .06em; margin-bottom: -.06em; }
+
+/* ---------- telefon i tablet ---------- */
+@media (max-width: 1100px) {
+  .stopka-kolumny { grid-template-columns: 1fr 1fr; }
+  .stopka-logo { grid-column: 1 / -1; order: -1; }
+}
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding-bottom: 150px; min-height: 0; }
+  .hero .hero-obraz { order: 0; min-height: 23vh; display: flex; align-items: flex-end; }
+  .podpis-hero { width: 66%; margin: 0 auto 1vh; }
+  .pas-tasma span { font-size: clamp(56px, 19vw, 120px); }
+  .pas-napisu { bottom: 18px; }
+  .schodki { display: none !important; }
+  .slowo-tlo { font-size: 34vw; }
+  .monika { grid-template-columns: 1fr; }
+  .monika-foto { max-width: 340px; margin: 0 auto 40px; }
+  .podpis-monika { right: -8%; bottom: -10%; width: 70%; }
+  .faq-uklad { grid-template-columns: 1fr; }
+  .faq-glowa { position: static; }
+  .stopka { padding-bottom: 96px; }
+  .stopka::before { bottom: -10%; height: 70%; }
+}
+@media (max-width: 560px) {
+  .duo { flex-direction: column; font-size: 17vw; gap: 2px; }
+  .duo-kreska { width: 1.4em; height: 1px; background: linear-gradient(90deg, transparent, var(--rz), transparent); margin: 8px 0; }
+  .stopka-kolumny { grid-template-columns: 1fr; text-align: center; }
+  .stopka-menu { align-items: center; text-align: center; }
+  .stopka-kontakt { text-align: center; }
+  .manifest .cel h3 { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pas-tasma { animation: none; }
+  .faq summary::after, .manifest .cel h3, .karta-obraz img, .stopka-menu a { transition: none; }
+}

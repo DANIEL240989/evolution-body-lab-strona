@@ -49,11 +49,17 @@
   /* tekst z wyróżnieniem: *słowo* = kursywa w różowym złocie (bez innerHTML z tekstów) */
   function zWyroznieniem(el, t) {
     el.textContent = '';
-    t.split('*').forEach(function (cz, i) {
-      if (!cz) return;
-      if (i % 2) { var em = document.createElement('em'); em.textContent = cz; el.appendChild(em); }
-      else el.appendChild(document.createTextNode(cz));
-    });
+    var cz = t.split('*');
+    for (var i = 0; i < cz.length; i++) {
+      if (!cz[i]) continue;
+      if (i % 2) {
+        /* słowo z kropką/przecinkiem po nim w jednym kawałku: znak nie spada do nowej linii */
+        var nw = document.createElement('span'), em = document.createElement('em'), m = (cz[i + 1] || '').match(/^[.,;:!?»]+/);
+        nw.className = 'nw'; em.textContent = cz[i]; nw.appendChild(em);
+        if (m) { nw.appendChild(document.createTextNode(m[0])); cz[i + 1] = cz[i + 1].slice(m[0].length); }
+        el.appendChild(nw);
+      } else el.appendChild(document.createTextNode(cz[i]));
+    }
   }
 
   /* tła sekcji poza pierwszym ekranem: dopiero ok. 1,5 ekranu przed sekcją (klasa „leniwe” z <head>) */

@@ -46,3 +46,34 @@ test('wersja pokazowa jest ukryta przed Google', () => {
   assert.match(html, /noindex/);
   assert.match(kod('robots.txt'), /Disallow: \//);
 });
+
+test('ruch: biblioteki z cdnjs mają SRI i crossorigin, Lenis i silnik ruchu lokalnie', () => {
+  const cdn = [...html.matchAll(/<script src="https:\/\/cdnjs[^>]+>/g)].map(m => m[0]);
+  assert.ok(cdn.length >= 2);
+  for (const s of cdn) { assert.match(s, /integrity="sha384-[A-Za-z0-9+/=]+"/); assert.match(s, /crossorigin="anonymous"/); }
+  assert.match(html, /<script src="js\/lenis\.min\.js"><\/script>/);
+  assert.match(html, /<script src="js\/ruch\.js"><\/script>/);
+});
+
+test('ruch: ograniczony ruch i brak bibliotek = nic nie ukryte, bezpieczniki czasowe w CSS', () => {
+  const ruch = kod('js/ruch.js'), css = kod('css/style.css');
+  assert.match(ruch, /prefers-reduced-motion: reduce/);
+  assert.match(ruch, /if \(!ok\) \{ H\.classList\.remove\('ruch', 'kurtyna-on'\)/);
+  assert.match(css, /html\.kurtyna-on:not\(\.ruch-js\) \.kurtyna \{ animation: kurtyna-awaryjna \.5s 4s forwards/);
+  assert.match(css, /html\.ruch:not\(\.ruch-js\)[^{]+\{ opacity: 0; animation: ruch-awaryjnie \.01s 3s forwards/);
+  assert.match(ruch, /setTimeout\(function \(\) \{ zdejmij\(\); otwarta\(\); \}, 6000\)/);
+});
+
+test('plakietka „Image de synthèse” przy obrazach AI, zdjęcie Moniki bez plakietki', () => {
+  const sekcja = id => html.slice(html.indexOf(id), html.indexOf('</section>', html.indexOf(id)));
+  for (const id of ['class="hero', 'id="soins"', 'id="contact"']) assert.match(sekcja(id), /class="plakietka" data-t="image_synthese"/, id);
+  assert.doesNotMatch(sekcja('id="monika"'), /plakietka/);
+  assert.match(kod('js/site.js'), /\.plakietka'\)\.textContent = tekst\(lang, 'image_synthese'\)/);
+});
+
+test('teksty z wyróżnieniem (*słowo*) mają parzystą liczbę gwiazdek', () => {
+  for (const k of [...html.matchAll(/class="[^"]*t-em[^"]*" data-t="([^"]+)"/g)].map(m => m[1])) {
+    assert.ok(T.fr[k], k);
+    assert.equal((T.fr[k].match(/\*/g) || []).length % 2, 0, k);
+  }
+});
