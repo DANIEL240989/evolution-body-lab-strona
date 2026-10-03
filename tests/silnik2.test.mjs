@@ -23,7 +23,9 @@ test('silnik2.js: po efekty.js, tylko komputer z ruchem, bez konsoli, każda ga�
   assert.equal((s2.match(/return function \(\) \{/g) || []).length, 3);
   // warstwy tylko ze skryptu; CSS chowa je na telefonie i przy ograniczonym ruchu
   assert.doesNotMatch(html, /class="[^"]*(menu-przycisk|menu-pelne|panel-ekran|polysk|monika-noc)/);
-  assert.match(pal, /@media \(max-width: 900px\), \(prefers-reduced-motion: reduce\) \{\s*\.menu-przycisk, \.menu-pelne, \.panel-ekran, \.polysk, \.monika-noc, \.k-cien \{ display: none !important; \}/);
+  assert.match(pal, /@media \(max-width: 900px\), \(prefers-reduced-motion: reduce\) \{\s*\.panel-ekran, \.polysk, \.monika-noc, \.k-cien \{ display: none !important; \}/);
+  // od 03.10.2026 menu pełnoekranowe także na telefonie (Daniel: „teraz mobil”)
+  assert.match(s2, /mm\.add\('all', function \(\) \{\n    var nag = Q\('\.naglowek'\)/);
 });
 
 test('#1 płyn = maska: tusz ×0,3, zanik .90/klatkę (≤ 600 ms), nic nad blokiem tekstu, twarz bez efektu, bez refrakcji', () => {

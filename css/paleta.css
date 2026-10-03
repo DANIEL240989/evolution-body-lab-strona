@@ -727,7 +727,7 @@ html.ruch:not(.ruch-js) .kurtyna .k-pod, html.ruch:not(.ruch-js) .kurtyna .k-lin
 .menu-kreski i:first-child { top: 0; } .menu-kreski i:last-child { top: 8.5px; }
 .menu-x i { top: 4.25px !important; transform-origin: 50% 50%; }
 .menu-x i:first-child { transform: rotate(45deg); } .menu-x i:last-child { transform: rotate(-45deg); }
-@media (min-width: 901px) {
+@media all {   /* od 03.10.2026 menu także na telefonie; układ telefonu nadpisany w bloku TELEFON na końcu pliku */
   html.z-menu .menu-przycisk { display: inline-grid; place-items: center; flex: none; width: 56px; height: 56px; margin: -4px 0 -4px -6px; padding: 0;
     border: 1px solid var(--rz-linia); border-radius: 50%; background: rgba(10, 20, 44, .35); color: #F6F0E4; cursor: pointer;
     transition: border-color .3s var(--e-ui), background-color .3s var(--e-ui); }
@@ -854,7 +854,7 @@ html.ruch:not(.ruch-js) .kurtyna .k-pod, html.ruch:not(.ruch-js) .kurtyna .k-lin
 
 /* bezpieczniki SILNIKI-2: telefon i ograniczony ruch nigdy nie widzą nowych warstw */
 @media (max-width: 900px), (prefers-reduced-motion: reduce) {
-  .menu-przycisk, .menu-pelne, .panel-ekran, .polysk, .monika-noc, .k-cien { display: none !important; }
+  .panel-ekran, .polysk, .monika-noc, .k-cien { display: none !important; }
 }
 
 /* ---------- tor: tylko dwa zabiegi są numerowane („01 / 02”); pierwsza wizyta zamyka tor bez numeru (Daniel 03.10.2026) ---------- */
@@ -906,3 +906,51 @@ html.ruch:not(.ruch-js) .kurtyna .k-pod, html.ruch:not(.ruch-js) .kurtyna .k-lin
    (FR „Première / visite”, EN „First / visit”, DE „Erster / Besuch”), żeby nie wjeżdżał na urządzenie */
 .menu a, .pill { white-space: nowrap; }
 .tor-on .panel-wizyta .panel-tytul { width: min-content; overflow-wrap: normal; word-break: normal; }
+
+/* =====================================================================================================================
+   TELEFON (≤ 900 px), od 03.10.2026 (Daniel: „teraz mobil”). Lekko: bez WebGL i ciężkich warstw, ale ten sam charakter:
+   Monika narysowana w pierwszym ekranie, przyciski czarno-złote 24K, pełnoekranowe menu z medalionem. */
+@media (max-width: 900px) {
+  /* przyciski: pełne złoto 24K jak na komputerze (zamiast kości słoniowej) */
+  .pill.solid, .jasna .pill.solid, .hero .pill.solid, .pasek-dol a.solid {
+    background: var(--k24); background-size: 200% 100%; color: #050505; border: 1px solid #F3D47A; box-shadow: none; }
+  .pasek-dol { background: rgba(8, 15, 33, .92); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  .pasek-dol a { border-color: var(--rz-linia); }
+
+  /* pierwszy ekran: Monika na górze, tekst pod nią */
+  .hero { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(100svh - var(--nav, 64px)); padding-bottom: 120px; }
+  .hero .hero-fala, .hero.hero-rama .hero-fala, .hero.gl-on .hero-fala { display: block; position: absolute; inset: 0; z-index: -2; pointer-events: none; overflow: hidden;
+    clip-path: none; transform: none;
+    background: var(--ziarno), radial-gradient(70% 45% at 58% 30%, var(--granat-swiatlo), var(--granat) 62%, var(--granat-gleboki)); }
+  .hero-imie { display: block; position: absolute; left: 50%; top: 2svh; margin: 0; transform: translateX(-50%); white-space: nowrap; user-select: none;
+    font: 500 31vw/.8 var(--szeryf); text-transform: uppercase; letter-spacing: -.02em;
+    color: rgba(212, 164, 154, .05); -webkit-text-stroke: 1px rgba(212, 164, 154, .4); }
+  .hero-monika { display: block; position: absolute; top: 0; left: 50%; height: min(56svh, 132vw); width: auto; max-width: none;
+    transform: translateX(-42%); filter: drop-shadow(0 0 50px rgba(5, 10, 23, .7));
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 97%); mask-image: linear-gradient(180deg, #000 60%, transparent 97%);
+    animation: tel-monika 1.6s cubic-bezier(.16, 1, .3, 1) both, tel-oddech 9s ease-in-out 1.6s infinite alternate; }
+  /* tekst pod postacią czyta się na nocy, nie na rysunku */
+  .hero-tresc { position: relative; z-index: 2; text-shadow: 0 2px 18px rgba(5, 10, 23, .85); }
+  .hero-tresc::before { content: ''; position: absolute; z-index: -1; pointer-events: none; left: -24px; right: -24px; top: -90px; bottom: -40px;
+    background: linear-gradient(180deg, rgba(10, 20, 44, 0), rgba(10, 20, 44, .82) 34%, rgba(10, 20, 44, .92)); }
+  .hero h1 { font-size: clamp(34px, 10vw, 52px); }
+
+  /* pasek: logo, przycisk menu; języki są w menu */
+  html.z-menu .naglowek .jezyki { display: none; }
+  html.z-menu .menu-przycisk { display: inline-grid; place-items: center; flex: none; width: 46px; height: 46px; margin-left: auto; padding: 0;
+    border: 1px solid var(--rz-linia); border-radius: 50%; background: rgba(10, 20, 44, .35); color: #F6F0E4; cursor: pointer; }
+
+  /* menu: jedna kolumna, bez kadrów, przewijane, nad dolnym paskiem */
+  .mp-tlo { display: flex; flex-direction: column; align-items: flex-start; gap: 28px; overscroll-behavior: contain;
+    padding: calc(var(--nav, 64px) + 24px) 24px calc(40px + env(safe-area-inset-bottom, 0px)); }
+  .mp-kadry { display: none; }
+  .mp-link { font-size: clamp(34px, 10.5vw, 48px); gap: 14px; }
+  .mp-nr { min-width: 2em; font-size: 11px; }
+  .mp-bok { gap: 18px; } .mp-medalion img { width: 92px; }
+  .mp-jezyki { flex-wrap: wrap; font-size: 15px; } .mp-jezyki a { padding: 8px 8px; }
+  html.menu-otwarte .pasek-dol { display: none; }
+}
+@keyframes tel-monika { from { opacity: 0; transform: translate(-42%, 4%) scale(1.04); } to { opacity: 1; transform: translateX(-42%); } }
+@keyframes tel-oddech { from { transform: translateX(-42%) scale(1); } to { transform: translate(-42%, -1%) scale(1.025); } }
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) { .hero-monika { animation: none; } }

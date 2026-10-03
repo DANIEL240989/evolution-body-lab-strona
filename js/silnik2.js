@@ -48,7 +48,8 @@
   var LINKI = [['#soins', 'nav_soins', 0], ['#tarifs', 'nav_tarifs', 1], ['#visite', 'nav_visite', 2], ['#monika', 'nav_monika', -1],
     ['#faq', 'nav_faq', 2], ['#contact', 'nav_contact', -1]];
   var KADRY = [['img/rtx/ems-urzadzenie-900.webp', 'mp-kadr-wolny'], ['img/rtx/krio-urzadzenie-900.webp', 'mp-kadr-wolny'], ['img/rtx/kabina-daniel-1200.webp', '']];
-  mm.add(KOMPUTER, function () {
+  /* od 03.10.2026 także telefon (Daniel: „teraz mobil”): to samo menu, na wąskim ekranie jedna kolumna bez kadrów */
+  mm.add('all', function () {
     var nag = Q('.naglowek'); if (!nag) return;
     var D = W.EBL || {};
     /* przycisk w pasku */
