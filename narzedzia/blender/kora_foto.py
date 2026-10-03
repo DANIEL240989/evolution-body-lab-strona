@@ -88,10 +88,10 @@ pole = M('ADD', M('ADD', sep.outputs['X'], 0.6), M('MULTIPLY', M('SUBTRACT', sz.
 w_pek = M('MULTIPLY', M('SUBTRACT', 1.0, zakres(pole, 0.0, 1.6)), M('LESS_THAN', dw, 0.32))   # żywica w pęknięciach przy styku
 zywica = M('MAXIMUM', M('LESS_THAN', pole, 0.0), w_pek, clamp=True)
 # różowe złoto: cienka obwódka tam, gdzie żywica spotyka drewno
-obw = M('SUBTRACT', M('MAXIMUM', M('LESS_THAN', pole, 0.11), M('MULTIPLY', M('SUBTRACT', 1.0, zakres(pole, 0.0, 1.7)), M('LESS_THAN', dw, 0.36)), clamp=True), zywica)
+obw = M('SUBTRACT', M('MAXIMUM', M('LESS_THAN', pole, 0.04), M('MULTIPLY', M('SUBTRACT', 1.0, zakres(pole, 0.0, 1.7)), M('LESS_THAN', dw, 0.345)), clamp=True), zywica)
 # kintsugi: różowe złoto w najgłębszych pęknięciach drewna, tylko w części desek
 kz_maska = node('ShaderNodeTexNoise'); kz_maska.inputs['Scale'].default_value = 0.5; L.new(ob, kz_maska.inputs['Vector'])
-kintsugi = M('MULTIPLY', M('LESS_THAN', dw, 0.3), M('GREATER_THAN', kz_maska.outputs['Fac'], 0.45))
+kintsugi = M('MULTIPLY', M('MULTIPLY', M('GREATER_THAN', dw, 0.2), M('LESS_THAN', dw, 0.235)), M('GREATER_THAN', kz_maska.outputs['Fac'], 0.47))   # cienka linia wzdłuż krawędzi pęknięcia
 kintsugi = M('MULTIPLY', kintsugi, M('SUBTRACT', 1.0, zywica))
 zloto = M('MAXIMUM', obw, kintsugi, clamp=True)
 
@@ -120,8 +120,8 @@ blekit.inputs['Coat Roughness'].default_value = 0.02
 L.new(rb.outputs['Color'], blekit.inputs['Emission Color']); blekit.inputs['Emission Strength'].default_value = 0.04
 
 zl = node('ShaderNodeBsdfPrincipled'); zl.inputs['Base Color'].default_value = lin('#E8B3A6')
-zl.inputs['Metallic'].default_value = 1.0; zl.inputs['Roughness'].default_value = 0.16
-zl.inputs['Emission Color'].default_value = lin('#F2B9A8'); zl.inputs['Emission Strength'].default_value = 0.9   # złoto świeci delikatnie, czytelne także w cieniu
+zl.inputs['Metallic'].default_value = 1.0; zl.inputs['Roughness'].default_value = 0.1
+zl.inputs['Emission Color'].default_value = lin('#F2B9A8'); zl.inputs['Emission Strength'].default_value = 0.3   # złoto świeci delikatnie, czytelne także w cieniu
 
 m1 = node('ShaderNodeMixShader'); L.new(zywica, m1.inputs[0]); L.new(drewno.outputs[0], m1.inputs[1]); L.new(blekit.outputs[0], m1.inputs[2])
 m2 = node('ShaderNodeMixShader'); L.new(zloto, m2.inputs[0]); L.new(m1.outputs[0], m2.inputs[1]); L.new(zl.outputs[0], m2.inputs[2])
