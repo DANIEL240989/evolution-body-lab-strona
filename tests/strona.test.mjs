@@ -155,6 +155,11 @@ test('Monika wycięta na końcu strony: prawdziwe zdjęcie bez plakietki, pliki 
   const stopka = html.slice(html.indexOf('<footer'), html.indexOf('</footer>'));
   assert.match(stopka, /<figure class="stopka-monika">[\s\S]*src="img\/monika-wycieta-900\.webp"[\s\S]*img\/monika-wycieta\.webp 1080w/);
   assert.match(stopka, /data-t-attr="alt:monika_alt"/);
-  assert.doesNotMatch(stopka, /plakietka/);
+  // Monika (figure) bez plakietki; plakietka tylko dla witryny AI w tle panelu (Daniel 03.10.2026)
+  const fig = stopka.slice(stopka.indexOf('<figure class="stopka-monika">'), stopka.indexOf('</figure>', stopka.indexOf('<figure class="stopka-monika">')));
+  assert.doesNotMatch(fig, /plakietka/);
+  assert.equal((stopka.match(/class="plakietka/g) || []).length, 1);
+  assert.match(stopka, /class="plakietka stopka-witryna-plak" data-t="image_synthese"/);
+  assert.ok(existsSync(new URL('../img/rtx/witryna-1920.webp', import.meta.url)));
   for (const f of ['img/monika-wycieta.webp', 'img/monika-wycieta-900.webp']) assert.ok(existsSync(new URL('../' + f, import.meta.url)), f);
 });

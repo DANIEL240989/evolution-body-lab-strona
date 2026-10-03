@@ -537,3 +537,22 @@ main p, .stopka p { text-wrap: pretty; }
 }
 /* kriolipoliza: chłodna poświata (lodowy błękit z aplikatorów) zamiast różowego złota; cień i odbicie bez zmian */
 .panel-chlod .urzadzenie::before { background: radial-gradient(closest-side, rgba(150, 196, 238, .20), rgba(120, 170, 225, .07) 55%, rgba(120, 170, 225, 0) 100%); top: 0; height: 70%; }
+
+/* ---------- Witryna gabinetu nocą w tle zamknięcia (Daniel 03.10.2026: „dawaj”). Grafika AI, lokal jeszcze nie istnieje:
+   mocno przygaszona (napisy na kolumnach nieczytelne), wtopiona w granat, z plakietką. Tylko desktop. ---------- */
+.stopka-witryna, .stopka-witryna-plak { display: none; }
+@media (min-width: 901px) {
+  .stopka-panel { position: relative; isolation: isolate; }
+  .stopka-witryna { display: block; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: url(../img/rtx/witryna-1920.webp) 62% 40% / cover no-repeat;
+    -webkit-mask-image: radial-gradient(120% 95% at 60% 35%, #000 25%, transparent 85%);
+    mask-image: radial-gradient(120% 95% at 60% 35%, #000 25%, transparent 85%);
+    opacity: .42; filter: saturate(.85) brightness(.8); }
+  .stopka-witryna::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(10,20,44,.9) 0%, rgba(10,20,44,.55) 45%, rgba(10,20,44,.25) 75%, rgba(10,20,44,.6) 100%),
+                linear-gradient(180deg, rgba(10,20,44,.2) 0%, rgba(10,20,44,.85) 100%); }
+  .stopka-witryna-plak { display: inline-block; position: absolute; left: auto; right: 18px; top: 16px; bottom: auto; z-index: 3; }
+}
+@media (min-width: 901px) and (max-resolution: 1dppx) and (max-width: 1300px) {
+  .stopka-witryna { background-image: url(../img/rtx/witryna-1200.webp); }
+}
