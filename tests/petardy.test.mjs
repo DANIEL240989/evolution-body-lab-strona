@@ -32,9 +32,13 @@ test('teleport: medalion z plakietką, manifest po drugiej stronie, WebGL z bezp
   assert.match(s, /img\/ilustracje\/dama-roza-900\.webp/);
   assert.match(s, /class="portal-druga[^"]*"[\s\S]*data-t="manifeste"/);
   assert.match(s, /id="objectifs"/);
-  for (const f of ['img/ilustracje/dama-roza-900.webp', 'img/glebia/dama-roza-900-glebia.webp', 'img/materialy/granat-kora-3.webp', 'img/glebia/granat-kora-3-glebia.webp']) {
+  for (const f of ['img/ilustracje/dama-roza-900.webp', 'img/glebia/dama-roza-900-glebia.webp']) {
     assert.ok(pet.includes(f), f); assert.ok(jest(f), f);
   }
+  // druga strona: czysty granat z pyłem i pierścieniami w shaderze, bez obrazu kamienia; plakietka gaśnie z różą
+  assert.doesNotMatch(pet, /img\/materialy\//);
+  assert.match(pet, /vec3 pyl\(/);
+  assert.match(pet, /plak\.style\.opacity/);
   assert.match(pet, /failIfMajorPerformanceCaveat: !SW/);
   assert.match(pet, /COMPILE_STATUS\)\) \{ gl\.deleteShader\(s\); return null; \}/);
   assert.match(pet, /webglcontextlost/);
@@ -55,8 +59,21 @@ test('tor: 3 panele, ceny z dane.js, „Réserver ce soin” nadal zaznacza zabi
   assert.match(site, /a\.className = 'karta panel'/);                   // js/rezerwacja.js: #karty-zabiegow .karta a
   assert.match(site, /tekst\(lang, 'a_partir'\) \+ ' ' \+ z\.cena \+ ' €'/);
   assert.match(site, /if \(z\.test\)/);                                 // kriolipoliza z dopiskiem TEST
-  assert.match(site, /var RTX = \{ ems: null, cryo: null, visite: null \}/);
-  for (const m of site.match(/img\/materialy\/[a-z0-9-]+\.webp/g)) assert.ok(jest(m), m);
+  // RTX: EMS = stacja + kombinezon, kriolipoliza = urządzenie (przezroczyste tło), wizyta = kabina Daniela (kadr wtopiony w granat); wszystko z plakietką
+  assert.match(site, /ems: \{ wolny: true, src: 'img\/rtx\/ems-urzadzenie-900\.webp', srcset: 'img\/rtx\/ems-urzadzenie-900\.webp 593w, img\/rtx\/ems-urzadzenie-1400\.webp 922w'/);
+  assert.match(site, /obok: \{ src: 'img\/rtx\/ems-kombinezon-900\.webp'/);
+  for (const f of ['img/rtx/ems-kombinezon-900.webp', 'img/rtx/ems-kombinezon-1400.webp', 'img/rtx/krio-urzadzenie-900.webp', 'img/rtx/krio-urzadzenie-1400.webp', 'img/rtx/kabina-daniel-1200.webp', 'img/rtx/kabina-daniel-1920.webp']) assert.ok(jest(f), f);
+  assert.match(site, /return h \+ '<span class="plakietka"><\/span>';/);   // każdy render i wideo RTX z plakietką
+  assert.match(site, /cryo: \{ wolny: true, chlod: true, src: 'img\/rtx\/krio-urzadzenie-900\.webp'/);
+  assert.match(site, /visite: \{ kadr: true, src: 'img\/rtx\/kabina-daniel-1200\.webp'/);
+  assert.match(site, /preload="none"/);   // wideo (gdy wpisane w RTX) ładowane dopiero przy zbliżeniu
+  assert.match(site, /prefers-reduced-motion: reduce/);
+  for (const f of ['img/rtx/ems-urzadzenie-900.webp', 'img/rtx/ems-urzadzenie-1400.webp']) assert.ok(jest(f), f);
+  assert.match(pet, /setProperty\('--ry'/);
+  // panele na granacie: bez obrazów kamienia; do czasu renderów RTX element zastępczy (obręcz z monogramem), bez plakietki
+  assert.doesNotMatch(site, /img\/materialy\//);
+  assert.match(site, /rtx \? obrazRtx\(rtx\) : zastepczy\(\)/);
+  assert.match(s, /class="panel-obraz panel-zastep"[\s\S]*class="zastep-krag zastep-medalion"[\s\S]*dama-kapelusz/);
   for (const k of ['tor_fond', 'tor_3_lien', 'visite_label', 'soins_fin', 'visite_pratique', 'reserver_soin']) assert.ok(T.fr[k], k);
   // kolejność sekcji i kotwice bez zmian
   assert.ok(html.indexOf('id="approche"') < html.indexOf('id="soins"') && html.indexOf('id="soins"') < html.indexOf('id="tarifs"'));
@@ -64,12 +81,12 @@ test('tor: 3 panele, ceny z dane.js, „Réserver ce soin” nadal zaznacza zabi
   assert.match(pet, /ScrollTrigger\.addEventListener\('refresh', doCelu\)/);   // wejście linkiem #sekcja po pinach
 });
 
-test('pierwszy ekran: Monika narysowana nad falą, bez plakietki na postaci, mapa głębi pod stałą nazwą', () => {
+test('pierwszy ekran: Monika narysowana na granacie, bez plakietki, mapa głębi pod stałą nazwą', () => {
   const fala = html.slice(html.indexOf('<div class="hero-fala"'), html.indexOf('</div>', html.indexOf('<div class="hero-fala"'))).replace(/<!--[\s\S]*?-->/g, '');
   assert.match(fala, /class="hero-monika" src="img\/monika-rys-hero\.webp"/);
   assert.match(fala, /data-t="h_wielki"/);
   assert.doesNotMatch(fala, /plakietka/);
-  assert.match(sekcja('class="hero'), /class="plakietka" data-t="image_synthese"/);   // plakietka zostaje na fali
+  assert.doesNotMatch(sekcja('class="hero'), /plakietka/);   // granat to nie obraz AI, Monika to prawdziwa osoba
   for (const f of ['img/monika-rys.webp', 'img/monika-rys-hero.webp', 'img/glebia/monika-rys-glebia.webp', 'narzedzia/monika_hero.py']) assert.ok(jest(f), f);
   assert.ok(gl.includes("'img/monika-rys-hero.webp', 'img/glebia/monika-rys-glebia.webp'"));
   assert.match(pal, /\.hero-imie, \.hero-monika \{ display: none; \}/);     // telefon bez zmian

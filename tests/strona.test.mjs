@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import vm from 'node:vm';
 
 const kod = p => readFileSync(new URL('../' + p, import.meta.url), 'utf8');
@@ -66,7 +66,10 @@ test('ruch: ograniczony ruch i brak bibliotek = nic nie ukryte, bezpieczniki cza
 
 test('plakietka „Image de synthèse” przy obrazach AI, zdjęcie Moniki bez plakietki', () => {
   const sekcja = id => html.slice(html.indexOf(id), html.indexOf('</section>', html.indexOf(id)));
-  for (const id of ['class="hero', 'id="soins"', 'id="contact"']) assert.match(sekcja(id), /class="plakietka" data-t="image_synthese"/, id);
+  // #soins: medalion damy w panelu „Première visite” (ilustracja AI) ma plakietkę
+  assert.match(sekcja('id="soins"'), /class="plakietka" data-t="image_synthese"/);
+  // pierwszy ekran i kontakt stoją na czystym granacie (nie obraz AI): bez plakietki
+  for (const id of ['class="hero', 'id="contact"']) assert.doesNotMatch(sekcja(id), /plakietka/, id);
   assert.doesNotMatch(sekcja('id="monika"'), /plakietka/);
   assert.match(kod('js/site.js'), /\.plakietka'\)\.textContent = tekst\(lang, 'image_synthese'\)/);
 });
@@ -103,8 +106,6 @@ test('ruch: efekty P1 silników (tokeny, okno logo, ramka hero, skos, linia krok
   assert.match(pal, /\.hero-fala \{ display: none; \}/);
   for (const k of ['hero-rama', 'k-okno', 'skos', 'pod-skosem', 'z-linia', 'zapalony']) assert.match(ruch, new RegExp("'" + k + "'"), k);
   assert.doesNotMatch(html, /class="[^"]*(hero-rama|skos|z-linia|unosi)/);
-  // plakietka hero jedzie z rogiem ramki, nie znika
-  assert.match(pal, /\.hero\.hero-rama \.hero-obraz \.plakietka \{ right: var\(--pr/);
 });
 
 test('WebGL (js/gl.js): ładowany po ruch.js, bezpieczniki, mapy głębi na miejscu, latarka CSS usunięta', () => {
@@ -124,7 +125,7 @@ test('WebGL (js/gl.js): ładowany po ruch.js, bezpieczniki, mapy głębi na miej
   assert.match(gl, /visibilitychange/);
   // płótna aria-hidden, plakietka zostaje w HTML
   assert.equal((gl.match(/setAttribute\('aria-hidden', 'true'\)/g) || []).length, 2);
-  for (const f of ['img/glebia/fala-pc-glebia.webp', 'img/glebia/fala-tel-glebia.webp']) {
+  for (const f of ['img/monika-rys-hero.webp', 'img/glebia/monika-rys-glebia.webp']) {
     assert.ok(gl.includes(f), f);
     assert.ok(readFileSync(new URL('../' + f, import.meta.url)).length > 1000, f);
   }
@@ -133,4 +134,27 @@ test('WebGL (js/gl.js): ładowany po ruch.js, bezpieczniki, mapy głębi na miej
   assert.match(pal, /@media \(prefers-reduced-motion: reduce\) \{\s*\.gl-hero, \.gl-plotno \{ display: none; \}/);
   assert.doesNotMatch(html, /gl-on|gl-fx/);
   assert.doesNotMatch(ruch + pal, /hero-latarka/);
+});
+
+test('granat zamiast kamienia (03.10.2026): obrazy kamienia nie są ładowane, pliki Daniela zostają w repo', () => {
+  const pliki = ['index.html', 'css/style.css', 'css/paleta.css', 'css/rezerwacja.css', 'js/site.js', 'js/gl.js', 'js/petardy.js', 'js/ruch.js'];
+  const kamien = /img\/materialy\/(fala-|granat-kora|klif|karta-|kamien|lupek|kora-3d)/;
+  for (const p of pliki) assert.doesNotMatch(kod(p).replace(/\/\*[\s\S]*?\*\/|<!--[\s\S]*?-->/g, ''), kamien, p);
+  for (const f of ['fala-pc', 'fala-tel', 'granat-kora-3', 'klif-lustro', 'karta-1']) assert.ok(existsSync(new URL('../img/materialy/' + f + '.webp', import.meta.url)), f);
+  const pal = kod('css/paleta.css');
+  assert.match(pal, /--granat: #0A142C;/);
+  assert.match(pal, /--tlo-granat: var\(--ziarno\), var\(--winieta\), var\(--granat\);/);
+  assert.match(pal, /feTurbulence/);                                        // ziarno przeciw pasom gradientu
+  // shader pierwszego ekranu: tło liczone, przygaszenie na twarzy Moniki
+  const gl = kod('js/gl.js');
+  assert.match(gl, /vec3 tlo\(vec2 q\)/);
+  assert.match(gl, /float tw=1\.-\.92\*fa;/);
+});
+
+test('Monika wycięta na końcu strony: prawdziwe zdjęcie bez plakietki, pliki pod stałymi nazwami', () => {
+  const stopka = html.slice(html.indexOf('<footer'), html.indexOf('</footer>'));
+  assert.match(stopka, /<figure class="stopka-monika">[\s\S]*src="img\/monika-wycieta-900\.webp"[\s\S]*img\/monika-wycieta\.webp 1080w/);
+  assert.match(stopka, /data-t-attr="alt:monika_alt"/);
+  assert.doesNotMatch(stopka, /plakietka/);
+  for (const f of ['img/monika-wycieta.webp', 'img/monika-wycieta-900.webp']) assert.ok(existsSync(new URL('../' + f, import.meta.url)), f);
 });

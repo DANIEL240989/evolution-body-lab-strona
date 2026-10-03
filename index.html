@@ -49,17 +49,14 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
 <main id="top">
   <section class="hero noc">
     <div class="hero-fala" aria-hidden="true">
-      <!-- Monika narysowana (plik Daniela img/monika-rys.webp; wersja do pierwszego ekranu z bluzką wtopioną w złoto i czerń:
-           img/monika-rys-hero.webp). Prawdziwa osoba, nie AI-gabinet: bez plakietki (plakietka zostaje na fali). -->
+      <!-- Monika narysowana (plik Daniela img/monika-rys-hero.webp) na czystym granacie (Daniel 03.10.2026: „zamiast kamienia
+           czysty ciemnogranatowy tło”). Prawdziwa osoba, tło bez obrazu AI: w pierwszym ekranie nie ma plakietki. -->
       <p class="hero-imie" data-t="h_wielki"></p>
       <img class="hero-monika" src="img/monika-rys-hero.webp" width="1024" height="1536" alt="" decoding="async" fetchpriority="high">
     </div>
     <div class="pas-napisu" aria-hidden="true">
       <div class="pas-rzad r1"><div class="pas-tasma"><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span></div></div>
       <div class="pas-rzad r2"><div class="pas-tasma"><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span></div></div>
-    </div>
-    <div class="hero-obraz" role="img" data-t-attr="aria-label:image_synthese">
-      <span class="plakietka" data-t="image_synthese"></span>
     </div>
     <div class="hero-tresc">
       <p class="etykieta" data-t="h_sur"></p>
@@ -105,7 +102,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
     <div class="schodki" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
   </section>
 
-  <section class="noc tor3" id="soins" data-tlo>
+  <section class="noc tor3" id="soins">
     <!-- 3 PETARDY W LEWO (js/petardy.js): komputer z ruchem = przypięta scena, przewijanie w dół przesuwa 3 pełnoekranowe
          panele w lewo. Panele 01–02 buduje site.js z js/dane.js (klasa .karta: „Réserver ce soin” zaznacza zabieg
          w kreatorze wizyty, plik rezerwacja.js). Bez skryptu, przy ograniczonym ruchu i na telefonie: panele jeden pod drugim. -->
@@ -119,8 +116,13 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
       <div class="tor3-tasma">
         <div class="karty" id="karty-zabiegow"></div>
         <article class="panel panel-wizyta" data-zabieg="visite">
-          <div class="panel-obraz">
-            <img src="img/materialy/granat-kora-lustro.webp" width="1536" height="1024" loading="lazy" decoding="async" data-t-attr="alt:image_synthese" alt="">
+          <!-- do czasu renderu RTX (js/site.js, RTX.visite): medalion ilustracji damy w złotej obręczy, z plakietką -->
+          <div class="panel-obraz panel-zastep">
+            <div class="zastep">
+              <span class="zastep-krag zastep-medalion"><img src="img/ilustracje/dama-kapelusz-600.webp" srcset="img/ilustracje/dama-kapelusz-600.webp 600w, img/ilustracje/dama-kapelusz-900.webp 900w"
+                sizes="(max-width: 900px) 52vw, 58vh" width="900" height="900" loading="lazy" decoding="async" data-t-attr="alt:ilustracja_alt" alt=""></span>
+              <span class="zastep-linia" aria-hidden="true"></span>
+            </div>
             <span class="plakietka" data-t="image_synthese"></span>
           </div>
           <div class="panel-tresc">
@@ -220,7 +222,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
     </div>
   </section>
 
-  <section class="noc" id="contact" data-tlo>
+  <section class="noc" id="contact">
     <p class="etykieta" data-t="contact_label"></p>
     <h2 data-t="contact_titre"></h2>
     <p class="lead" data-t="rdv_lead"></p>
@@ -319,13 +321,18 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
     </dl>
     </aside>
     </div>
-    <span class="plakietka" data-t="image_synthese"></span>
   </section>
 </main>
 
 <footer class="stopka">
   <div class="stopka-panel noc">
     <p class="stopka-slogan t-em" data-t="footer_slogan"></p>
+    <!-- Monika wycięta z prawdziwego zdjęcia (Daniel 03.10.2026: „na końcu dodaj Monikę wyciętą, tło bezbarwne”; BiRefNet
+         na RTX), wtopiona w granat. Prawdziwe zdjęcie, zgoda potwierdzona: bez plakietki. -->
+    <figure class="stopka-monika">
+      <img src="img/monika-wycieta-900.webp" srcset="img/monika-wycieta-900.webp 676w, img/monika-wycieta.webp 1080w"
+        sizes="(max-width: 900px) min(72vw, 340px), min(30vw, 460px)" width="1080" height="1437" loading="lazy" decoding="async" data-t-attr="alt:monika_alt" alt="">
+    </figure>
     <div class="stopka-kolumny">
       <nav class="stopka-menu" data-t-attr="aria-label:footer_pages">
         <p class="stopka-tyt" data-t="footer_pages"></p>

@@ -3,17 +3,17 @@
    Ładowany PO css/paleta.css. Paleta bez zmian: czerń, biel, złoto 24K tylko na pełnych przyciskach, numerach
    oraz wybranym dniu i godzinie (czarny tekst), różowe złoto na obrysach i kreskach.
    Formularz bez animacji wejścia; mikrointerakcje 150–250 ms, wyłączone przy ograniczonym ruchu. */
-:root { --rdv-szklo: rgba(9, 9, 10, .72); --rdv-obrys: rgba(212, 164, 154, .34); --rdv-blad: #F2A7A0; --rdv-t: 200ms; }
+:root { --rdv-szklo: rgba(8, 15, 34, .74); --rdv-obrys: rgba(212, 164, 154, .34); --rdv-blad: #F2A7A0; --rdv-t: 200ms; }
 
 /* ------------------------------------------------- CENNIK ------------------------------------------------- */
 #tarifs { position: relative; overflow: hidden;
-  background: radial-gradient(70% 60% at 85% 0%, rgba(212, 164, 154, .10), transparent 70%),
-              radial-gradient(60% 50% at 0% 100%, rgba(227, 181, 71, .05), transparent 70%), var(--noc); }
+  background: var(--ziarno, none), radial-gradient(70% 60% at 85% 0%, rgba(212, 164, 154, .10), transparent 70%),
+              radial-gradient(60% 50% at 0% 100%, rgba(227, 181, 71, .04), transparent 70%), var(--winieta, none), var(--noc); }
 .tarifs-glowa { max-width: 760px; }
 .tarifs-glowa h2 { margin: 0; font-size: clamp(38px, 4.4vw, 64px); }
 .cennik { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 2.6vw, 40px); margin-top: clamp(36px, 6vh, 64px); }
 .cennik-poz { position: relative; padding: clamp(26px, 3vw, 48px); border: 1px solid var(--rz-linia); border-radius: 2px;
-  background: linear-gradient(160deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .012)), rgba(10, 10, 11, .6); }
+  background: linear-gradient(160deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .012)), rgba(8, 15, 34, .6); }
 /* druga, cieńsza ramka w środku: karta jak menu w spa */
 .cennik-poz::before { content: ''; position: absolute; inset: 9px; border: 1px solid rgba(212, 164, 154, .14); pointer-events: none; }
 .cennik-glowa { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 20px; align-items: end; }
@@ -32,6 +32,18 @@
   padding-top: clamp(24px, 3.5vh, 36px); border-top: 1px solid var(--rz-linia); }
 .tarifs-note { margin: 0; max-width: 36em; color: var(--tekst-noc-2); font-size: 15px; }
 .tarifs-dol .pill { flex: none; }
+/* jakość 03.10.2026: karta EMS miała pusty dół, a dopisek TEST ściskał podtytuł kriolipolizy („… ZONE PAR / ZONE”)
+   i spychał „02” niżej niż „01”. Teraz: numer i tytuł od góry na jednej linii, dopisek w rogu karty, lista cen
+   dosunięta do dołu karty (ostatnie ceny obu kart na jednej linii, jak w karcie spa). */
+@media (min-width: 901px) {
+  .cennik-poz { display: flex; flex-direction: column; }
+  .cennik-glowa { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+  .cennik-nr { margin-top: -.04em; }
+  .cennik-test { position: absolute; top: clamp(22px, 2.2vw, 34px); right: clamp(22px, 2.2vw, 34px); }
+  .cennik-poz:has(.cennik-test) .cennik-tyt h3 { padding-right: 150px; }
+  .cennik-glowa { margin-bottom: clamp(22px, 3vh, 32px); }
+  .cennik-lista { margin-top: auto; }
+}
 @media (max-width: 900px) {
   .cennik { grid-template-columns: 1fr; gap: 24px; }
   .tarifs-dol { flex-direction: column; align-items: flex-start; }

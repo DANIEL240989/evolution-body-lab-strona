@@ -311,13 +311,13 @@ section { padding: 96px max(16px, calc((100% - var(--szer)) / 2)); }
 /* Pierwszy ekran: obrazy Daniela (03.10.2026), „fala”: czarny marmur z niebieskim kryształem, krawędzie w różowym złocie.
    Komputer: poziomy obraz, tekst na czystej czerni po lewej. Telefon: pionowy obraz, kryształ nad tekstem. */
 .hero { position: relative; isolation: isolate;
-  background: #020306 url(../img/materialy/fala-pc.webp) 70% 50% / cover no-repeat; }
+  background: #020306; }
 .hero::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background: linear-gradient(90deg, rgba(2,3,6,.45) 0%, rgba(2,3,6,.25) 40%, rgba(2,3,6,0) 60%); }
 .hero .hero-obraz { background: none; border: 0; }
 .hero .hero-obraz .plakietka { left: auto; right: 12px; }
 @media (max-width: 900px) {
-  .hero { background: #020306 url(../img/materialy/fala-tel.webp) 50% -330px / 150% auto no-repeat; }
+  .hero { background: #020306; }
   .hero::before { background: linear-gradient(180deg, rgba(2,3,6,0) 0%, rgba(2,3,6,.05) 34%, rgba(2,3,6,.85) 50%, #020306 62%); }
 }
 
@@ -332,15 +332,15 @@ section { padding: 96px max(16px, calc((100% - var(--szer)) / 2)); }
 .cel { background: #E6E8EC; }
 .cel:hover { background: #DCDFE5; }
 /* tła sekcji z obrazów Daniela: zabiegi na granatowym marmurze z korą, kontakt na klifie (lustro: skała po prawej) */
-#soins { background: linear-gradient(rgba(5,7,13,.78), rgba(5,7,13,.86)), #05070D url(../img/materialy/granat-kora-3.webp) 50% 50% / cover no-repeat; }
-#contact { background: linear-gradient(90deg, rgba(5,7,13,.55) 0%, rgba(5,7,13,.2) 55%, rgba(5,7,13,0) 75%), #05070D url(../img/materialy/klif-lustro.webp) 70% 50% / cover no-repeat; }
+#soins { background: linear-gradient(rgba(5,7,13,.78), rgba(5,7,13,.86)), #05070D; }
+#contact { background: linear-gradient(90deg, rgba(5,7,13,.55) 0%, rgba(5,7,13,.2) 55%, rgba(5,7,13,0) 75%), #05070D; }
 @media (max-width: 900px) {
-  #contact { background: linear-gradient(rgba(5,7,13,.7), rgba(5,7,13,.85)), #05070D url(../img/materialy/klif-lustro.webp) 80% 50% / cover no-repeat; }
+  #contact { background: linear-gradient(rgba(5,7,13,.7), rgba(5,7,13,.85)), #05070D; }
   .pasek-dol { background: #05070D; }
   .hero .pill.solid, .pasek-dol a.solid { box-shadow: 0 0 0 2px #05070D, 0 0 0 3px var(--rz); }
 }
 .stopka { background: #05070D; }
-#contact { background: linear-gradient(90deg, rgba(5,7,13,.82) 0%, rgba(5,7,13,.78) 60%, rgba(5,7,13,.76) 100%), #05070D url(../img/materialy/klif-lustro.webp) 100% 50% / cover no-repeat; }
+#contact { background: linear-gradient(90deg, rgba(5,7,13,.82) 0%, rgba(5,7,13,.78) 60%, rgba(5,7,13,.76) 100%), #05070D; }
 
 /* Prawdziwe zdjęcie Moniki (od Daniela 03.10.2026), bez plakietki AI. Złota nitka jak przy przyciskach. */
 .monika-foto { background: none; border-radius: 4px; box-shadow: 0 0 0 1px var(--rz-linia); }

@@ -36,6 +36,13 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
   przy zachowaniu obecnej palety (czerń, złoto jako akcent, kość słoniowa); pierwsza zmiana: noc pod
   tekstem pierwszego ekranu na telefonie i wygaszenie marmuru `#soins` w `#05070D` przed „Première | visite”.
 
+## Tło i obrazy od 03.10.2026 (Daniel: „zamiast kamienia czysty ciemnogranatowy”)
+Ciemne sekcje: czysty granat `#0A142C` (brzegi `#050A17`, poświata `#101C3A`, karty `#0E1A36`) z delikatnym ziarnem, BEZ
+obrazów kamienia/marmuru/kryształu (fala, granat-kora, klif, karta-* zostają w repo, nieużywane; pilnuje test).
+Pierwszy ekran: narysowana Monika (`img/monika-rys-hero.webp`) w WebGL z głębią z RTX; płyn = światło (jedwab, ciekłe złoto),
+twarz Moniki bez efektu. Tor 3 petard: 01 stacja + kombinezon EMS, 02 urządzenie krio, 03 kabina (grafiki Daniela w `img/rtx/`,
+z plakietką). Koniec strony: Monika wycięta z prawdziwego zdjęcia (`img/monika-wycieta*.webp`, bez plakietki).
+
 ## Słowa Daniela z początku projektu (03.10.2026: „czemu olewasz moje słowa”) — obowiązują zawsze
 - „landonorris.com robimy 1 do 1 bez pierdolenia”, „strona bilioner, zero lipy”: ten sam poziom co wzory (Lando, jjettas,
   Orchid), czyli WebGL (2,5D z głębi, płyn pod kursorem, dystorsje), nie same lekkie animacje CSS. 1 do 1 = układ, rytm,

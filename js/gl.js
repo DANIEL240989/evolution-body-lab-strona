@@ -1,12 +1,13 @@
 /* Evolution Body Lab: silnik WebGL (03.10.2026). Daniel: „kilka efektów mamy, ale nie to, co w tamtych stronach”.
    Mechanika wzorów (projekt/wzory/SILNIKI.md #6 i #10), kod i shadery własne, bez bibliotek (CSP: tylko self + cdnjs):
-   1. Pierwszy ekran (.hero-fala): obraz „fala” Daniela żyje w 2,5D z mapy głębi (img/glebia/*-glebia.webp, jasne = blisko):
-      paralaksa zależna od głębi za myszą (wygładzenie ok. 0,35 s), lekki dryf w czasie, przy przewijaniu kamera
-      „wjeżdża” w obraz (zoom zależny od głębi). Telefon: sam dryf + żyroskop, jeśli działa bez pytania o zgodę.
+   1. Pierwszy ekran (.hero-fala, komputer): od 03.10.2026 czysty głęboki granat liczony w shaderze (Daniel: „zamiast tego
+      kamienia czysty ciemnogranatowy tło”), na nim gigantyczny napis i Monika (img/monika-rys-hero.webp) w 2,5D z mapy
+      głębi (img/glebia/monika-rys-glebia.webp, jasne = blisko): paralaksa za myszą (wygładzenie ok. 0,35 s), lekki dryf,
+      przy przewijaniu kamera „wjeżdża” (zoom zależny od głębi). Telefon: bez WebGL, granat z CSS.
    2. Płyn pod kursorem (komputer z myszą): symulacja na teksturach ping-pong w 1/6 rozdzielczości (adwekcja, wir,
       dywergencja, ciśnienie Jacobiego, odjęcie gradientu). Mysz wstrzykuje prędkość i „tusz” odcinkiem (bez kropek przy
-      szybkim ruchu). Tusz jest maską: w śladzie ten sam obraz w tonacji różowego złota i złota 24K (w shaderze, bez
-      nowego pliku), z izoliniami głębi, połyskiem od światła za kursorem, refrakcją i aberracją chromatyczną na krawędzi.
+      szybkim ruchu). Ślad rysuje ŚWIATŁO na granacie: połysk jak jedwab / ciekłe złoto (różowe złoto → 24K), włókna
+      wzdłuż ruchu, refrakcja Moniki i napisu z rozszczepieniem barw na krawędzi; na twarzy Moniki prawie zero.
    3. Karty zabiegów (#soins) i medaliony ilustracji: przy wjeździe w ekran i przy najechaniu obraz faluje w shaderze,
       kanały RGB rozchodzą się przy krawędziach. Jeden wspólny kontekst poza DOM, wynik kopiowany do lekkiego płótna 2D
       tylko na czas efektu; po efekcie wraca zwykły <img>.
@@ -117,46 +118,52 @@
       'gl_FragColor=vec4(texture2D(uV,vUv).xy-.5*vec2(R-L,T-B),0.,1.);}',
     mnoz: P + 'varying vec2 vUv;uniform sampler2D uT;uniform float uM;void main(){gl_FragColor=uM*texture2D(uT,vUv);}',
 
-    /* pierwszy ekran: 2,5D + płyn + złota wersja w śladzie */
-    hero: P + 'varying vec2 vUv;uniform sampler2D uImg,uGl,uTusz,uV,uMon,uMonGl,uNap;uniform vec2 uRes,uPar,uSw,uSwiatlo,uParM,uParW;uniform vec4 uKadr,uMonK,uNapK;' +
-      'uniform float uZoom,uPlyn,uCzas,uRefr,uMonOn;uniform vec3 uTlo;' +
-      /* warstwy nad falą (komputer): gigantyczny napis, na nim Monika; każda ze swoją paralaksą i zoomem kamery */
+    /* pierwszy ekran (od 03.10.2026 bez kamienia, Daniel: „czysty ciemnogranatowy tło”): granat liczony w shaderze
+       (ciemniejsze brzegi, dwie ledwo widoczne poświaty, ziarno), na nim gigantyczny napis i Monika z paralaksą 2,5D.
+       Płyn: ślad kursora jest ŚWIATŁEM, nie farbą: połysk jak jedwab / ciekłe złoto (normalna z gradientu śladu,
+       odblask za kursorem, włókna wzdłuż ruchu, jaśniejszy brzeg fałdy), dodawany do granatu, a Monika i napis są
+       w śladzie lekko załamane (refrakcja z rozszczepieniem barw na krawędzi). Na Monice światło przygaszone,
+       na twarzy prawie zero (maska owalu twarzy w kadrze img/monika-rys-hero.webp + alfa postaci). */
+    hero: P + 'varying vec2 vUv;uniform sampler2D uTusz,uV,uMon,uMonGl,uNap;uniform vec2 uRes,uPar,uSwiatlo,uParM,uParW,uTx;uniform vec4 uMonK,uNapK;' +
+      'uniform float uZoom,uPlyn,uCzas,uRefr,uMonOn;' +
       'vec2 gM,gW;' +
       'float wn(vec2 u){return step(0.,u.x)*step(u.x,1.)*step(0.,u.y)*step(u.y,1.);}' +
-      'vec3 kol(vec2 su,vec2 q){vec3 c=texture2D(uImg,su).rgb;if(uMonOn>.5){' +
+      'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}' +
+      /* granat: baza #0B1530 w środku kadru, #050A17 na brzegach; poświata różowego złota za Moniką, chłodna w lewym górnym rogu */
+      'vec3 tlo(vec2 q){vec2 u=q/uRes;vec2 o=uPar/uRes*.5;' +
+      'vec3 c=mix(vec3(.043,.082,.188),vec3(.020,.039,.090),smoothstep(.15,1.05,length((u-vec2(.56,.46))*vec2(1.,1.3))));' +
+      'vec2 d1=(u-vec2(.74,.52)-o)*vec2(1.6,1.);c+=vec3(.831,.643,.604)*.055*exp(-dot(d1,d1)*7.);' +
+      'vec2 d2=(u-vec2(.18,.22)+o)*vec2(1.3,1.);c+=vec3(.12,.20,.38)*.09*exp(-dot(d2,d2)*5.);return c;}' +
+      'vec3 kol(vec2 q){vec3 c=tlo(q);if(uMonOn>.5){' +
       'vec2 qw=.5*uRes+(q-.5*uRes)/(1.+uZoom*.7);vec2 uw=(qw-uNapK.xy)/uNapK.zw+gW;vec4 w=texture2D(uNap,uw)*wn(uw);c=mix(c,w.rgb,w.a);' +
       'vec2 qm=.5*uRes+(q-.5*uRes)/(1.+uZoom*1.4);vec2 um=(qm-uMonK.xy)/uMonK.zw+gM;vec4 m=texture2D(uMon,um)*wn(um);c=mix(c,m.rgb,m.a);}return c;}' +
-      'float glb(vec2 s){return texture2D(uGl,s).r;}' +
-      'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}' +
       'vec3 zloto(float x){x=clamp(x,0.,1.);' +
-      'vec3 c=mix(vec3(.018,.011,.010),vec3(.34,.19,.15),smoothstep(0.,.22,x));' +        /* głęboki cień różowego złota */
-      'c=mix(c,vec3(.831,.643,.604),smoothstep(.16,.58,x));' +                              /* #D4A49A */
-      'return mix(c,vec3(.984,.906,.631),smoothstep(.52,.96,x));}' +                        /* 24K #FBE7A1 */
-      'void main(){vec2 px=vec2(vUv.x,1.-vUv.y)*uRes;vec2 u0=(px-uKadr.xy)/uKadr.zw;' +
-      /* 2,5D: odwrotne odwzorowanie paralaksy (punkt stały, 4 kroki) + zoom kamery zależny od głębi */
-      'vec2 off=uPar/uKadr.zw;vec2 s=u0;for(int i=0;i<4;i++){float d=glb(s);s=.5+(u0-off*(d-.45)-.5)/(1.+uZoom*(.35+d));}' +
-      'float d=glb(s);' +
-      'gM=vec2(0.);gW=vec2(0.);if(uMonOn>.5){vec2 qm0=.5*uRes+(px-.5*uRes)/(1.+uZoom*1.4);vec2 um0=(qm0-uMonK.xy)/uMonK.zw;' +
-      'float dm=texture2D(uMonGl,um0).r;gM=-uParM*(.55+.7*dm)/uMonK.zw;dm=texture2D(uMonGl,um0+gM).r;gM=-uParM*(.55+.7*dm)/uMonK.zw;gW=-uParW/uNapK.zw;}' +
-      'vec4 tz=uPlyn>.5?texture2D(uTusz,vUv):vec4(0.);vec2 v=uPlyn>.5?texture2D(uV,vUv).xy:vec2(0.);' +
-      'float m=smoothstep(.035,.7,tz.r);float kr=m*(1.-m)*4.;' +
-      'vec2 rf=v*uRefr;float lr=length(rf);if(lr>.014)rf*=.014/lr;vec2 sr=s+rf*(m+kr)/uKadr.zw*uRes;' +
-      'vec2 dir=lr>1e-5?rf/lr:vec2(1.,0.);vec2 ca=dir*kr*.0022*uRes/uKadr.zw;' +
-      'vec3 baza=kol(s,px);' +
-      'vec3 c=baza;if(m+kr>.002){vec2 pq=px+(sr-s)*uKadr.zw,cq=ca*uKadr.zw;' +
-      'vec3 zr=vec3(kol(sr+ca,pq+cq).r,kol(sr,pq).g,kol(sr-ca,pq-cq).b);' +
-      'float l=dot(zr,vec3(.299,.587,.114));' +
-      /* połysk złotej folii: normalna z luminancji obrazu (żyłki marmuru), światło idzie za kursorem */
-      'vec2 e=uSw;vec3 j=vec3(.333);' +
-      'float lx=dot(kol(sr+vec2(e.x,0.),pq+vec2(1.5,0.))-kol(sr-vec2(e.x,0.),pq-vec2(1.5,0.)),j),' +
-      'ly=dot(kol(sr+vec2(0.,e.y),pq+vec2(0.,1.5))-kol(sr-vec2(0.,e.y),pq-vec2(0.,1.5)),j);' +
-      'vec3 n=normalize(vec3(-lx*2.6,ly*2.6,1.));vec3 hv=normalize(normalize(vec3(uSwiatlo,1.))+vec3(0.,0.,1.));' +
-      'float bl=pow(max(dot(n,hv),0.),30.);' +
-      'vec3 zl=zloto(pow(l,.8)*2.1+d*.06)*(.86+.28*bl)+bl*vec3(1.,.93,.78)*.3*smoothstep(.02,.12,l);' +
-      'c=mix(mix(baza,zr,kr),zl,m)+vec3(.831,.643,.604)*kr*.07;}' +
-      /* poza obrazem (telefon: pod falą) czerń tła sekcji */
-      'float w=step(0.,u0.x)*step(u0.x,1.)*step(0.,u0.y)*smoothstep(1.,.985,u0.y);c=mix(uTlo,c,w);' +
-      'c+=(hash(px+fract(uCzas))-.5)/255.;gl_FragColor=vec4(c,1.);}',
+      'vec3 c=mix(vec3(.30,.17,.13),vec3(.831,.643,.604),smoothstep(0.,.45,x));' +                 /* różowe złoto #D4A49A */
+      'return mix(c,vec3(.984,.906,.631),smoothstep(.45,1.,x));}' +                                  /* 24K #FBE7A1 */
+      'void main(){vec2 px=vec2(vUv.x,1.-vUv.y)*uRes;' +
+      'gM=vec2(0.);gW=vec2(0.);float fa=0.,ma=0.;if(uMonOn>.5){vec2 qm0=.5*uRes+(px-.5*uRes)/(1.+uZoom*1.4);vec2 um0=(qm0-uMonK.xy)/uMonK.zw;' +
+      'float dm=texture2D(uMonGl,um0).r;gM=-uParM*(.55+.7*dm)/uMonK.zw;dm=texture2D(uMonGl,um0+gM).r;gM=-uParM*(.55+.7*dm)/uMonK.zw;gW=-uParW/uNapK.zw;' +
+      'vec2 uq=um0+gM;ma=texture2D(uMon,uq).a*wn(uq);fa=smoothstep(1.2,.72,length((uq-vec2(.52,.27))/vec2(.27,.25)));}' +
+      'vec3 baza=kol(px);vec3 c=baza;' +
+      'if(uPlyn>.5){vec4 tz=texture2D(uTusz,vUv);float m=smoothstep(.03,.6,tz.r);float kr=m*(1.-m)*4.;' +
+      'if(m+kr>.002){vec2 v=texture2D(uV,vUv).xy;' +
+      'float tw=1.-.92*fa;float att=(1.-.5*ma)*tw;' +                                                  /* twarz: prawie bez światła i refrakcji */
+      'vec2 rf=v*uRefr*tw;float lr=length(rf);if(lr>.012)rf*=.012/lr;vec2 dir=lr>1e-5?rf/lr:vec2(1.,0.);' +
+      'vec2 pq=px+rf*(m+kr)*uRes;vec2 ca=dir*kr*1.6;' +
+      'vec3 zr=vec3(kol(pq+ca).r,kol(pq).g,kol(pq-ca).b);' +
+      /* normalna z gradientu śladu: fałdy jedwabiu */
+      'float hx=texture2D(uTusz,vUv+vec2(uTx.x,0.)).r-texture2D(uTusz,vUv-vec2(uTx.x,0.)).r;' +
+      'float hy=texture2D(uTusz,vUv+vec2(0.,uTx.y)).r-texture2D(uTusz,vUv-vec2(0.,uTx.y)).r;' +
+      'vec3 n=normalize(vec3(-hx*7.,hy*7.,1.));vec3 hv=normalize(normalize(vec3(uSwiatlo,.85))+vec3(0.,0.,1.));' +
+      'float bl=pow(max(dot(n,hv),0.),42.);float rim=clamp(1.-n.z,0.,1.);' +
+      'float wl=.85+.15*sin(dot(px,vec2(-dir.y,dir.x))*.16+tz.r*6.+uCzas*.4);' +            /* włókna wzdłuż ruchu */
+      'float I=(.22*m+.30*rim*smoothstep(0.,.35,m)+.80*bl*m+.05*kr)*wl*att;' +
+      'c=mix(baza,zr,clamp(kr*.9+m*.35,0.,1.)*tw);' +
+      'c+=zloto(.25+.55*m+.6*bl)*I;' +
+      'c=mix(c,c*vec3(1.06,.99,.93),m*.5*att);}}' +
+      'c=min(c,vec3(1.));' +
+      /* ziarno ok. ±1,5/255: na granacie bez pasów gradientu */
+      'c+=(hash(px+fract(uCzas*.37))-.5)*3./255.;gl_FragColor=vec4(c,1.);}',
 
     /* karty i medaliony: fala + rozejście kanałów RGB przy krawędziach (tekstury z premultiplikowaną alfą) */
     karta: P + 'varying vec2 vUv;uniform sampler2D uImg;uniform vec2 uRes,uObr,uMysz;uniform float uWej,uNad,uCzas;' +
@@ -182,12 +189,9 @@
     var pr = {}, fbo = null, plyn = false, tex = {}, gotowe = false, raf = 0, widac = true;
     var POSTAC = ['img/monika-rys-hero.webp', 'img/glebia/monika-rys-glebia.webp'];
     var czcionkiGotowe = Promise.race([(document.fonts && document.fonts.ready) || Promise.resolve(), new Promise(function (r) { setTimeout(r, 2500); })]);
-    var ZRODLA = { pc: ['img/materialy/fala-pc.webp', 'img/glebia/fala-pc-glebia.webp'],
-                   tel: ['img/materialy/fala-tel.webp', 'img/glebia/fala-tel-glebia.webp'] };
     /* parametry (komputer / telefon) */
-    var PAR = { pc: [22, 14], tel: [10, 7] }, ZAPAS = 16, SYM = 6, ITER = 14,
+    var PAR = [22, 14], SYM = 6, ITER = 14,
         ZANIK_V = 1.1, ZANIK_T = .85, WIR = 16, PROM = .0016, SILA = 1.5, TUSZ = .55, REFR = 2.4e-5;
-    var tlo = [2 / 255, 3 / 255, 6 / 255];
 
     function zbuduj() {
       trojkat(gl);
@@ -195,13 +199,11 @@
         pr[k] = program(gl, /^(wir|wirowosc|dywergencja|cisnienie|gradient)$/.test(k) ? VS_S : VS, FS[k]);
         if (!pr[k]) return false;
       }
-      tex.img = tekstura(gl, gl.LINEAR); tex.gl = tekstura(gl, gl.LINEAR); tex.zero = piksel(gl, 0, 0, 0, 0);
+      tex.zero = piksel(gl, 0, 0, 0, 0);
       tex.mon = piksel(gl, 0, 0, 0, 0); tex.monGl = piksel(gl, 128, 128, 128, 255); tex.nap = piksel(gl, 0, 0, 0, 0);
       gl.bindTexture(gl.TEXTURE_2D, tex.mon); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.bindTexture(gl.TEXTURE_2D, tex.monGl); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.bindTexture(gl.TEXTURE_2D, tex.nap); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.bindTexture(gl.TEXTURE_2D, tex.gl);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([115, 115, 115, 255]));
       return true;
     }
     /* format FBO płynu: half float; bez renderowania do half float płyn wyłączony (2,5D zostaje) */
@@ -242,23 +244,14 @@
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
-    /* kadr jak w CSS: komputer „70% 50% / cover”, telefon „50% -330px / 150% auto”; ZAPAS px na paralaksę */
-    var cssW = 1, cssH = 1, dpr = 1, iw = 1536, ih = 1024, tryb = '', kadr = [0, 0, 1, 1];
-    function liczKadr() {
-      var dw, dh, ox, oy;
-      if (tryb === 'tel') { dw = cssW * 1.5; dh = dw * ih / iw; ox = (cssW - dw) * .5; oy = -330; }
-      else { var s = Math.max(cssW / iw, cssH / ih); dw = iw * s; dh = ih * s; ox = (cssW - dw) * .7; oy = (cssH - dh) * .5; }
-      var k = 1 + 2 * ZAPAS / Math.min(dw, dh), nw = dw * k, nh = dh * k;
-      kadr[0] = ox - (nw - dw) * (tryb === 'tel' ? .5 : .7); kadr[1] = tryb === 'tel' ? oy - (nh - dh) * .15 : oy - (nh - dh) * .5;
-      kadr[2] = nw; kadr[3] = nh;
-    }
+    var cssW = 1, cssH = 1, dpr = 1, tryb = '';
     function rozmiar() {
       var w = fala.clientWidth, h = fala.clientHeight; if (!w || !h) return;
       dpr = Math.min(W.devicePixelRatio || 1, TEL.matches ? 1 : 1.5);
       cssW = w; cssH = h;
       var pw = Math.round(w * dpr), ph = Math.round(h * dpr);
       if (cv.width !== pw || cv.height !== ph) { cv.width = pw; cv.height = ph; }
-      liczKadr(); miejsca(); napis();
+      miejsca(); napis();
       if (plyn) { var sw = Math.max(48, Math.min(256, Math.round(w / SYM))); fboPlynu(sw, Math.max(32, Math.round(sw * h / w))); }
     }
     /* Monika i napis za nią (komputer): miejsce bierzemy z warstw DOM w .hero-fala (css/paleta.css), żeby płótno
@@ -284,26 +277,24 @@
       if ('letterSpacing' in c) c.letterSpacing = cs.letterSpacing;
       c.fillStyle = cs.color; c.textBaseline = 'alphabetic';
       var m = c.measureText(t), asc = m.actualBoundingBoxAscent || parseFloat(cs.fontSize) * .7, desc = m.actualBoundingBoxDescent || 0;
-      c.fillText(t, 0, (napEl.offsetHeight + asc - desc) / 2);
+      var y = (napEl.offsetHeight + asc - desc) / 2;
+      c.fillText(t, 0, y);
+      /* obrys 1 px różowym złotem (css/paleta.css: -webkit-text-stroke), żeby napis czytał się na granacie jako drugi plan */
+      var sw = parseFloat(cs.webkitTextStrokeWidth) || 0;
+      if (sw > 0) { c.lineWidth = sw; c.strokeStyle = cs.webkitTextStrokeColor; c.strokeText(t, 0, y); }
       gl.bindTexture(gl.TEXTURE_2D, tex.nap); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, napCv);
     }
+    /* tło liczy shader: wczytujemy tylko Monikę z mapą głębi (komputer); na telefonie pierwszy ekran zostaje w CSS */
     var ladowanie = 0;
     function wczytaj() {
       var t = TEL.matches ? 'tel' : 'pc'; if (t === tryb) return Promise.resolve();
       tryb = t; var nr = ++ladowanie;
-      return obraz(ZRODLA[t][0]).then(function (im) {
-        if (nr !== ladowanie || !gl || gl.isContextLost()) return;
-        iw = im.naturalWidth; ih = im.naturalHeight; wgraj(gl, tex.img, im, false);
-        liczKadr();
-        var glb = obraz(ZRODLA[t][1]).then(function (g) { if (nr === ladowanie && !gl.isContextLost()) wgraj(gl, tex.gl, g, false); }, function () {});
-        if (t !== 'pc' || !monImg) { monOn = false; hero.classList.remove('gl-postac'); return glb; }
-        var mon = Promise.all([obraz(POSTAC[0]), obraz(POSTAC[1]).catch(function () { return null; })]).then(function (r) {
-          if (nr !== ladowanie || gl.isContextLost()) return;
-          wgraj(gl, tex.mon, r[0], false); if (r[1]) wgraj(gl, tex.monGl, r[1], false);
-          monOn = true; miejsca();
-          return czcionkiGotowe.then(function () { if (monOn) { napis(); hero.classList.add('gl-postac'); } });
-        }, function () { monOn = false; });
-        return Promise.all([glb, mon]);
+      if (t !== 'pc' || !monImg) { monOn = false; hero.classList.remove('gl-postac'); return Promise.resolve(); }
+      return Promise.all([obraz(POSTAC[0]), obraz(POSTAC[1]).catch(function () { return null; })]).then(function (r) {
+        if (nr !== ladowanie || gl.isContextLost()) return;
+        wgraj(gl, tex.mon, r[0], v2); if (r[1]) wgraj(gl, tex.monGl, r[1], false);   /* WebGL2: mipmapy, Monika ostra bez migotania */
+        monOn = true; miejsca();
+        return czcionkiGotowe.then(function () { if (monOn) { napis(); hero.classList.add('gl-postac'); } });
       });
     }
 
@@ -394,7 +385,7 @@
       }
       var k = 1 - Math.exp(-dt / .35);
       sx += (mx - sx) * k; sy += (my - sy) * k;
-      var p = TEL.matches ? PAR.tel : PAR.pc;
+      var p = PAR;
       var dryfX = Math.sin(czas * .21) * .22 + Math.sin(czas * .057) * .12, dryfY = Math.cos(czas * .17) * .18;
       if (TEL.matches) { dryfX *= 2.2; dryfY *= 2.2; }
       var przew = Math.max(0, Math.min(1.2, (W.scrollY || 0) / (innerHeight || 1)));
@@ -404,11 +395,11 @@
         else if (czasPlynu < 1e9) { wyczysc(); czasPlynu = 1e9; }
       }
       var u = uzyj(pr.hero);
-      gl.uniform2f(u.uRes, cssW, cssH); gl.uniform4f(u.uKadr, kadr[0], kadr[1], kadr[2], kadr[3]);
+      gl.uniform2f(u.uRes, cssW, cssH);
       gl.uniform2f(u.uPar, (sx + dryfX) * p[0], (sy + dryfY) * p[1] + przew * p[1] * 1.4);
-      gl.uniform2f(u.uSw, 1.5 / kadr[2], 1.5 / kadr[3]); gl.uniform2f(u.uSwiatlo, sx * .55, -sy * .55);
+      gl.uniform2f(u.uSwiatlo, sx * .55, -sy * .55);
+      if (fbo) gl.uniform2f(u.uTx, 1 / fbo.tw, 1 / fbo.th);
       gl.uniform1f(u.uZoom, przew * .07 + wjazd * .06); gl.uniform1f(u.uCzas, czas); gl.uniform1f(u.uRefr, REFR);
-      gl.uniform3f(u.uTlo, tlo[0], tlo[1], tlo[2]);
       /* Monika: większa paralaksa niż fala (bliżej kamery), przy przewijaniu unosi się szybciej; napis: mniejsza */
       gl.uniform1f(u.uMonOn, monOn ? 1 : 0);
       var hs = hero.style, msx = (parseFloat(hs.getPropertyValue('--fp')) || 0) * (parseFloat(hs.getPropertyValue('--msx')) || 0);
@@ -418,12 +409,15 @@
       tex2(4, tex.mon, u.uMon); tex2(5, tex.monGl, u.uMonGl); tex2(6, tex.nap, u.uNap);
       var aktywny = plyn && czasPlynu < 1e9;
       gl.uniform1f(u.uPlyn, aktywny ? 1 : 0);
-      tex2(0, tex.img, u.uImg); tex2(1, tex.gl, u.uGl);
       tex2(2, aktywny ? fbo.tusz.a.t : tex.zero, u.uTusz); tex2(3, aktywny ? fbo.v.a.t : tex.zero, u.uV);
       rysujDo(null);
       if (!gotowe) { gotowe = true; requestAnimationFrame(function () { hero.classList.add('gl-on'); }); }
     }
-    function graj() { if (!raf && widac && !document.hidden && pr.hero) { ost = 0; raf = requestAnimationFrame(klatka); } }
+    /* telefon: pierwszy ekran bez WebGL (czysty granat z CSS), dopóki Daniel nie zatwierdzi wersji mobilnej */
+    function graj() {
+      if (TEL.matches) { stop(); hero.classList.remove('gl-on'); gotowe = false; return; }
+      if (!raf && widac && !document.hidden && pr.hero) { ost = 0; raf = requestAnimationFrame(klatka); }
+    }
     function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
     function zatrzymaj(calkiem) {
       stop(); hero.classList.remove('gl-on'); stat.hero = 'wylaczony';
@@ -448,7 +442,7 @@
     var zmianaTrybu = function () {
       plyn = !!FMT && MYSZ.matches && !TEL.matches && !zdegradowane; stat.plyn = plyn;
       if (!FMT && MYSZ.matches && !TEL.matches) { FMT = format(); plyn = !!FMT; stat.plyn = plyn; }
-      wczytaj().then(rozmiar);
+      wczytaj().then(function () { rozmiar(); graj(); });
     };
     if (TEL.addEventListener) TEL.addEventListener('change', zmianaTrybu);
     W.addEventListener('pointermove', mysz, { passive: true });
