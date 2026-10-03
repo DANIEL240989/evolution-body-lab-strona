@@ -2,7 +2,7 @@
 // przed publikacją podmień je na prawdziwe (narzedzia/sprawdz_publikacje.mjs blokuje wydanie, jeśli zostanie TEST).
 window.EBL = {
   nazwa: 'Evolution Body Lab',
-  osoba: 'Monika',
+  osoba: 'Monika Marek',   // z dokumentu od Daniela 03.10.2026
   telefon: '+33000000000',          // TEST
   telefonTekst: '00 00 00 00 00 (TEST)',
   whatsapp: '+33000000000',         // TEST
