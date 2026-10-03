@@ -28,7 +28,7 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
   jako języki obsługi, reszta to tłumaczenie oferty. Nigdy „6 langues”.
   Etap 1: FR kompletny do akceptacji; pozostałe języki tłumaczymy z francuskiego po akceptacji Moniki.
 - Godziny: pon-pt 9:00-19:00, ostatnia wizyta 18:00, weekend zamknięte (porównanie gabinetów w Nicei w dokumencie).
-- Zdjęcie Moniki (od Daniela 03.10.2026): `img/monika.webp`, prawdziwe, bez plakietki AI. Przed publikacją potwierdzić zgodę Moniki na wizerunek.
+- Zdjęcie Moniki (od Daniela 03.10.2026): `img/monika.webp`, prawdziwe, bez plakietki AI. Zgoda Moniki na wizerunek: potwierdzona przez Daniela 03.10.2026.
 - Zdjęcia: wizualizacje z RTX robione lokalnie u Daniela (ComfyUI), bez ludzi, każda z plakietką „Image de synthèse”.
   Nigdy jako „przed i po” ani jako realny gabinet. Po otwarciu: prawdziwe zdjęcia.
 - 03.10.2026 (Daniel: „jeżeli kolory nie są odpowiednie dla animacji, dawaj inne, ma być ultra”): kolory i przyciemnienia
@@ -64,7 +64,10 @@ raffermissement/remodelage. Ceny na stronie z biznesplanu Moniki (EMS 100 €, k
 Biznesplanu (PDF, dane finansowe) nie wrzucamy do repo.
 
 ## Logo i kolory (Daniel 03.10.2026)
-Od 03.10.2026 noc (Daniel: „tą chcę”): dama w czarno-złotym kapeluszu z czerwoną różą w obręczy, jasne tło koła jak
+Od 03.10.2026 (Daniel: „mamy zgodę, zamiana logo na to”): LOGO = narysowana Monika w złotej obręczy z czerwoną różą
+(źródło `projekt/ilustracje/monika-medalion-logo.webp`, przezroczyste) + napis z fasady, pod tymi samymi nazwami plików
+(`img/logo-dama-zlota*.webp`, `img/ikona-64.png`). ZGODA MONIKI NA WIZERUNEK: potwierdzona przez Daniela 03.10.2026
+(zdjęcie `img/monika.webp`, rysunek `img/monika-rys.webp`, medalion-logo). Poprzednio (03.10 noc, „tą chcę”): dama w czarno-złotym kapeluszu z czerwoną różą w obręczy, jasne tło koła jak
 w oryginale (tylko mgiełka poza obręczą usunięta; źródło `projekt/ilustracje/dama-roza-kapelusz-logo.webp`) + napis EVOLUTION / BODY LAB z fasady
 (pliki pod tymi samymi nazwami co wersja ze złotym kapeluszem):
 `img/logo-dama-zlota-poziom.webp` (pasek), `img/logo-dama-zlota.webp` (stopka, kurtyna), `img/ikona-64.png`.
