@@ -60,7 +60,7 @@ test('tor: 3 panele, ceny z dane.js, „Réserver ce soin” nadal zaznacza zabi
   assert.match(site, /tekst\(lang, 'a_partir'\) \+ ' ' \+ z\.cena \+ ' €'/);
   assert.match(site, /if \(z\.test\)/);                                 // kriolipoliza z dopiskiem TEST
   // RTX: EMS = sama stacja (bez kombinezonu), kriolipoliza = urządzenie (przezroczyste tło), wizyta = kabina Daniela (kadr wtopiony w granat); wszystko z plakietką
-  assert.match(site, /ems: \{ wolny: true, src: 'img\/rtx\/ems-urzadzenie-900\.webp', srcset: 'img\/rtx\/ems-urzadzenie-900\.webp 589w, img\/rtx\/ems-urzadzenie-1400\.webp 917w'/);
+  assert.match(site, /ems: \{ wolny: true, src: 'img\/rtx\/ems-urzadzenie-900\.webp', srcset: 'img\/rtx\/ems-urzadzenie-900\.webp 589w, img\/rtx\/ems-urzadzenie-1400\.webp 917w, img\/rtx\/ems-urzadzenie-2000\.webp 1310w'/);
   assert.doesNotMatch(site, /src: 'img\/rtx\/ems-kombinezon/);   // kombinezon niehigieniczny (Daniel 03.10.2026)
   for (const f of ['img/rtx/ems-urzadzenie-900.webp', 'img/rtx/ems-urzadzenie-1400.webp', 'img/rtx/krio-urzadzenie-900.webp', 'img/rtx/krio-urzadzenie-1400.webp', 'img/rtx/kabina-daniel-1200.webp', 'img/rtx/kabina-daniel-1920.webp']) assert.ok(jest(f), f);
   assert.match(site, /return h \+ '<span class="plakietka"><\/span>';/);   // każdy render i wideo RTX z plakietką
@@ -87,8 +87,8 @@ test('pierwszy ekran: Monika narysowana na granacie, bez plakietki, mapa głębi
   assert.match(fala, /data-t="h_wielki"/);
   assert.doesNotMatch(fala, /plakietka/);
   assert.doesNotMatch(sekcja('class="hero'), /plakietka/);   // granat to nie obraz AI, Monika to prawdziwa osoba
-  for (const f of ['img/monika-rys.webp', 'img/monika-rys-hero.webp', 'img/glebia/monika-rys-glebia.webp', 'narzedzia/monika_hero.py']) assert.ok(jest(f), f);
-  assert.ok(gl.includes("'img/monika-rys-hero.webp', 'img/glebia/monika-rys-glebia.webp'"));
+  for (const f of ['img/monika-rys.webp', 'img/monika-rys-hero.webp', 'img/monika-rys-hero-2048.webp', 'img/rtx/ems-urzadzenie-2000.webp', 'img/rtx/krio-urzadzenie-2000.webp', 'img/rtx/kabina-daniel-2880.webp', 'img/rtx/witryna-2880.webp', 'img/glebia/monika-rys-glebia.webp', 'narzedzia/monika_hero.py']) assert.ok(jest(f), f);
+  assert.ok(gl.includes("'img/monika-rys-hero-2048.webp' : 'img/monika-rys-hero.webp'), 'img/glebia/monika-rys-glebia.webp'"));   // HD z mastera 8K na dużych ekranach
   assert.match(pal, /\.hero-imie, \.hero-monika \{ display: none; \}/);     // telefon bez zmian
   assert.match(ruch, /var LOGO_KOLO = \{ x: \.530, y: \.399, r: \.413 \}/);   // okno kurtyny w obręczy nowego logo
 });

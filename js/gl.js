@@ -187,7 +187,8 @@
     var K = kontekst(cv, ATR); if (!K) return;
     var gl = K.gl, v2 = K.v2;
     var pr = {}, fbo = null, plyn = false, tex = {}, gotowe = false, raf = 0, widac = true;
-    var POSTAC = ['img/monika-rys-hero.webp', 'img/glebia/monika-rys-glebia.webp'];
+    /* wersja HD z mastera 8K (Real-ESRGAN na RTX), te same proporcje i kadr: na wysokich/gęstych ekranach ostrzejsza tekstura */
+    var POSTAC = [(innerHeight * Math.min(devicePixelRatio || 1, 1.5) > 1000 ? 'img/monika-rys-hero-2048.webp' : 'img/monika-rys-hero.webp'), 'img/glebia/monika-rys-glebia.webp'];
     var czcionkiGotowe = Promise.race([(document.fonts && document.fonts.ready) || Promise.resolve(), new Promise(function (r) { setTimeout(r, 2500); })]);
     /* parametry (komputer / telefon) */
     var PAR = [22, 14], SYM = 6, ITER = 14,

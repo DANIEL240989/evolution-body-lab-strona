@@ -545,6 +545,7 @@ main p, .stopka p { text-wrap: pretty; }
   .stopka-panel { position: relative; isolation: isolate; }
   .stopka-witryna { display: block; position: absolute; inset: 0; z-index: -1; pointer-events: none;
     background: url(../img/rtx/witryna-1920.webp) 62% 40% / cover no-repeat;
+    background-image: image-set(url(../img/rtx/witryna-1920.webp) 1x, url(../img/rtx/witryna-2880.webp) 1.5x);
     -webkit-mask-image: radial-gradient(120% 95% at 60% 35%, #000 25%, transparent 85%);
     mask-image: radial-gradient(120% 95% at 60% 35%, #000 25%, transparent 85%);
     opacity: .42; filter: saturate(.85) brightness(.8); }

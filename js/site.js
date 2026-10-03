@@ -34,16 +34,16 @@
   var RTX = {
     /* EMS (Daniel 03.10.2026): sama czarno-złota stacja, przezroczyste tło. Kombinezon usunięty (Daniel: „kombinezon wyleci,
        na samą maszynę, to niehigieniczne”); pliki img/rtx/ems-kombinezon-*.webp zostają w repo, nieużywane. */
-    ems: { wolny: true, src: 'img/rtx/ems-urzadzenie-900.webp', srcset: 'img/rtx/ems-urzadzenie-900.webp 589w, img/rtx/ems-urzadzenie-1400.webp 917w',
+    ems: { wolny: true, src: 'img/rtx/ems-urzadzenie-900.webp', srcset: 'img/rtx/ems-urzadzenie-900.webp 589w, img/rtx/ems-urzadzenie-1400.webp 917w, img/rtx/ems-urzadzenie-2000.webp 1310w',
            sizes: '(max-width: 900px) 46vh, 53vh', w: 917, h: 1400 },
     /* kriolipoliza (Daniel 03.10.2026): czarno-złote urządzenie z 4 aplikatorami w lodowym błękicie i mgłą, przezroczyste tło;
        poświata za nim chłodna (chlod). Pętla img/rtx/krio-mgla.mp4 zostaje w repo, nieużywana: wolno stojące urządzenie
        na granacie jest czystsze niż kadr studyjny w tle. */
-    cryo: { wolny: true, chlod: true, src: 'img/rtx/krio-urzadzenie-900.webp', srcset: 'img/rtx/krio-urzadzenie-900.webp 600w, img/rtx/krio-urzadzenie-1400.webp 933w',
+    cryo: { wolny: true, chlod: true, src: 'img/rtx/krio-urzadzenie-900.webp', srcset: 'img/rtx/krio-urzadzenie-900.webp 600w, img/rtx/krio-urzadzenie-1400.webp 933w, img/rtx/krio-urzadzenie-2000.webp 1333w',
             sizes: '(max-width: 900px) 46vh, 54vh', w: 933, h: 1400 },
     /* pierwsza wizyta (Daniel 03.10.2026, ma pierwszeństwo przed kadrami RTX): kabina nocą, czarne ściany, złote
        podświetlenia, lustro, róże; kadr z tłem wtapiany w granat. Pętla img/rtx/kabina-swiatlo.mp4 zostaje w repo. */
-    visite: { kadr: true, src: 'img/rtx/kabina-daniel-1200.webp', srcset: 'img/rtx/kabina-daniel-1200.webp 1200w, img/rtx/kabina-daniel-1920.webp 1920w',
+    visite: { kadr: true, src: 'img/rtx/kabina-daniel-1200.webp', srcset: 'img/rtx/kabina-daniel-1200.webp 1200w, img/rtx/kabina-daniel-1920.webp 1920w, img/rtx/kabina-daniel-2880.webp 2880w',
               sizes: '(max-width: 900px) 100vw, 70vw', w: 1920, h: 1280 }
   };
   window.EBL_RTX = RTX;
