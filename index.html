@@ -10,10 +10,32 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/ruch.css">
+<script>/* Klasy na <html>, zanim cokolwiek się narysuje (wzór DASTAN BTP 26.09).
+   leniwe: tła sekcji poza pierwszym ekranem ładują się dopiero blisko ekranu (site.js).
+   ruch: tylko bez ograniczonego ruchu i bez botów. Kurtyna: pierwsze wejście w karcie, bez skoku prosto do sekcji (#contact).
+   Bezpieczniki w css/ruch.css: bez skryptu ruchu nagłówek widać po 3 s, kurtyna gaśnie po 4 s; ruch.js zdejmuje ją najpóźniej po 6 s. */
+(function(h){h.classList.add('leniwe');try{if(matchMedia('(prefers-reduced-motion: reduce)').matches||/bot|crawl|spider|slurp|lighthouse|headless/i.test(navigator.userAgent||''))return;
+h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'))h.classList.add('kurtyna-on')}catch(e){}})(document.documentElement);</script>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- podpis „Monika”: własna ścieżka jedną kreską (narzedzia: Catmull-Rom z punktów, pochylenie 18°) -->
+  <symbol id="podpis-m" viewBox="0 0 530 200">
+    <path class="p1" d="M18 150 C22 146 30 139 39 128 C48 117 61 97 72 82 C82 67 95 49 101 40 C108 31 110 29 110 30 C111 31 110 37 107 48 C103 59 94 78 88 95 C81 112 66 148 66 150 C66 152 80 125 89 110 C98 95 110 72 118 62 C126 52 132 48 135 48 C138 48 139 52 136 62 C133 72 123 95 117 110 C111 125 99 150 100 150 C101 150 115 122 123 108 C132 94 144 75 151 66 C158 57 164 54 167 54 C170 54 171 57 168 68 C165 79 153 105 148 118 C144 131 141 141 141 146 C142 151 147 152 152 150 C157 148 167 139 174 132 C180 125 185 113 191 108 C198 103 206 99 210 100 C214 101 219 106 218 112 C218 118 212 130 206 136 C201 142 191 149 186 150 C181 151 176 146 177 140 C178 134 185 120 192 114 C198 108 208 105 215 104 C221 103 228 105 231 108 C234 111 233 117 232 124 C231 131 225 150 226 150 C227 150 233 132 238 124 C244 116 253 107 259 104 C264 101 271 102 272 106 C274 110 269 121 267 128 C265 135 259 147 260 150 C261 153 268 151 273 146 C279 141 288 127 294 120 C299 113 305 101 305 104 C305 107 295 132 293 140 C292 148 293 150 296 150 C299 150 304 149 311 142 C317 135 326 124 335 110 C344 96 357 73 365 58 C374 43 384 29 387 22 C390 15 387 13 384 14 C380 15 375 19 368 30 C362 41 353 60 344 80 C336 100 319 142 316 150 C313 158 323 135 329 128 C335 121 348 110 354 106 C361 102 367 102 369 104 C370 106 368 114 364 118 C360 122 349 126 343 128 C338 130 330 127 331 128 C332 129 344 130 347 134 C351 138 349 148 352 150 C355 152 360 152 367 148 C373 144 383 131 390 124 C397 117 406 110 408 106 C410 102 406 101 401 102 C397 103 387 108 382 114 C376 120 370 132 370 138 C369 144 373 151 378 150 C383 149 393 140 400 132 C406 124 418 104 419 104 C420 104 409 126 407 134 C405 142 404 150 407 152 C410 154 416 152 425 148 C433 144 445 136 457 128 C469 120 487 105 497 98 C506 91 515 87 516 88 C517 89 516 92 503 102 C491 112 464 138 440 150 C416 162 394 170 362 176 C330 182 286 185 248 186 C211 187 170 186 139 184 C108 182 80 177 62 174 C45 171 40 167 35 166"/>
+    <path class="p2" d="M315 78 C316 77 320 74 320 74 C321 74 318 79 317 80"/>
+  </symbol>
+</svg>
+
+<div class="kurtyna" aria-hidden="true">
+  <div class="k-gora"></div><div class="k-dol"></div>
+  <p class="k-znak"><span data-dane="nazwa"></span></p>
+  <span class="k-linia"></span>
+  <p class="k-pod"><span data-t="h_sur"></span></p>
+</div>
+
 <div class="pasek-demo" role="note"><span data-t="demo"></span></div>
 <div class="pasek-tlum" role="note" hidden><span data-t="traduction"></span></div>
 
@@ -32,7 +54,12 @@
 
 <main id="top">
   <section class="hero noc">
-    <div class="hero-obraz" role="img" aria-label="Image de synthèse">
+    <div class="pas-napisu" aria-hidden="true">
+      <div class="pas-rzad r1"><div class="pas-tasma"><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span></div></div>
+      <div class="pas-rzad r2"><div class="pas-tasma"><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span></div></div>
+    </div>
+    <div class="hero-obraz" role="img" data-t-attr="aria-label:image_synthese">
+      <svg class="podpis podpis-hero" viewBox="0 0 530 200" aria-hidden="true" focusable="false"><use href="#podpis-m"/></svg>
       <span class="plakietka" data-t="image_synthese"></span>
     </div>
     <div class="hero-tresc">
@@ -47,62 +74,98 @@
     </div>
   </section>
 
-  <section class="jasna" id="objectifs">
-    <p class="etykieta" data-t="obj_label"></p>
-    <h2 data-t="obj_titre"></h2>
-    <div class="siatka4">
-      <a class="cel" href="#soins"><h3 data-t="obj_1_t"></h3><p data-t="obj_1_d"></p></a>
-      <a class="cel" href="#soins"><h3 data-t="obj_2_t"></h3><p data-t="obj_2_d"></p></a>
-      <a class="cel" href="#soins"><h3 data-t="obj_3_t"></h3><p data-t="obj_3_d"></p></a>
-      <a class="cel" href="#soins"><h3 data-t="obj_4_t"></h3><p data-t="obj_4_d"></p></a>
+  <section class="noc manifest" id="approche">
+    <div class="manifest-srodek">
+      <p class="etykieta" data-t="man_label"></p>
+      <p class="manifest-tekst t-em" data-t="manifeste"></p>
+      <div class="cele" id="objectifs">
+        <p class="cele-tytul"><span data-t="obj_label"></span> · <span data-t="obj_titre"></span></p>
+        <div class="siatka4">
+          <a class="cel" href="#soins"><span class="cel-nr">01</span><h3 data-t="obj_1_t"></h3><p data-t="obj_1_d"></p></a>
+          <a class="cel" href="#soins"><span class="cel-nr">02</span><h3 data-t="obj_2_t"></h3><p data-t="obj_2_d"></p></a>
+          <a class="cel" href="#soins"><span class="cel-nr">03</span><h3 data-t="obj_3_t"></h3><p data-t="obj_3_d"></p></a>
+          <a class="cel" href="#soins"><span class="cel-nr">04</span><h3 data-t="obj_4_t"></h3><p data-t="obj_4_d"></p></a>
+        </div>
+      </div>
+    </div>
+    <div class="schodki" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </section>
+
+  <section class="noc" id="soins" data-tlo>
+    <p class="slowo-tlo" aria-hidden="true" data-t="soins_fond"></p>
+    <span class="plakietka" data-t="image_synthese"></span>
+    <div class="tor">
+      <div class="tor-wstep">
+        <p class="etykieta" data-t="soins_label"></p>
+        <h2 data-t="soins_titre"></h2>
+        <p class="uwaga" data-t="soins_test"></p>
+        <p class="tor-wskazowka" aria-hidden="true"><span data-t="soins_defiler"></span> <span class="strzalka">→</span></p>
+      </div>
+      <div class="karty" id="karty-zabiegow"></div>
+      <div class="tor-koniec">
+        <p class="tor-koniec-tekst" data-t="soins_fin"></p>
+        <a class="pill solid" href="#contact" data-t="cta_rdv"></a>
+      </div>
     </div>
   </section>
 
-  <section class="noc" id="soins">
-    <p class="etykieta" data-t="soins_label"></p>
-    <h2 data-t="soins_titre"></h2>
-    <p class="uwaga" data-t="soins_test"></p>
-    <div class="karty" id="karty-zabiegow"></div>
-  </section>
-
-  <section class="jasna" id="visite">
-    <p class="etykieta" data-t="visite_label"></p>
-    <h2 data-t="visite_titre"></h2>
+  <section class="noc" id="visite">
+    <div class="kula" aria-hidden="true"></div>
+    <div class="duo" aria-hidden="true">
+      <span class="duo-l" data-t="visite_mot_1"></span>
+      <span class="duo-kreska"></span>
+      <span class="duo-r" data-t="visite_mot_2"></span>
+    </div>
+    <div class="visite-naglowek">
+      <p class="etykieta" data-t="visite_label"></p>
+      <h2 data-t="visite_titre"></h2>
+    </div>
     <ol class="kroki">
       <li><span class="nr">01</span><h3 data-t="v1_t"></h3><p data-t="v1_d"></p></li>
       <li><span class="nr">02</span><h3 data-t="v2_t"></h3><p data-t="v2_d"></p></li>
       <li><span class="nr">03</span><h3 data-t="v3_t"></h3><p data-t="v3_d"></p></li>
       <li><span class="nr">04</span><h3 data-t="v4_t"></h3><p data-t="v4_d"></p></li>
     </ol>
-    <p class="info ciemna" data-t="visite_pratique"></p>
-    <a class="pill solid" href="#contact" data-t="cta_rdv"></a>
+    <div class="visite-dol">
+      <p class="info" data-t="visite_pratique"></p>
+      <a class="pill solid" href="#contact" data-t="cta_rdv"></a>
+    </div>
   </section>
 
-  <section class="jasna druga" id="monika">
+  <section class="jasna" id="monika">
+    <p class="slowo-tlo" aria-hidden="true" data-t="monika_fond"></p>
     <div class="monika">
-      <div class="monika-foto"><img src="img/monika.webp" alt="Monika, Evolution Body Lab" width="800" height="1000" loading="lazy"></div>
-      <div>
+      <figure class="monika-foto">
+        <img src="img/monika.webp" data-t-attr="alt:monika_alt" alt="" width="800" height="1000" loading="lazy" decoding="async">
+        <svg class="podpis podpis-monika" viewBox="0 0 530 200" aria-hidden="true" focusable="false"><use href="#podpis-m"/></svg>
+      </figure>
+      <div class="monika-tekst">
         <p class="etykieta" data-t="monika_label"></p>
         <h2 data-t="monika_titre"></h2>
+        <blockquote class="cytat"><p data-t="monika_citation"></p></blockquote>
         <p data-t="monika_txt"></p>
         <p class="info ciemna" data-t="monika_langues"></p>
       </div>
     </div>
   </section>
 
-  <section class="jasna" id="faq">
-    <p class="etykieta" data-t="faq_label"></p>
-    <h2 data-t="faq_titre"></h2>
-    <div class="faq">
-      <details><summary data-t="q1"></summary><p data-t="a1"></p></details>
-      <details><summary data-t="q2"></summary><p data-t="a2"></p></details>
-      <details><summary data-t="q3"></summary><p data-t="a3"></p></details>
-      <details><summary data-t="q4"></summary><p data-t="a4"></p></details>
-      <details><summary data-t="q5"></summary><p data-t="a5"></p></details>
+  <section class="jasna druga" id="faq">
+    <div class="faq-uklad">
+      <div class="faq-glowa">
+        <p class="etykieta" data-t="faq_label"></p>
+        <h2 data-t="faq_titre"></h2>
+      </div>
+      <div class="faq">
+        <details><summary><span data-t="q1"></span></summary><p data-t="a1"></p></details>
+        <details><summary><span data-t="q2"></span></summary><p data-t="a2"></p></details>
+        <details><summary><span data-t="q3"></span></summary><p data-t="a3"></p></details>
+        <details><summary><span data-t="q4"></span></summary><p data-t="a4"></p></details>
+        <details><summary><span data-t="q5"></span></summary><p data-t="a5"></p></details>
+      </div>
     </div>
   </section>
 
-  <section class="noc" id="contact">
+  <section class="noc" id="contact" data-tlo>
     <p class="etykieta" data-t="contact_label"></p>
     <h2 data-t="contact_titre"></h2>
     <p class="lead" data-t="rdv_off"></p>
@@ -116,13 +179,36 @@
       <div><dt data-t="telephone"></dt><dd data-dane="telefonTekst"></dd></div>
       <div><dt data-t="langues"></dt><dd data-t="langues_val"></dd></div>
     </dl>
+    <span class="plakietka" data-t="image_synthese"></span>
   </section>
 </main>
 
-<footer class="stopka noc">
-  <p class="logo">Evolution <em>Body Lab</em></p>
-  <p><span data-dane="osoba"></span> · <span data-dane="forma"></span> · <span data-t="footer_siret"></span> <span data-dane="siret"></span></p>
-  <p data-dane="adres"></p>
+<footer class="stopka">
+  <div class="stopka-panel noc">
+    <p class="stopka-slogan t-em" data-t="footer_slogan"></p>
+    <svg class="podpis podpis-stopka" viewBox="0 0 530 200" aria-hidden="true" focusable="false"><use href="#podpis-m"/></svg>
+    <div class="stopka-kolumny">
+      <nav class="stopka-menu" data-t-attr="aria-label:footer_pages">
+        <p class="stopka-tyt" data-t="footer_pages"></p>
+        <a href="#soins" data-t="nav_soins"></a>
+        <a href="#visite" data-t="nav_visite"></a>
+        <a href="#monika" data-t="nav_monika"></a>
+        <a href="#faq" data-t="nav_faq"></a>
+        <a href="#contact" data-t="nav_contact"></a>
+      </nav>
+      <div class="stopka-logo">
+        <p class="logo">Evolution <em>Body Lab</em></p>
+        <p data-t="h_sur"></p>
+      </div>
+      <div class="stopka-kontakt">
+        <p class="stopka-tyt" data-t="footer_contact"></p>
+        <p data-dane="adres"></p>
+        <p data-dane="telefonTekst"></p>
+        <p data-t="horaires_val"></p>
+      </div>
+    </div>
+    <p class="stopka-prawne"><span data-dane="osoba"></span> · <span data-dane="forma"></span> · <span data-t="footer_siret"></span> <span data-dane="siret"></span> · <span data-dane="adres"></span></p>
+  </div>
 </footer>
 
 <nav class="pasek-dol" aria-label="Contact rapide">
@@ -134,5 +220,11 @@
 <script src="js/dane.js"></script>
 <script src="js/teksty.js"></script>
 <script src="js/site.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" integrity="sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/CustomEase.min.js" integrity="sha384-bk/dsRkKcZYqsQ8OzP86S+TVAAI6D7V0ApKLhj3ssXqZPNYYO77EXxOrTX+pp1g/" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="js/lenis.min.js"></script>
+<script src="js/ruch.js"></script>
 </body>
 </html>
