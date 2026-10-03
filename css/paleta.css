@@ -1,0 +1,31 @@
+/* PALETA 03.10.2026 (Daniel: „24 karat, biały i czarny, i różowe złoto tam, gdzie pozwoli grafika”; „zero musztardowego”).
+   Czerń i biel jako baza, złoto 24K jak w logo tylko na pełnych przyciskach i numerach, różowe złoto na obrysach i kreskach.
+   Ładowana jako ostatni arkusz. Mobilne przyciski (białe z różową nitką) zostają z style.css. */
+:root {
+  --k24: linear-gradient(105deg, #8C6418 0%, #D9A933 22%, #FBE7A1 42%, #E7BE52 58%, #A97A1F 80%, #E2B648 100%);
+  --k24-pelne: #E3B547;
+  --rz: #D4A49A; --rz-linia: rgba(212, 164, 154, .55);
+  --noc: #050505; --noc-2: #0E0E0F; --mat: #050505; --mat-karta: #0E0E0F;
+  --tekst-noc: #FFFFFF; --mocno: #FFFFFF;
+}
+
+/* logo 1 do 1 (Designer (88).png, tło wycięte) */
+.logo-obraz { display: inline-flex; align-items: center; line-height: 0; }
+.logo-obraz img { display: block; height: 78px; width: auto; }
+.stopka-logo .logo-obraz img { height: auto; width: min(340px, 72vw); margin: 0 auto; }
+.k-znak img { display: block; width: min(560px, 78vw); height: auto; margin: 0 auto; }
+@media (max-width: 600px) { .naglowek .logo-obraz img { height: 56px; } }
+
+/* obrysy różowym złotem */
+.naglowek { border-bottom-color: var(--rz-linia); }
+.karta, .karta-meta { border-color: var(--rz-linia); }
+.pill.ramka { border-color: var(--rz); }
+.noc + .jasna, .jasna + .noc { border-top-color: var(--rz-linia); }
+
+/* złoto 24K: pełne przyciski (komputer) i numery kart */
+@media (min-width: 901px) {
+  .pill.solid { background: var(--k24); background-size: 200% 100%; background-position: 0 0; color: #050505;
+    border: 1px solid #F3D47A; transition: background-position .6s ease; }
+  .pill.solid:hover { background: var(--k24); background-size: 200% 100%; background-position: 100% 0; color: #050505; }
+}
+.karta-nr { background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--k24-pelne); }
