@@ -879,4 +879,4 @@ html.ruch:not(.ruch-js) .kurtyna .k-pod, html.ruch:not(.ruch-js) .kurtyna .k-lin
 .schodki i::before { opacity: calc(1 - var(--n, 0) * 1.6); }
 
 /* Etykiety sekcji bez kresek (Daniel 03.10.2026: „tu też jest ta kreska, usuń ją”) */
-.etykieta::before, .etykieta::after { display: none !important; content: none !important; }
+.etykieta::before, .etykieta::after, .panel-nad::before, .panel-nad::after { display: none !important; content: none !important; }
