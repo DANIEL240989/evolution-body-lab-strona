@@ -429,17 +429,21 @@ html.k-tlo body { background-color: var(--granat); }
 /* ---------- Monika wycięta na końcu strony (panel stopki): prawdziwe zdjęcie, bez plakietki ---------- */
 .stopka-monika { position: relative; margin: 28px auto 0; width: min(72vw, 340px); pointer-events: none; }
 .stopka-monika::before { content: ''; position: absolute; left: 0; right: 0; top: 8%; bottom: 0; z-index: 0;
-  background: radial-gradient(ellipse 50% 50% at 55% 45%, rgba(212, 164, 154, .2), rgba(212, 164, 154, .06) 55%, rgba(212, 164, 154, 0) 100%); }
+  /* cień zamiast różowej poświaty: postać odcina się od witryny w tle, zamiast tonąć w mgle */
+  background: radial-gradient(ellipse 55% 50% at 55% 55%, rgba(5, 10, 23, .55), rgba(5, 10, 23, .2) 60%, rgba(5, 10, 23, 0) 100%); }
 /* wycięcie dotyka lewej, górnej i dolnej krawędzi kadru zdjęcia (bluzka i włosy ucięte kadrem): te brzegi rozpuszczone
    maską (przecięcie trzech gradientów), prawa krawędź to czyste wycięcie BiRefNet */
 .stopka-monika img { position: relative; z-index: 1; display: block; width: 100%; height: auto;
   /* góra: tylko 3% miękkiego wejścia (było 9%: zjadało czubek głowy; Daniel 03.10.2026 „na końcu ucięło głowę”) */
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24%), linear-gradient(180deg, transparent 0, #000 3%), linear-gradient(180deg, #000 66%, transparent 98%);
+  /* lewo i dół wygaszane krótko (było 24% i od 66%: bluzka szarzała na granacie, Daniel 03.10.2026: „takie matowe”) */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, rgba(0,0,0,.35) 6%, #000 17%), linear-gradient(180deg, transparent 0, #000 3%), linear-gradient(180deg, #000 82%, transparent 100%);
   -webkit-mask-composite: source-in, source-in;
-  mask-image: linear-gradient(90deg, transparent 0, #000 24%), linear-gradient(180deg, transparent 0, #000 3%), linear-gradient(180deg, #000 66%, transparent 98%);
-  mask-composite: intersect; }
+  mask-image: linear-gradient(90deg, transparent 0, rgba(0,0,0,.35) 6%, #000 17%), linear-gradient(180deg, transparent 0, #000 3%), linear-gradient(180deg, #000 82%, transparent 100%);
+  mask-composite: intersect;
+  filter: contrast(1.07) saturate(1.06); }
 /* kontur światła i poświata na figurze (nie na <img>): maska przycina do pudełka obrazu, a cień musi wyjść poza nie */
-.stopka-monika { filter: drop-shadow(0 0 1px rgba(251, 231, 161, .5)) drop-shadow(0 0 24px rgba(212, 164, 154, .26)); }
+/* bez poświaty i złotego konturu: dawały mleczną mgłę i jasną obwódkę na włosach (zdjęcie wyglądało na matowe i doklejone) */
+.stopka-monika { filter: none; }
 @media (min-width: 901px) {
   .stopka-panel { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(16px, 2vw, 32px); overflow: hidden; }
   .stopka-slogan { grid-column: 1 / 9; grid-row: 1; margin: 0; max-width: 10em; text-align: left; font-size: clamp(48px, 5.8vw, 100px); }
