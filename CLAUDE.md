@@ -40,3 +40,8 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
 
 ## Sprawdzanie
 `node --test`, potem przeglądarka: 375 px i desktop, wszystkie języki, zero błędów w konsoli.
+
+## Zabiegi a prawo (skarbnik 03.10.2026)
+Kriolipolizy nie ma na stronie (we Francji w praktyce tylko lekarze, Cass. 31.01.2023) i nie kupujemy jej z kredytu.
+Bez słów „massage” i „drainage lymphatique manuel”: „soin drainant”, „palper-rouler mécanique”. Radiofrekwencja tylko jako
+raffermissement/remodelage. Ceny z Nicei: `projekt/CENY_NICEA.md` (z wyników wyszukiwania, do sprawdzenia).
