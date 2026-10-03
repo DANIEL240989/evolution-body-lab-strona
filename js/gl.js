@@ -118,8 +118,14 @@
     mnoz: P + 'varying vec2 vUv;uniform sampler2D uT;uniform float uM;void main(){gl_FragColor=uM*texture2D(uT,vUv);}',
 
     /* pierwszy ekran: 2,5D + płyn + złota wersja w śladzie */
-    hero: P + 'varying vec2 vUv;uniform sampler2D uImg,uGl,uTusz,uV;uniform vec2 uRes,uPar,uSw,uSwiatlo;uniform vec4 uKadr;' +
-      'uniform float uZoom,uPlyn,uCzas,uRefr;uniform vec3 uTlo;' +
+    hero: P + 'varying vec2 vUv;uniform sampler2D uImg,uGl,uTusz,uV,uMon,uMonGl,uNap;uniform vec2 uRes,uPar,uSw,uSwiatlo,uParM,uParW;uniform vec4 uKadr,uMonK,uNapK;' +
+      'uniform float uZoom,uPlyn,uCzas,uRefr,uMonOn;uniform vec3 uTlo;' +
+      /* warstwy nad falą (komputer): gigantyczny napis, na nim Monika; każda ze swoją paralaksą i zoomem kamery */
+      'vec2 gM,gW;' +
+      'float wn(vec2 u){return step(0.,u.x)*step(u.x,1.)*step(0.,u.y)*step(u.y,1.);}' +
+      'vec3 kol(vec2 su,vec2 q){vec3 c=texture2D(uImg,su).rgb;if(uMonOn>.5){' +
+      'vec2 qw=.5*uRes+(q-.5*uRes)/(1.+uZoom*.7);vec2 uw=(qw-uNapK.xy)/uNapK.zw+gW;vec4 w=texture2D(uNap,uw)*wn(uw);c=mix(c,w.rgb,w.a);' +
+      'vec2 qm=.5*uRes+(q-.5*uRes)/(1.+uZoom*1.4);vec2 um=(qm-uMonK.xy)/uMonK.zw+gM;vec4 m=texture2D(uMon,um)*wn(um);c=mix(c,m.rgb,m.a);}return c;}' +
       'float glb(vec2 s){return texture2D(uGl,s).r;}' +
       'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}' +
       'vec3 zloto(float x){x=clamp(x,0.,1.);' +
@@ -130,18 +136,20 @@
       /* 2,5D: odwrotne odwzorowanie paralaksy (punkt stały, 4 kroki) + zoom kamery zależny od głębi */
       'vec2 off=uPar/uKadr.zw;vec2 s=u0;for(int i=0;i<4;i++){float d=glb(s);s=.5+(u0-off*(d-.45)-.5)/(1.+uZoom*(.35+d));}' +
       'float d=glb(s);' +
+      'gM=vec2(0.);gW=vec2(0.);if(uMonOn>.5){vec2 qm0=.5*uRes+(px-.5*uRes)/(1.+uZoom*1.4);vec2 um0=(qm0-uMonK.xy)/uMonK.zw;' +
+      'float dm=texture2D(uMonGl,um0).r;gM=-uParM*(.55+.7*dm)/uMonK.zw;dm=texture2D(uMonGl,um0+gM).r;gM=-uParM*(.55+.7*dm)/uMonK.zw;gW=-uParW/uNapK.zw;}' +
       'vec4 tz=uPlyn>.5?texture2D(uTusz,vUv):vec4(0.);vec2 v=uPlyn>.5?texture2D(uV,vUv).xy:vec2(0.);' +
       'float m=smoothstep(.035,.7,tz.r);float kr=m*(1.-m)*4.;' +
       'vec2 rf=v*uRefr;float lr=length(rf);if(lr>.014)rf*=.014/lr;vec2 sr=s+rf*(m+kr)/uKadr.zw*uRes;' +
       'vec2 dir=lr>1e-5?rf/lr:vec2(1.,0.);vec2 ca=dir*kr*.0022*uRes/uKadr.zw;' +
-      'vec3 baza=texture2D(uImg,s).rgb;' +
-      'vec3 c=baza;if(m+kr>.002){' +
-      'vec3 zr=vec3(texture2D(uImg,sr+ca).r,texture2D(uImg,sr).g,texture2D(uImg,sr-ca).b);' +
+      'vec3 baza=kol(s,px);' +
+      'vec3 c=baza;if(m+kr>.002){vec2 pq=px+(sr-s)*uKadr.zw,cq=ca*uKadr.zw;' +
+      'vec3 zr=vec3(kol(sr+ca,pq+cq).r,kol(sr,pq).g,kol(sr-ca,pq-cq).b);' +
       'float l=dot(zr,vec3(.299,.587,.114));' +
       /* połysk złotej folii: normalna z luminancji obrazu (żyłki marmuru), światło idzie za kursorem */
       'vec2 e=uSw;vec3 j=vec3(.333);' +
-      'float lx=dot(texture2D(uImg,sr+vec2(e.x,0.)).rgb-texture2D(uImg,sr-vec2(e.x,0.)).rgb,j),' +
-      'ly=dot(texture2D(uImg,sr+vec2(0.,e.y)).rgb-texture2D(uImg,sr-vec2(0.,e.y)).rgb,j);' +
+      'float lx=dot(kol(sr+vec2(e.x,0.),pq+vec2(1.5,0.))-kol(sr-vec2(e.x,0.),pq-vec2(1.5,0.)),j),' +
+      'ly=dot(kol(sr+vec2(0.,e.y),pq+vec2(0.,1.5))-kol(sr-vec2(0.,e.y),pq-vec2(0.,1.5)),j);' +
       'vec3 n=normalize(vec3(-lx*2.6,ly*2.6,1.));vec3 hv=normalize(normalize(vec3(uSwiatlo,1.))+vec3(0.,0.,1.));' +
       'float bl=pow(max(dot(n,hv),0.),30.);' +
       'vec3 zl=zloto(pow(l,.8)*2.1+d*.06)*(.86+.28*bl)+bl*vec3(1.,.93,.78)*.3*smoothstep(.02,.12,l);' +
@@ -172,6 +180,8 @@
     var K = kontekst(cv, ATR); if (!K) return;
     var gl = K.gl, v2 = K.v2;
     var pr = {}, fbo = null, plyn = false, tex = {}, gotowe = false, raf = 0, widac = true;
+    var POSTAC = ['img/monika-rys-hero.webp', 'img/glebia/monika-rys-glebia.webp'];
+    var czcionkiGotowe = Promise.race([(document.fonts && document.fonts.ready) || Promise.resolve(), new Promise(function (r) { setTimeout(r, 2500); })]);
     var ZRODLA = { pc: ['img/materialy/fala-pc.webp', 'img/glebia/fala-pc-glebia.webp'],
                    tel: ['img/materialy/fala-tel.webp', 'img/glebia/fala-tel-glebia.webp'] };
     /* parametry (komputer / telefon) */
@@ -186,6 +196,10 @@
         if (!pr[k]) return false;
       }
       tex.img = tekstura(gl, gl.LINEAR); tex.gl = tekstura(gl, gl.LINEAR); tex.zero = piksel(gl, 0, 0, 0, 0);
+      tex.mon = piksel(gl, 0, 0, 0, 0); tex.monGl = piksel(gl, 128, 128, 128, 255); tex.nap = piksel(gl, 0, 0, 0, 0);
+      gl.bindTexture(gl.TEXTURE_2D, tex.mon); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.bindTexture(gl.TEXTURE_2D, tex.monGl); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.bindTexture(gl.TEXTURE_2D, tex.nap); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.bindTexture(gl.TEXTURE_2D, tex.gl);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([115, 115, 115, 255]));
       return true;
@@ -244,8 +258,34 @@
       cssW = w; cssH = h;
       var pw = Math.round(w * dpr), ph = Math.round(h * dpr);
       if (cv.width !== pw || cv.height !== ph) { cv.width = pw; cv.height = ph; }
-      liczKadr();
+      liczKadr(); miejsca(); napis();
       if (plyn) { var sw = Math.max(48, Math.min(256, Math.round(w / SYM))); fboPlynu(sw, Math.max(32, Math.round(sw * h / w))); }
+    }
+    /* Monika i napis za nią (komputer): miejsce bierzemy z warstw DOM w .hero-fala (css/paleta.css), żeby płótno
+       i wersja bez WebGL były w tym samym kadrze. Mapa głębi Moniki: img/glebia/monika-rys-glebia.webp (tymczasowa
+       z alfy; podmiana na mapę z RTX = ten sam plik). */
+    var monImg = fala.querySelector('.hero-monika'), napEl = fala.querySelector('.hero-imie');
+    var monOn = false, monK = [0, 0, 1, 1], napK = [0, 0, 1, 1], napCv = null;
+    function miejsca() {
+      if (!monOn || !monImg) return;
+      monK = [monImg.offsetLeft, monImg.offsetTop, monImg.offsetWidth || 1, monImg.offsetHeight || 1];
+      if (napEl) napK = [napEl.offsetLeft, napEl.offsetTop, napEl.offsetWidth || 1, napEl.offsetHeight || 1];
+    }
+    function napis() {
+      if (!monOn || !napEl || !napEl.offsetWidth) return;
+      var cs = getComputedStyle(napEl), d = Math.min(W.devicePixelRatio || 1, 1.5);
+      if (!napCv) napCv = document.createElement('canvas');
+      var w = Math.round(napEl.offsetWidth * d), h = Math.round(napEl.offsetHeight * d);
+      napCv.width = w; napCv.height = h;
+      var c = napCv.getContext('2d'), t = napEl.textContent || '';
+      if (cs.textTransform === 'uppercase') t = t.toUpperCase();
+      c.clearRect(0, 0, w, h); c.scale(d, d);
+      c.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+      if ('letterSpacing' in c) c.letterSpacing = cs.letterSpacing;
+      c.fillStyle = cs.color; c.textBaseline = 'alphabetic';
+      var m = c.measureText(t), asc = m.actualBoundingBoxAscent || parseFloat(cs.fontSize) * .7, desc = m.actualBoundingBoxDescent || 0;
+      c.fillText(t, 0, (napEl.offsetHeight + asc - desc) / 2);
+      gl.bindTexture(gl.TEXTURE_2D, tex.nap); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, napCv);
     }
     var ladowanie = 0;
     function wczytaj() {
@@ -255,7 +295,15 @@
         if (nr !== ladowanie || !gl || gl.isContextLost()) return;
         iw = im.naturalWidth; ih = im.naturalHeight; wgraj(gl, tex.img, im, false);
         liczKadr();
-        return obraz(ZRODLA[t][1]).then(function (g) { if (nr === ladowanie && !gl.isContextLost()) wgraj(gl, tex.gl, g, false); }, function () {});
+        var glb = obraz(ZRODLA[t][1]).then(function (g) { if (nr === ladowanie && !gl.isContextLost()) wgraj(gl, tex.gl, g, false); }, function () {});
+        if (t !== 'pc' || !monImg) { monOn = false; hero.classList.remove('gl-postac'); return glb; }
+        var mon = Promise.all([obraz(POSTAC[0]), obraz(POSTAC[1]).catch(function () { return null; })]).then(function (r) {
+          if (nr !== ladowanie || gl.isContextLost()) return;
+          wgraj(gl, tex.mon, r[0], false); if (r[1]) wgraj(gl, tex.monGl, r[1], false);
+          monOn = true; miejsca();
+          return czcionkiGotowe.then(function () { if (monOn) { napis(); hero.classList.add('gl-postac'); } });
+        }, function () { monOn = false; });
+        return Promise.all([glb, mon]);
       });
     }
 
@@ -361,6 +409,13 @@
       gl.uniform2f(u.uSw, 1.5 / kadr[2], 1.5 / kadr[3]); gl.uniform2f(u.uSwiatlo, sx * .55, -sy * .55);
       gl.uniform1f(u.uZoom, przew * .07 + wjazd * .06); gl.uniform1f(u.uCzas, czas); gl.uniform1f(u.uRefr, REFR);
       gl.uniform3f(u.uTlo, tlo[0], tlo[1], tlo[2]);
+      /* Monika: większa paralaksa niż fala (bliżej kamery), przy przewijaniu unosi się szybciej; napis: mniejsza */
+      gl.uniform1f(u.uMonOn, monOn ? 1 : 0);
+      var hs = hero.style, msx = (parseFloat(hs.getPropertyValue('--fp')) || 0) * (parseFloat(hs.getPropertyValue('--msx')) || 0);
+      gl.uniform4f(u.uMonK, monK[0] + msx, monK[1], monK[2], monK[3]); gl.uniform4f(u.uNapK, napK[0], napK[1], napK[2], napK[3]);
+      gl.uniform2f(u.uParM, (sx + dryfX * .6) * 30, (sy + dryfY * .6) * 18 - przew * 70);
+      gl.uniform2f(u.uParW, sx * 9, sy * 5 + przew * 40);
+      tex2(4, tex.mon, u.uMon); tex2(5, tex.monGl, u.uMonGl); tex2(6, tex.nap, u.uNap);
       var aktywny = plyn && czasPlynu < 1e9;
       gl.uniform1f(u.uPlyn, aktywny ? 1 : 0);
       tex2(0, tex.img, u.uImg); tex2(1, tex.gl, u.uGl);

@@ -18,10 +18,13 @@ window.T = {
     h_titre: 'Remodelage de la silhouette à Nice',
     h_lead: 'Deux soins, un protocole clair dès la première séance et des tarifs affichés. Sur rendez-vous, du lundi au vendredi.',
     h_info: 'Monika vous reçoit en français et en polonais.',
+    h_wielki: 'Evolution',   // gigantyczny napis za Moniką w pierwszym ekranie (jak u Lando)
     h_pas_1: 'EMS · Cryolipolyse · Nice · ',
     h_pas_2: 'Silhouette · Fermeté · Côte d’Azur · ',
     man_label: 'Notre approche',
     manifeste: 'Un protocole *clair*. Des tarifs *affichés*. Des soins *précis*, à Nice.',
+    // Teleport (#approche, js/petardy.js): wskazówka nad medalionem
+    portal_entrer: 'Faites défiler pour entrer',
     obj_label: 'Vos objectifs',
     obj_titre: 'Par où commencer ?',
     obj_1_t: 'Tonicité', obj_1_d: 'Travailler les muscles en séances courtes et régulières.',
@@ -34,6 +37,9 @@ window.T = {
     soins_defiler: 'Faites défiler',
     soins_fin: 'Le soin adapté, le nombre de séances et le prix total sont fixés lors de la première visite.',
     soins_test: 'Deux soins seulement : l’EMS et la cryolipolyse.',
+    // Tor 3 paneli (#soins, js/petardy.js): wielki napis w tle i link trzeciego panelu
+    tor_fond: 'Evolution Body Lab',
+    tor_3_lien: 'Le déroulé de la visite',
     s_ems_t: 'EMS', s_ems_d: 'Électrostimulation musculaire en séance encadrée : un entraînement régulier, planifié avec vous.',
     s_cryo_t: 'Cryolipolyse', s_cryo_d: 'Un froid contrôlé, appliqué sur une zone précise. 180 € une zone, 350 € deux zones, 500 € trois zones.',
     duree: 'min', prix_tbc: 'Tarif à confirmer (TEST)', par_seance: 'la séance', a_partir: 'à partir de', reserver_soin: 'Réserver ce soin',

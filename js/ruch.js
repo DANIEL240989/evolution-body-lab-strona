@@ -4,15 +4,15 @@
    - kurtyna przy pierwszym wejściu w karcie: nazwa spod maski, różowozłota linia rośnie od środka, ekran się rozchyla;
    - nagłówki linia po linii spod maski (podział cofany po animacji), etykiety wycierane od kreski, zdjęcia spod maski;
    - pierwszy ekran: pas napisu w dwóch rzędach (prędkość i kierunek idą za przewijaniem);
-   - manifest: słowa rozjaśniają się przy przewijaniu, schodki z bloków w różowym złocie i nocy przechodzą do zabiegów;
-   - zabiegi: przy 2 kartach siatka obok siebie, od 3 kart przypięty poziomy tor (komputer); wielkie słowo w tle jedzie;
+   - manifest: schodki z bloków w różowym złocie i nocy przechodzą do zabiegów;
    - pierwsza wizyta: dwie połówki rozjeżdżają się, kula światła płynie, szklane karty wpływają;
    - ilustracje marki (manifest, pierwsza wizyta): medalion odsłania się kołem, potem lekko płynie z przewijaniem;
    - stopka: ciemny panel unosi się nad poświatą;
    - Lenis tylko z myszą (telefon i dotyk przewijają natywnie);
    SILNIKI P1 (03.10.2026, projekt/wzory/SILNIKI.md): nazwane krzywe (reveal/editorial/ui/cover), Lenis lerp .14,
    okno logo w kurtynie (Lando), pierwszy ekran kurczy się do ramki między rzędami napisu (Lando), skośna kurtyna
-   #visite → #monika (jjettas), linia przez kroki wizyty ze świecącą głowicą (Orchid); P2: unoszenie kart zabiegów;
+   #visite → #monika (jjettas), linia przez kroki wizyty ze świecącą głowicą (Orchid);
+   TELEPORT w różę medalionu i tor „3 petardy w lewo” (03.10.2026): osobny plik js/petardy.js;
    WebGL (2,5D z mapy głębi, płyn pod kursorem, dystorsje kart i medalionów): osobny plik js/gl.js;
    - przyciski, dane kontaktu i FAQ bez animacji wejścia: są gotowe od razu;
    - ograniczony ruch albo brak bibliotek: nic nie jest ukryte, kurtyny nie ma, układ pionowy. */
@@ -145,7 +145,7 @@
      Komputer: sekcja przypięta na ok. 90 vh; ramka inset(18% 30%) + skala .92, tekst gaśnie i ucieka w górę, dwa rzędy
      napisu zjeżdżają na środek i chowają się „za” ramkę (maska rzędów gaśnie tylko w pasie ramki).
      Telefon: bez pinu, lekkie zwężenie zwykłym scrubem. Plakietka „Image de synthèse” jedzie z rogiem ramki. */
-  var fala = Q('.hero-fala'), pasN = Q('.pas-napisu'), tresc = Q('.hero-tresc');
+  var fala = Q('.hero-fala'), pasN = Q('.pas-napisu'), tresc = Q('.hero-tresc'), monH = Q('.hero-monika');
   var RAMA_PC = { fx: 30, fy: 18, s: .08, r: 6, rzedy: true, tekst: true }, RAMA_TEL = { fx: 5, fy: 3, s: 0, r: 14 };
   function rama(p, o) {
     var W = hero.clientWidth, Hh = hero.clientHeight, s = 1 - o.s * p, st = hero.style;
@@ -155,6 +155,8 @@
     st.setProperty('--fr', (o.r * p).toFixed(2) + 'px'); st.setProperty('--fs', s.toFixed(4)); st.setProperty('--fp', p.toFixed(3));
     st.setProperty('--pr', Math.max(Math.max(16, (W - 1180) / 2), lewa + 12).toFixed(1) + 'px');
     st.setProperty('--pb', Math.max(14, dol + 12).toFixed(1) + 'px');
+    /* Monika (komputer) przesuwa się do środka ramki, gdy ekran kurczy się w ramkę (jak portret u Lando) */
+    if (monH && monH.offsetWidth) st.setProperty('--msx', (W / 2 - (monH.offsetLeft + monH.offsetWidth / 2)).toFixed(1) + 'px');
     if (o.rzedy && pasN) {
       var ps = pasN.style;
       ps.setProperty('--ml', lewa.toFixed(1) + 'px'); ps.setProperty('--mr', (W - lewa).toFixed(1) + 'px'); ps.setProperty('--ma', (1 - p).toFixed(3));
@@ -167,7 +169,7 @@
   }
   function bezRamy() {
     hero.classList.remove('hero-rama');
-    ['--fx', '--fy', '--fr', '--fs', '--fp', '--pr', '--pb'].forEach(function (v) { hero.style.removeProperty(v); });
+    ['--fx', '--fy', '--fr', '--fs', '--fp', '--pr', '--pb', '--msx'].forEach(function (v) { hero.style.removeProperty(v); });
     if (pasN) ['--ml', '--mr', '--ma', '--pas-y'].forEach(function (v) { pasN.style.removeProperty(v); });
     if (tresc) { tresc.style.opacity = ''; tresc.style.transform = ''; }
   }
@@ -248,7 +250,7 @@
      pierwszego ekranu (maska kurtyny z dziurą w kształcie koła), potem okno z różowozłotą obręczą rośnie do pełnego
      ekranu (krzywa „cover”, 1,25 s; telefon ok. 0,9 s). Logo nie jest przerysowane: znika spod maski, obręcz to kreska CSS.
      LOGO_KOLO: środek i promień wnętrza koła w img/logo-dama-zlota.webp (ułamki szerokości/wysokości obrazu). */
-  var LOGO_KOLO = { x: .495, y: .382, r: .45 };
+  var LOGO_KOLO = { x: .530, y: .399, r: .413 };   /* medalion Moniki z czarnym kołem (4dc3f95): środek czarnego dysku 318×307 px, r = 248 px na 600×770 (tuż wewnątrz złotej obręczy) */
   function okno(img, pod, kl) {
     var b = img.getBoundingClientRect();
     if (!b.width) throw new Error('brak logo');
@@ -285,7 +287,8 @@
 
   /* ---------- nagłówki, etykiety, akapity, zdjęcia ---------- */
   kolejka('main > section:not(.hero) h2', 'linie', 'top 88%');
-  kolejka('main > section:not(.hero) .etykieta', 'etykieta', 'top 92%');
+  /* etykieta manifestu w teleporcie wchodzi razem z manifestem po drugiej stronie portalu (js/petardy.js) */
+  kolejka('main > section:not(.hero) .etykieta:not(.portal-druga .etykieta)', 'etykieta', 'top 92%');
   kolejka('.cytat', 'akapit', 'top 90%', 30);   /* cudzysłowy z CSS: bez podziału na linie */
   kolejka('.monika-foto img', 'obraz', 'top 90%');
   kolejka('.stopka-slogan', 'linie', 'top 90%');
@@ -300,13 +303,7 @@
     });
   });
 
-  /* ---------- manifest: słowa rozjaśniają się przy przewijaniu ---------- */
-  var man = Q('.manifest-tekst');
-  if (man) {
-    var sw = SplitText.create(man, { type: 'words', wordsClass: 'ebl-slowo', reduceWhiteSpace: false });
-    gsap.fromTo(sw.words, { opacity: .13 }, { opacity: 1, ease: 'none', stagger: .12,
-      scrollTrigger: { trigger: man, start: 'top 82%', end: 'bottom 42%', scrub: .6 } });
-  }
+  /* manifest: słowa wychodzą z portalu w teleporcie (js/petardy.js); na telefonie i bez ruchu stoją od razu */
   kolejka('.manifest .cel', 'akapit', 'top 92%', 50);
 
   /* schodki z bloków: różowe złoto wchodzi stopniami, noc je przykrywa i odsłania zabiegi (tylko komputer) */
@@ -321,45 +318,7 @@
     return function () { sch.style.display = ''; sek.classList.remove('ze-schodkami'); };
   });
 
-  /* ---------- zabiegi ----------
-     Przy 2 kartach (EMS i kriolipoliza, 03.10.2026) poziomy tor zostawiał pół ekranu pustego: karty stoją obok siebie
-     w siatce (css/paleta.css), wchodzą od dołu, obraz płynie wolniej niż karta, wielkie słowo w tle jedzie.
-     Tor wraca sam, gdy zabiegów będzie co najmniej TOR_OD. */
-  var TOR_OD = 3, malo = QA('#soins .karta').length < TOR_OD;
-  if (malo) {
-    kolejka('#soins .karta', 'akapit', 'top 90%', 60);
-    mm.add(KOMPUTER, function () {
-      var sek = Q('#soins'); if (!sek) return;
-      gsap.fromTo(Q('.slowo-tlo', sek), { xPercent: 4 }, { xPercent: -16, ease: 'none',
-        scrollTrigger: { trigger: sek, start: 'top bottom', end: 'bottom top', scrub: true } });
-      QA('.karta', sek).forEach(function (k) {
-        gsap.fromTo(k, { '--py': '-5%' }, { '--py': '5%', ease: 'none',
-          scrollTrigger: { trigger: k, start: 'top bottom', end: 'bottom top', scrub: true } });
-      });
-    });
-  }
-  /* poziomy tor (komputer, od TOR_OD kart) */
-  if (!malo) mm.add(KOMPUTER, function () {
-    var sek = Q('#soins'), tor = Q('.tor', sek); if (!tor) return;
-    sek.classList.add('tor-poziomo');
-    var dystans = function () { return Math.max(0, tor.scrollWidth - innerWidth); };
-    var jazda = gsap.to(tor, { x: function () { return -dystans(); }, ease: 'none',
-      scrollTrigger: { trigger: sek, start: 'top top', end: function () { return '+=' + dystans(); }, pin: true, scrub: 1,
-        invalidateOnRefresh: true, anticipatePin: 1 } });
-    gsap.fromTo(Q('.slowo-tlo', sek), { xPercent: 6 }, { xPercent: -26, ease: 'none',
-      scrollTrigger: { trigger: sek, start: 'top top', end: function () { return '+=' + dystans(); }, scrub: true, invalidateOnRefresh: true } });
-    QA('.karta', sek).forEach(function (k, i) {
-      gsap.fromTo(k, { y: i % 2 ? 90 : -70, rotate: i % 2 ? 2.2 : -2.2, opacity: .25 },
-        { y: 0, rotate: 0, opacity: 1, ease: 'none',
-          scrollTrigger: { trigger: k, containerAnimation: jazda, start: 'left 100%', end: 'left 55%', scrub: true } });
-      gsap.fromTo(Q('.karta-obraz img', k), { scale: 1.28, xPercent: -6 }, { scale: 1.06, xPercent: 6, ease: 'none',
-        scrollTrigger: { trigger: k, containerAnimation: jazda, start: 'left 100%', end: 'right 0%', scrub: true } });
-    });
-    gsap.fromTo('.tor-wskazowka .strzalka', { x: 0 }, { x: 10, duration: .9, ease: 'sine.inOut', repeat: -1, yoyo: true });
-    ScrollTrigger.refresh();
-    return function () { sek.classList.remove('tor-poziomo'); gsap.set(tor, { clearProps: 'transform' }); };
-  });
-  if (!malo) mm.add(TELEFON, function () { kolejka('#soins .karta', 'akapit', 'top 92%', 50); });
+  /* ---------- zabiegi: tor „3 petardy w lewo” (pin + przesuw paneli) jest w js/petardy.js ---------- */
 
   /* ---------- pierwsza wizyta ---------- */
   var duo = Q('.duo');
@@ -412,12 +371,6 @@
       ['--skos-o', '--sl', '--sr'].forEach(function (v) { mon.style.removeProperty(v); wiz.style.removeProperty(v); });
     };
   });
-
-  /* Unoszenie kart zabiegów (jjettas, SILNIKI #14): ±6 px i ±0,4° w pętli 6,4 / 7,5 / 8,6 s w różnych fazach, tylko gdy
-     sekcja jest w kadrze. Animowane są właściwości translate/rotate, więc nie gryzą się z transformem wejścia (GSAP). */
-  var kartyZ = QA('#soins .karta');
-  if (kartyZ.length) ScrollTrigger.create({ trigger: '#soins', start: 'top bottom', end: 'bottom top',
-    onToggle: function (st) { kartyZ.forEach(function (k) { k.classList.add('unosi'); k.classList.toggle('w-kadrze', st.isActive); }); } });
 
   /* Kursor-latarka (CSS) zastąpiona płynem WebGL: js/gl.js (płótno w .hero-fala, ładowane po tym pliku). */
 

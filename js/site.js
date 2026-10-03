@@ -17,34 +17,47 @@
     return Object.keys(T.fr).some(function (k) { return !(T[lang] && T[lang][k] != null); });
   }
 
-  /* obrazy kart: kadry z obrazów Daniela (granatowy marmur z korą), każdy z plakietką „Image de synthèse” */
-  var OBRAZY_KART = ['karta-1', 'karta-2', 'karta-3', 'karta-4'];
+  /* Panele zabiegów w torze „3 petardy” (#soins, js/petardy.js). Obrazy Daniela (każdy z plakietką „Image de synthèse”):
+     EMS na granatowym marmurze z korą, kriolipoliza na kryształowym klifie (zimno), pierwsza wizyta na marmurze z lustrem.
+     RTX: rendery sprzętu z RTX 5080 Daniela przyjdą na gałęzi rtx-rendery jako img/rtx/*.webp. Gdy plik jest w repo,
+     wpisz jego ścieżkę tutaj (np. ems: 'img/rtx/ems.webp'); null = obraz zastępczy. Bez zgadywania adresów: brakujący
+     plik dawałby błąd 404 w konsoli. */
+  var OBRAZY_PANELI = { ems: 'img/materialy/granat-kora-2.webp', cryo: 'img/materialy/klif-lustro.webp', visite: 'img/materialy/granat-kora-lustro.webp' };
+  var RTX = { ems: null, cryo: null, visite: null };
+  window.EBL_RTX = RTX;
 
+  /* klasa .karta zostaje: „Réserver ce soin” zaznacza zabieg w kreatorze wizyty (js/rezerwacja.js, #karty-zabiegow .karta a) */
   function kartyZabiegow(lang) {
     var box = document.getElementById('karty-zabiegow');
     box.innerHTML = '';
     D.zabiegi.forEach(function (z, i) {
       var a = document.createElement('article');
-      a.className = 'karta';
-      var cena = z.cena == null ? tekst(lang, 'prix_tbc') : z.od ? tekst(lang, 'a_partir') + ' ' + z.cena + ' €' : z.cena + ' € ' + tekst(lang, 'par_seance');
+      a.className = 'karta panel';
+      a.setAttribute('data-zabieg', z.id);
+      var cena = z.cena == null ? tekst(lang, 'prix_tbc') : z.od ? tekst(lang, 'a_partir') + ' ' + z.cena + ' €' : z.cena + ' €';
       a.innerHTML =
-        '<div class="karta-obraz"><img alt="" width="720" height="540" loading="lazy" decoding="async"><span class="plakietka"></span></div>' +
-        '<div class="karta-tresc"><span class="karta-nr"></span><h3></h3><p></p>' +
-        '<p class="karta-meta"><span class="czas"></span><span class="cena"></span></p>' +
-        '<a class="pill ramka maly" href="#contact"></a></div>';
+        '<div class="panel-obraz"><img alt="" width="1536" height="1024" loading="lazy" decoding="async"><span class="plakietka"></span></div>' +
+        '<div class="panel-tresc"><span class="panel-nr"></span><h3 class="panel-tytul"></h3><p class="panel-opis"></p>' +
+        '<p class="panel-cena"><span class="cena"></span> <span class="cena-j"></span></p>' +
+        '<div class="panel-cta"><a class="pill solid" href="#contact"></a></div></div>';
       var img = a.querySelector('img');
-      img.src = 'img/materialy/' + OBRAZY_KART[i % OBRAZY_KART.length] + '.webp';
+      img.src = RTX[z.id] || OBRAZY_PANELI[z.id] || OBRAZY_PANELI.ems;
       img.alt = tekst(lang, 'image_synthese');
       a.querySelector('.plakietka').textContent = tekst(lang, 'image_synthese');
-      a.querySelector('.karta-nr').textContent = (i < 9 ? '0' : '') + (i + 1);
+      a.querySelector('.panel-nr').textContent = (i < 9 ? '0' : '') + (i + 1);
       a.querySelector('h3').textContent = tekst(lang, 's_' + z.id + '_t');
-      a.querySelector('.karta-tresc > p').textContent = tekst(lang, 's_' + z.id + '_d');
-      if (z.czas != null) a.querySelector('.czas').textContent = z.czas + ' ' + tekst(lang, 'duree');
-      else a.querySelector('.czas').remove();
+      a.querySelector('.panel-opis').textContent = tekst(lang, 's_' + z.id + '_d');
       a.querySelector('.cena').textContent = cena;
+      var j = a.querySelector('.cena-j');
+      if (z.cena != null && !z.od) j.textContent = tekst(lang, 'par_seance');
+      else if (z.czas != null) j.textContent = z.czas + ' ' + tekst(lang, 'duree');
+      else j.remove();
+      if (z.test) { var t = document.createElement('span'); t.className = 'panel-test'; t.textContent = tekst(lang, 'tarif_test'); a.querySelector('.panel-cena').appendChild(t); }
       a.querySelector('a').textContent = tekst(lang, 'reserver_soin');
       box.appendChild(a);
     });
+    var wiz = document.querySelector('.panel-wizyta .panel-obraz img');
+    if (wiz && RTX.visite) wiz.src = RTX.visite;
   }
 
   /* tekst z wyróżnieniem: *słowo* = kursywa w różowym złocie (bez innerHTML z tekstów) */

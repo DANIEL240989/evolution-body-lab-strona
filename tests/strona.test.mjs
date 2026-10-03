@@ -80,7 +80,7 @@ test('teksty z wyróżnieniem (*słowo*) mają parzystą liczbę gwiazdek', () =
 
 test('ilustracje marki: plakietka, alt z kluczy, srcset, poza sekcją Moniki', () => {
   const fig = [...html.matchAll(/<figure class="ilustracja[\s\S]*?<\/figure>/g)].map(m => m[0]);
-  assert.equal(fig.length, 3);   // róża (manifest), kapelusz (wizyta), czarny kapelusz (pytania)
+  assert.equal(fig.length, 2);   // kapelusz (wizyta), czarny kapelusz (pytania); róża jest medalionem teleportu (#approche)
   for (const f of fig) {
     assert.match(f, /class="plakietka" data-t="image_synthese"/);
     assert.match(f, /data-t-attr="alt:ilustracja_alt"/);
@@ -98,14 +98,13 @@ test('ruch: efekty P1 silników (tokeny, okno logo, ramka hero, skos, linia krok
   for (const n of ['--e-reveal', '--e-editorial', '--e-ui', '--e-cover']) assert.match(pal, new RegExp(n + ':'), n);
   assert.match(ruch, /lerp: \.1[2-6]/);                                     // Lenis krótszy niż dawne .09
   assert.match(ruch, /matchMedia\('\(hover: hover\) and \(pointer: fine\)'\)\.matches\) \{\s*\n?\s*\/\*[^*]*\*\/\s*lenis = new Lenis/);
-  assert.match(html, /<section class="hero noc">\s*<div class="hero-fala" aria-hidden="true"><\/div>/);
+  assert.match(html, /<section class="hero noc">\s*<div class="hero-fala" aria-hidden="true">/);
   // warstwy i klasy ruchu włącza dopiero skrypt: bez JS fala zostaje tłem sekcji, granica #visite/#monika prosta
   assert.match(pal, /\.hero-fala \{ display: none; \}/);
-  for (const k of ['hero-rama', 'k-okno', 'skos', 'pod-skosem', 'z-linia', 'zapalony', 'unosi']) assert.match(ruch, new RegExp("'" + k + "'"), k);
+  for (const k of ['hero-rama', 'k-okno', 'skos', 'pod-skosem', 'z-linia', 'zapalony']) assert.match(ruch, new RegExp("'" + k + "'"), k);
   assert.doesNotMatch(html, /class="[^"]*(hero-rama|skos|z-linia|unosi)/);
   // plakietka hero jedzie z rogiem ramki, nie znika
   assert.match(pal, /\.hero\.hero-rama \.hero-obraz \.plakietka \{ right: var\(--pr/);
-  assert.match(pal, /@media \(prefers-reduced-motion: reduce\) \{\s*#soins \.karta\.unosi \{ animation: none; \}/);
 });
 
 test('WebGL (js/gl.js): ładowany po ruch.js, bezpieczniki, mapy głębi na miejscu, latarka CSS usunięta', () => {

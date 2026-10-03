@@ -48,7 +48,12 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
 
 <main id="top">
   <section class="hero noc">
-    <div class="hero-fala" aria-hidden="true"></div>
+    <div class="hero-fala" aria-hidden="true">
+      <!-- Monika narysowana (plik Daniela img/monika-rys.webp; wersja do pierwszego ekranu z bluzką wtopioną w złoto i czerń:
+           img/monika-rys-hero.webp). Prawdziwa osoba, nie AI-gabinet: bez plakietki (plakietka zostaje na fali). -->
+      <p class="hero-imie" data-t="h_wielki"></p>
+      <img class="hero-monika" src="img/monika-rys-hero.webp" width="1024" height="1536" alt="" decoding="async" fetchpriority="high">
+    </div>
     <div class="pas-napisu" aria-hidden="true">
       <div class="pas-rzad r1"><div class="pas-tasma"><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span></div></div>
       <div class="pas-rzad r2"><div class="pas-tasma"><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span></div></div>
@@ -68,21 +73,25 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
     </div>
   </section>
 
-  <section class="noc manifest" id="approche">
-    <div class="manifest-srodek">
-      <div class="manifest-glowa">
-        <div class="manifest-slowa">
-          <p class="etykieta" data-t="man_label"></p>
-          <p class="manifest-tekst t-em" data-t="manifeste"></p>
+  <section class="noc manifest portal" id="approche">
+    <!-- TELEPORT (js/petardy.js): komputer z ruchem = przypięta scena WebGL, kamera wjeżdża w różę medalionu i wychodzi
+         po drugiej stronie w manifeście. Bez skryptu, przy ograniczonym ruchu i na telefonie: medalion, pod nim manifest. -->
+    <div class="portal-scena">
+      <figure class="portal-medalion">
+        <div class="portal-obraz">
+          <img src="img/ilustracje/dama-roza-900.webp" srcset="img/ilustracje/dama-roza-600.webp 600w, img/ilustracje/dama-roza-900.webp 900w"
+            sizes="(max-width: 900px) min(82vw, 380px), 74vmin" width="900" height="900" loading="lazy" decoding="async" data-t-attr="alt:ilustracja_alt" alt="">
         </div>
-        <figure class="ilustracja ilustracja-roza">
-          <div class="ilustracja-obraz">
-            <img src="img/ilustracje/dama-roza-900.webp" srcset="img/ilustracje/dama-roza-600.webp 600w, img/ilustracje/dama-roza-900.webp 900w"
-              sizes="(max-width: 900px) min(82vw, 380px), min(500px, 36vw)" width="900" height="900" loading="lazy" decoding="async" data-t-attr="alt:ilustracja_alt" alt="">
-            <span class="plakietka" data-t="image_synthese"></span>
-          </div>
-        </figure>
+      </figure>
+      <div class="portal-blysk" aria-hidden="true"></div>
+      <div class="portal-druga manifest-slowa">
+        <p class="etykieta" data-t="man_label"></p>
+        <p class="manifest-tekst t-em" data-t="manifeste"></p>
       </div>
+      <p class="portal-wskazowka" aria-hidden="true"><span data-t="portal_entrer"></span><i></i></p>
+      <span class="plakietka" data-t="image_synthese"></span>
+    </div>
+    <div class="manifest-srodek">
       <div class="cele" id="objectifs">
         <p class="cele-tytul"><span data-t="obj_label"></span> · <span data-t="obj_titre"></span></p>
         <div class="siatka4">
@@ -96,21 +105,37 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
     <div class="schodki" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
   </section>
 
-  <section class="noc" id="soins" data-tlo>
-    <p class="slowo-tlo" aria-hidden="true" data-t="soins_fond"></p>
-    <span class="plakietka" data-t="image_synthese"></span>
-    <div class="tor">
-      <div class="tor-wstep">
+  <section class="noc tor3" id="soins" data-tlo>
+    <!-- 3 PETARDY W LEWO (js/petardy.js): komputer z ruchem = przypięta scena, przewijanie w dół przesuwa 3 pełnoekranowe
+         panele w lewo. Panele 01–02 buduje site.js z js/dane.js (klasa .karta: „Réserver ce soin” zaznacza zabieg
+         w kreatorze wizyty, plik rezerwacja.js). Bez skryptu, przy ograniczonym ruchu i na telefonie: panele jeden pod drugim. -->
+    <div class="tor3-scena">
+      <p class="tor3-tlo" aria-hidden="true"><span data-t="tor_fond"></span></p>
+      <div class="tor3-glowa">
         <p class="etykieta" data-t="soins_label"></p>
         <h2 data-t="soins_titre"></h2>
-        <p class="uwaga" data-t="soins_test"></p>
-        <p class="tor-wskazowka" aria-hidden="true"><span data-t="soins_defiler"></span> <span class="strzalka">→</span></p>
       </div>
-      <div class="karty" id="karty-zabiegow"></div>
-      <div class="tor-koniec">
-        <p class="tor-koniec-tekst" data-t="soins_fin"></p>
-        <a class="pill solid" href="#contact" data-t="cta_rdv"></a>
+      <p class="tor3-licznik" aria-hidden="true"><span class="tor3-nr"><span class="tor3-nr-akt">01</span></span><span class="tor3-z">/ 03</span></p>
+      <div class="tor3-tasma">
+        <div class="karty" id="karty-zabiegow"></div>
+        <article class="panel panel-wizyta" data-zabieg="visite">
+          <div class="panel-obraz">
+            <img src="img/materialy/granat-kora-lustro.webp" width="1536" height="1024" loading="lazy" decoding="async" data-t-attr="alt:image_synthese" alt="">
+            <span class="plakietka" data-t="image_synthese"></span>
+          </div>
+          <div class="panel-tresc">
+            <span class="panel-nr">03</span>
+            <h3 class="panel-tytul" data-t="visite_label"></h3>
+            <p class="panel-opis" data-t="soins_fin"></p>
+            <p class="panel-cena panel-meta" data-t="visite_pratique"></p>
+            <div class="panel-cta">
+              <a class="pill solid" href="#contact" data-t="cta_rdv"></a>
+              <a class="pill ramka" href="#visite" data-t="tor_3_lien"></a>
+            </div>
+          </div>
+        </article>
       </div>
+      <p class="tor3-pasek" aria-hidden="true"><i></i></p>
     </div>
   </section>
 
@@ -343,5 +368,6 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
 <script src="js/lenis.min.js"></script>
 <script src="js/ruch.js"></script>
 <script src="js/gl.js"></script>
+<script src="js/petardy.js"></script>
 </body>
 </html>
