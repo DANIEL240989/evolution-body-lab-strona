@@ -580,3 +580,44 @@ html.ruch-js .czeka { opacity: 0; }
   .pas-tasma { animation: none; }
   .faq summary::after, .manifest .cel h3, .karta-obraz img, .stopka-menu a { transition: none; }
 }
+
+/* ===== Kontrola jakości 03.10.2026 (zgoda Daniela: kolory i przyciemnienia tam, gdzie wymaga tego czytelność lub ruch) ===== */
+/* Telefon: etykieta i H1 leżały na jasnych smugach kryształu (kontrast etykiety 1,2:1). Pod tekstem noc gęstnieje od góry,
+   kryształ nad tekstem zostaje odsłonięty. Po poprawce etykieta i H1 na najjaśniejszym miejscu tła: patrz raport QA. */
+@media (max-width: 900px) {
+  .hero-tresc::before { content: ''; position: absolute; z-index: -1; pointer-events: none; left: -16px; right: -16px; top: -72px; bottom: 0;
+    background: linear-gradient(180deg, rgba(2,3,6,0) 0, rgba(2,3,6,.78) 56px, rgba(2,3,6,.9) 120px, #020306 220px); }
+}
+/* Komputer o niskim ekranie (1280×720, 1366×768, 1024×768): karty toru wychodziły pod pasek i pod dolną krawędź
+   (do 86 px). Mniejsze schodkowanie kart, niższy kadr obrazu, numer mniejszy. */
+@media (min-width: 901px) and (max-height: 820px) {
+  .tor-poziomo .tor { padding-top: 84px; padding-bottom: 16px; }
+  .tor-poziomo .karta:nth-child(odd) { top: -3vh; }
+  .tor-poziomo .karta:nth-child(even) { top: 3vh; }
+  .tor-poziomo .karta-obraz { aspect-ratio: 16 / 10; }
+  .tor-poziomo .karta-nr { font-size: 36px; }
+  .tor-poziomo .karta-tresc { padding-top: 12px; }
+}
+/* Po torze zabiegów: marmur gaśnie w noc, a „Première | visite” wchodzi bez pustego pasa czerni (komputer). */
+@media (min-width: 901px) {
+  #soins::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 22vh; z-index: 0; pointer-events: none;
+    background: linear-gradient(180deg, transparent, var(--noc)); }
+  #visite { padding-top: clamp(56px, 8vh, 96px); }
+}
+/* bardzo niski ekran (laptop 1366×768 z paskami przeglądarki ≈ 657 px): karty bez schodkowania, kadr panoramiczny */
+@media (min-width: 901px) and (max-height: 680px) {
+  .tor-poziomo .tor { padding-top: 78px; padding-bottom: 10px; }
+  .tor-poziomo .karta:nth-child(odd), .tor-poziomo .karta:nth-child(even) { top: 0; }
+  .tor-poziomo .karta-obraz { aspect-ratio: 2 / 1; }
+  .tor-poziomo .karta-tresc { gap: 4px; }
+  .tor-poziomo .karta-meta { margin: 4px 0; }
+}
+/* Szwy kolorów w ruchu: po zmianie nocy na czerń matową (css/szampan.css) zostały wpisane na sztywno granatowe #05070D
+   (pokrywa schodków, tło wizyty, kurtyna, pasek na telefonie). Przy przejściu schodków widać było granatowy pas na czerni
+   (#05080F obok #090909). Wszystko na jednej zmiennej nocy, więc szwu nie ma przy żadnej palecie. */
+.schodki i::after, .k-gora, .k-dol { background: var(--noc); }
+#visite { background: var(--noc); }
+@media (max-width: 900px) {
+  .pasek-dol { background: var(--noc); }
+  .hero .pill.solid, .pasek-dol a.solid { box-shadow: 0 0 0 2px var(--noc), 0 0 0 3px var(--rz); }
+}

@@ -31,6 +31,10 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
 - Zdjęcie Moniki (od Daniela 03.10.2026): `img/monika.webp`, prawdziwe, bez plakietki AI. Przed publikacją potwierdzić zgodę Moniki na wizerunek.
 - Zdjęcia: wizualizacje z RTX robione lokalnie u Daniela (ComfyUI), bez ludzi, każda z plakietką „Image de synthèse”.
   Nigdy jako „przed i po” ani jako realny gabinet. Po otwarciu: prawdziwe zdjęcia.
+- 03.10.2026 (Daniel: „jeżeli kolory nie są odpowiednie dla animacji, dawaj inne, ma być ultra”): kolory i przyciemnienia
+  wolno zmieniać tam, gdzie wymaga tego ruch lub czytelność (min. 4,5:1 na najjaśniejszym miejscu obrazu pod tekstem),
+  przy zachowaniu obecnej palety (czerń, złoto jako akcent, kość słoniowa); pierwsza zmiana: noc pod
+  tekstem pierwszego ekranu na telefonie i wygaszenie marmuru `#soins` w `#05070D` przed „Première | visite”.
 
 ## Czego nie wolno
 - Wymyślać opinii, certyfikatów, cen, wyników, liczby klientek. Przed/po i opinie tylko prawdziwe (puste = sekcja ukryta).
