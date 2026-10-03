@@ -612,7 +612,7 @@ html.ruch-js .czeka { opacity: 0; }
   .tor-poziomo .karta-tresc { gap: 4px; }
   .tor-poziomo .karta-meta { margin: 4px 0; }
 }
-/* Szwy kolorów w ruchu: po zmianie nocy na czerń matową (css/szampan.css) zostały wpisane na sztywno granatowe #05070D
+/* Szwy kolorów w ruchu: po zmianie nocy na czerń (css/paleta.css) zostały wpisane na sztywno granatowe #05070D
    (pokrywa schodków, tło wizyty, kurtyna, pasek na telefonie). Przy przejściu schodków widać było granatowy pas na czerni
    (#05080F obok #090909). Wszystko na jednej zmiennej nocy, więc szwu nie ma przy żadnej palecie. */
 .schodki i::after, .k-gora, .k-dol { background: var(--noc); }

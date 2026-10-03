@@ -163,9 +163,10 @@
     setTimeout(function () { zdejmij(); otwarta(); }, 6000);   /* bezpiecznik: najpóźniej po 6 s kurtyny nie ma */
     try { sessionStorage.setItem('ebl-kurtyna', '1'); } catch (e) {}
     try {
-      var znak = Q('.k-znak span', kurtyna), pod = Q('.k-pod span', kurtyna), kl = Q('.k-linia', kurtyna),
+      /* znak: napis (litery spod maski) albo obraz logo (cały spod maski .k-znak); bez celu GSAP sypał ostrzeżeniami */
+      var znak = Q('.k-znak span', kurtyna) || Q('.k-znak img', kurtyna), pod = Q('.k-pod span', kurtyna), kl = Q('.k-linia', kurtyna),
           gora = Q('.k-gora', kurtyna), dol = Q('.k-dol', kurtyna),
-          sz = SplitText.create(znak, { type: 'chars', mask: 'chars', aria: 'none' });
+          sz = { chars: !znak ? [] : znak.tagName === 'SPAN' ? SplitText.create(znak, { type: 'chars', mask: 'chars', aria: 'none' }).chars : [znak] };
       gsap.timeline()
         .fromTo(sz.chars, { yPercent: 118 }, { yPercent: 0, duration: 1.05, ease: 'ebl', stagger: .035 }, .1)
         .fromTo(kl, { scaleX: 0 }, { scaleX: 1, duration: 1.3, ease: 'ebl-io' }, .25)

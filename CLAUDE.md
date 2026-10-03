@@ -46,6 +46,14 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
 `node --test`, potem przeglądarka: 375 px i desktop, wszystkie języki, zero błędów w konsoli.
 
 ## Zabiegi a prawo (skarbnik 03.10.2026)
-Kriolipolizy nie ma na stronie (we Francji w praktyce tylko lekarze, Cass. 31.01.2023) i nie kupujemy jej z kredytu.
+Oferta jak w biznesplanie Moniki (Daniel 03.10.2026: „trzymamy się tego, co w biznesplanie”): tylko EMS i kriolipoliza.
+Kriolipoliza we Francji to w praktyce akt lekarski (Cass. crim. 31.01.2023): na stronie oznaczona TEST w `js/dane.js`,
+więc `sprawdz-publikacje` blokuje wydanie do potwierdzenia przez prawnika i ubezpieczyciela.
 Bez słów „massage” i „drainage lymphatique manuel”: „soin drainant”, „palper-rouler mécanique”. Radiofrekwencja tylko jako
-raffermissement/remodelage. Ceny z Nicei: `projekt/CENY_NICEA.md` (z wyników wyszukiwania, do sprawdzenia).
+raffermissement/remodelage. Ceny na stronie z biznesplanu Moniki (EMS 100 €, kriolipoliza 180/350/500 €). Ceny konkurencji w Nicei: `projekt/CENY_NICEA.md`.
+Biznesplanu (PDF, dane finansowe) nie wrzucamy do repo.
+
+## Logo i kolory (Daniel 03.10.2026)
+Logo z fasady 1 do 1: monogram E w kole + EVOLUTION / BODY LAB (`img/logo-e.webp`, na pasku `img/logo-e-poziom.webp`).
+Nie przerysowywać. Kolory: czerń, biel, złoto 24K tylko na pełnych przyciskach i numerach, różowe złoto na obrysach
+i kreskach (`css/paleta.css`, ostatni arkusz). Zero „musztardowego” (złoto szampańskie odrzucone).
