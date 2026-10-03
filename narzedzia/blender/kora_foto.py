@@ -69,7 +69,7 @@ def zakres(v, a, b, c=0.0, d=1.0):
 tc = node('ShaderNodeTexCoord'); ob = tc.outputs['Object']
 sep = node('ShaderNodeSeparateXYZ'); L.new(ob, sep.inputs[0])
 # skan drewna: słoje pionowo, jeden kafel 4K na ok. 4,5 jednostki szerokości
-mp = node('ShaderNodeMapping'); mp.inputs['Scale'].default_value = (0.22, 0.15, 1); mp.inputs['Rotation'].default_value = (0, 0, math.radians(90))
+mp = node('ShaderNodeMapping'); mp.inputs['Scale'].default_value = (0.17, 0.17, 1)
 L.new(ob, mp.inputs['Vector'])
 def obraz(frag, kolor=True):
     t = node('ShaderNodeTexImage'); t.image = bpy.data.images.load(plik(frag))
@@ -88,13 +88,13 @@ pole = M('ADD', M('ADD', sep.outputs['X'], 0.6), M('MULTIPLY', M('SUBTRACT', sz.
 w_pek = M('MULTIPLY', M('SUBTRACT', 1.0, zakres(pole, 0.0, 1.6)), M('LESS_THAN', dw, 0.32))   # żywica w pęknięciach przy styku
 zywica = M('MAXIMUM', M('LESS_THAN', pole, 0.0), w_pek, clamp=True)
 # różowe złoto: cienka obwódka tam, gdzie żywica spotyka drewno
-obw = M('SUBTRACT', M('MAXIMUM', M('LESS_THAN', pole, 0.045), M('MULTIPLY', M('SUBTRACT', 1.0, zakres(pole, 0.0, 1.7)), M('LESS_THAN', dw, 0.36)), clamp=True), zywica)
+obw = M('SUBTRACT', M('MAXIMUM', M('LESS_THAN', pole, 0.11), M('MULTIPLY', M('SUBTRACT', 1.0, zakres(pole, 0.0, 1.7)), M('LESS_THAN', dw, 0.36)), clamp=True), zywica)
 zloto = M('MAXIMUM', obw, 0.0, clamp=True)
 
 # drewno: skan odbarwiony do grafitu ze srebrnymi grzbietami (jak wzór), bez brązu
-hs = node('ShaderNodeHueSaturation'); hs.inputs['Saturation'].default_value = 0.08; hs.inputs['Value'].default_value = 0.85
+hs = node('ShaderNodeHueSaturation'); hs.inputs['Saturation'].default_value = 0.06; hs.inputs['Value'].default_value = 1.25
 L.new(t_diff.outputs['Color'], hs.inputs['Color'])
-bc = node('ShaderNodeBrightContrast'); bc.inputs['Bright'].default_value = -0.04; bc.inputs['Contrast'].default_value = 0.35
+bc = node('ShaderNodeBrightContrast'); bc.inputs['Bright'].default_value = 0.0; bc.inputs['Contrast'].default_value = 0.22
 L.new(hs.outputs['Color'], bc.inputs['Color'])
 chl = node('ShaderNodeMix', data_type='RGBA', blend_type='MULTIPLY'); chl.inputs['Factor'].default_value = 0.35
 L.new(bc.outputs['Color'], chl.inputs['A']); chl.inputs['B'].default_value = lin('#B8C4D6')
@@ -105,10 +105,11 @@ nmap = node('ShaderNodeNormalMap'); nmap.inputs['Strength'].default_value = 1.4;
 L.new(nmap.outputs['Normal'], drewno.inputs['Normal'])
 
 # czysty błękit: gładka, lana żywica, głęboki lazur z lekkim przejściem, połysk lakieru
-gb = node('ShaderNodeTexNoise'); gb.inputs['Scale'].default_value = 0.25; gb.inputs['Detail'].default_value = 2; L.new(ob, gb.inputs['Vector'])
+gb = node('ShaderNodeTexNoise'); gb.inputs['Scale'].default_value = 0.45; gb.inputs['Detail'].default_value = 4; L.new(ob, gb.inputs['Vector'])
 rb = node('ShaderNodeValToRGB'); e = rb.color_ramp.elements
-e[0].position, e[0].color = 0.3, lin('#0A3F9E'); e[1].position, e[1].color = 0.7, lin('#1C6FD6')
-L.new(gb.outputs['Fac'], rb.inputs[0])
+e[0].position, e[0].color = 0.25, lin('#06307E'); e[1].position, e[1].color = 0.75, lin('#2A86E8')
+gl_b = M('ADD', M('MULTIPLY', gb.outputs['Fac'], 0.6), M('MULTIPLY', zakres(pole, -2.5, 0.0), 0.5))
+L.new(gl_b, rb.inputs[0])
 blekit = node('ShaderNodeBsdfPrincipled'); L.new(rb.outputs['Color'], blekit.inputs['Base Color'])
 blekit.inputs['Roughness'].default_value = 0.08; blekit.inputs['Coat Weight'].default_value = 1.0
 blekit.inputs['Coat Roughness'].default_value = 0.02
@@ -133,7 +134,7 @@ def lampa(nazwa, loc, rot, moc, rozm, kol):
     o = bpy.data.objects.new(nazwa, d); o.location = loc; o.rotation_euler = [math.radians(a) for a in rot]
     sc.collection.objects.link(o)
 lampa('klucz', (-5, 5, 5), (-45, 0, 225), 1800, 6, lin('#EEF2F8'))      # miękkie, z lewej góry
-lampa('kontra', (8, 1, 1.4), (80, 0, 100), 1200, 1.5, lin('#FFE0D2'))   # nisko z prawej: relief drewna i blik złota
+lampa('kontra', (8, 1, 1.4), (80, 0, 100), 2200, 1.5, lin('#FFE0D2'))   # nisko z prawej: relief drewna i blik złota
 lampa('wypelnienie', (0, -6, 4), (55, 0, 0), 220, 8, lin('#9FB8E8'))
 
 kd = bpy.data.cameras.new('kam'); kd.lens = 65; kd.dof.use_dof = True; kd.dof.aperture_fstop = 4.0
