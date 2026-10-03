@@ -26,7 +26,8 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
   narzędzia; render na RTX 5080 Daniela przez `render_rtx.ps1`.
 - Języki w kolejności: FR (domyślny), EN, ES, PL, RU, DE (`?lang=`). Monika mówi po francusku i polsku: tylko to piszemy
   jako języki obsługi, reszta to tłumaczenie oferty. Nigdy „6 langues”.
-  Etap 1: FR kompletny do akceptacji; pozostałe języki tłumaczymy z francuskiego po akceptacji Moniki.
+  Od 03.10.2026 (Daniel: „lecimy z językami”) komplet 6 języków w `js/teksty.js`; każda zmiana tekstu we wszystkich 6.
+  Wiadomość z prośbą o wizytę (rdv_msg_*) do Moniki: po francusku, w wersji PL po polsku.
 - Godziny: pon-pt 9:00-19:00, ostatnia wizyta 18:00, weekend zamknięte (porównanie gabinetów w Nicei w dokumencie).
 - Zdjęcie Moniki (od Daniela 03.10.2026): `img/monika.webp`, prawdziwe, bez plakietki AI. Zgoda Moniki na wizerunek: potwierdzona przez Daniela 03.10.2026.
 - Zdjęcia: wizualizacje z RTX robione lokalnie u Daniela (ComfyUI), bez ludzi, każda z plakietką „Image de synthèse”.

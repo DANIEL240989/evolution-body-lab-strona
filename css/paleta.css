@@ -901,3 +901,8 @@ html.ruch:not(.ruch-js) .kurtyna .k-pod, html.ruch:not(.ruch-js) .kurtyna .k-lin
   background: linear-gradient(118deg, rgba(255, 255, 255, .13) 0%, rgba(255, 255, 255, .045) 26%, rgba(255, 255, 255, 0) 44%),
               radial-gradient(120% 95% at 50% 45%, rgba(5, 10, 23, 0) 62%, rgba(5, 10, 23, .55) 100%);
   box-shadow: inset 0 0 0 2px rgba(232, 201, 193, .10), inset 0 0 40px rgba(0, 0, 0, .55); }
+
+/* języki (03.10.2026): linki paska w jednej linii, tytuł wizyty w torze zawsze słowo pod słowem
+   (FR „Première / visite”, EN „First / visit”, DE „Erster / Besuch”), żeby nie wjeżdżał na urządzenie */
+.menu a, .pill { white-space: nowrap; }
+.tor-on .panel-wizyta .panel-tytul { width: min-content; overflow-wrap: normal; word-break: normal; }
