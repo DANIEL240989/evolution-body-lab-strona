@@ -6,21 +6,50 @@
 <meta name="robots" content="noindex, nofollow">
 <title data-t="meta_title">Evolution Body Lab · Remodelage de la silhouette à Nice</title>
 <meta name="description" data-t-attr="content:meta_desc" content="">
-<meta name="theme-color" content="#05070D">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0A142C">
+<meta name="color-scheme" content="dark">
+<meta name="supported-color-schemes" content="dark">
+<link rel="icon" href="img/ikona-64.png" type="image/png">
+<!-- aplikacja na telefon (PWA, Daniel 03.10.2026: „i apka na smartfona”): ikona na ekranie głównym, pełny ekran -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Body Lab">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/paleta.css">
+<link rel="stylesheet" href="css/rezerwacja.css">
+<script>/* Klasy na <html>, zanim cokolwiek się narysuje (wzór DASTAN BTP 26.09).
+   leniwe: tła sekcji poza pierwszym ekranem ładują się dopiero blisko ekranu (site.js).
+   ruch: tylko bez ograniczonego ruchu i bez botów. Kurtyna: pierwsze wejście w karcie, bez skoku prosto do sekcji (#contact).
+   Bezpieczniki na końcu css/style.css: bez skryptu ruchu nagłówek widać po 3 s, kurtyna gaśnie po 4 s; ruch.js zdejmuje ją najpóźniej po 6 s. */
+/* ?ruch=1 (test na telefonie Daniela, 03.10.2026): pokazuje animacje mimo ustawienia „ograniczony ruch” w telefonie,
+   do końca sesji karty. Zwykły adres dalej szanuje to ustawienie. */
+(function(){try{var u=/[?&]ruch=1\b/.test(location.search);if(u)sessionStorage.setItem('ebl-ruch','1');if(!u&&sessionStorage.getItem('ebl-ruch')!=='1')return;
+var mm=window.matchMedia;window.matchMedia=function(q){return mm.call(window,/prefers-reduced-motion\s*:\s*reduce/.test(q)?'(min-width: 999999px)':q)}}catch(e){}})();
+(function(h){h.classList.add('leniwe');try{if(matchMedia('(prefers-reduced-motion: reduce)').matches||/bot|crawl|spider|slurp|lighthouse|headless/i.test(navigator.userAgent||''))return;
+h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'))h.classList.add('kurtyna-on')}catch(e){}})(document.documentElement);</script>
 </head>
 <body>
+<div class="kurtyna" aria-hidden="true">
+  <div class="k-gora"></div><div class="k-dol"></div>
+  <p class="k-znak"><img src="img/logo-dama-zlota.webp" width="600" height="770" alt=""></p>
+  <span class="k-linia"></span>
+  <p class="k-pod"><span data-t="h_sur"></span></p>
+</div>
+
 <div class="pasek-demo" role="note"><span data-t="demo"></span></div>
 <div class="pasek-tlum" role="note" hidden><span data-t="traduction"></span></div>
 
 <header class="naglowek">
-  <a class="logo" href="#top">Evolution <em>Body Lab</em></a>
+  <a class="logo logo-obraz" href="#top"><img src="img/logo-dama-zlota-poziom.webp" width="465" height="120" alt="Evolution Body Lab"></a>
   <nav class="menu" aria-label="Menu">
     <a href="#soins" data-t="nav_soins"></a>
+    <a href="#tarifs" data-t="nav_tarifs"></a>
     <a href="#visite" data-t="nav_visite"></a>
     <a href="#monika" data-t="nav_monika"></a>
     <a href="#faq" data-t="nav_faq"></a>
@@ -32,8 +61,15 @@
 
 <main id="top">
   <section class="hero noc">
-    <div class="hero-obraz" role="img" aria-label="Image de synthèse">
-      <span class="plakietka" data-t="image_synthese"></span>
+    <div class="hero-fala" aria-hidden="true">
+      <!-- Monika narysowana (plik Daniela img/monika-rys-hero.webp) na czystym granacie (Daniel 03.10.2026: „zamiast kamienia
+           czysty ciemnogranatowy tło”). Prawdziwa osoba, tło bez obrazu AI: w pierwszym ekranie nie ma plakietki. -->
+      <p class="hero-imie" data-t="h_wielki"></p>
+      <img class="hero-monika" src="img/monika-rys-hero.webp" srcset="img/monika-rys-hero.webp 1024w, img/monika-rys-hero-2048.webp 1365w" sizes="(max-width: 900px) 70vw, 62vh" width="1024" height="1536" alt="" decoding="async" fetchpriority="high">
+    </div>
+    <div class="pas-napisu" aria-hidden="true">
+      <div class="pas-rzad r1"><div class="pas-tasma"><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span><span data-t="h_pas_1"></span></div></div>
+      <div class="pas-rzad r2"><div class="pas-tasma"><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span><span data-t="h_pas_2"></span></div></div>
     </div>
     <div class="hero-tresc">
       <p class="etykieta" data-t="h_sur"></p>
@@ -47,67 +83,248 @@
     </div>
   </section>
 
-  <section class="jasna" id="objectifs">
-    <p class="etykieta" data-t="obj_label"></p>
-    <h2 data-t="obj_titre"></h2>
-    <div class="siatka4">
-      <a class="cel" href="#soins"><h3 data-t="obj_1_t"></h3><p data-t="obj_1_d"></p></a>
-      <a class="cel" href="#soins"><h3 data-t="obj_2_t"></h3><p data-t="obj_2_d"></p></a>
-      <a class="cel" href="#soins"><h3 data-t="obj_3_t"></h3><p data-t="obj_3_d"></p></a>
-      <a class="cel" href="#soins"><h3 data-t="obj_4_t"></h3><p data-t="obj_4_d"></p></a>
+  <section class="noc manifest portal" id="approche">
+    <!-- TELEPORT (js/petardy.js): komputer z ruchem = przypięta scena WebGL, kamera wjeżdża w różę medalionu i wychodzi
+         po drugiej stronie w manifeście. Bez skryptu, przy ograniczonym ruchu i na telefonie: medalion, pod nim manifest. -->
+    <div class="portal-scena">
+      <figure class="portal-medalion">
+        <div class="portal-obraz">
+          <img src="img/ilustracje/dama-roza-900.webp" srcset="img/ilustracje/dama-roza-600.webp 600w, img/ilustracje/dama-roza-900.webp 900w"
+            sizes="(max-width: 900px) min(82vw, 380px), 74vmin" width="900" height="900" loading="lazy" decoding="async" data-t-attr="alt:ilustracja_alt" alt="">
+        </div>
+      </figure>
+      <div class="portal-blysk" aria-hidden="true"></div>
+      <div class="portal-druga manifest-slowa">
+        <p class="etykieta" data-t="man_label"></p>
+        <p class="manifest-tekst t-em" data-t="manifeste"></p>
+      </div>
+      <p class="portal-wskazowka" aria-hidden="true"><span data-t="portal_entrer"></span><i></i></p>
+      <span class="plakietka" data-t="image_synthese"></span>
+    </div>
+    <div class="manifest-srodek">
+      <div class="cele" id="objectifs">
+        <p class="cele-tytul"><span data-t="obj_label"></span> · <span data-t="obj_titre"></span></p>
+        <div class="siatka4">
+          <a class="cel" href="#soins"><span class="cel-nr">01</span><h3 data-t="obj_1_t"></h3><p data-t="obj_1_d"></p></a>
+          <a class="cel" href="#soins"><span class="cel-nr">02</span><h3 data-t="obj_2_t"></h3><p data-t="obj_2_d"></p></a>
+          <a class="cel" href="#soins"><span class="cel-nr">03</span><h3 data-t="obj_3_t"></h3><p data-t="obj_3_d"></p></a>
+          <a class="cel" href="#soins"><span class="cel-nr">04</span><h3 data-t="obj_4_t"></h3><p data-t="obj_4_d"></p></a>
+        </div>
+      </div>
+    </div>
+    <div class="schodki" aria-hidden="true"><i><span class="st-nr">01</span><span class="st-t" data-t="st_1"></span></i><i><span class="st-nr">02</span><span class="st-t" data-t="st_2"></span></i><i><span class="st-nr">03</span><span class="st-t" data-t="st_3"></span></i><i><span class="st-nr">04</span><span class="st-t" data-t="st_4"></span></i><i><span class="st-nr">05</span><span class="st-t" data-t="st_5"></span></i><i><span class="st-nr">06</span><span class="st-t" data-t="st_6"></span></i></div>
+  </section>
+
+  <section class="noc tor3" id="soins">
+    <!-- 3 PETARDY W LEWO (js/petardy.js): komputer z ruchem = przypięta scena, przewijanie w dół przesuwa 3 pełnoekranowe
+         panele w lewo. Panele 01–02 buduje site.js z js/dane.js (klasa .karta: „Réserver ce soin” zaznacza zabieg
+         w kreatorze wizyty, plik rezerwacja.js). Bez skryptu, przy ograniczonym ruchu i na telefonie: panele jeden pod drugim. -->
+    <div class="tor3-scena">
+      <p class="tor3-tlo" aria-hidden="true"><span data-t="tor_fond"></span></p>
+      <div class="tor3-glowa">
+        <p class="etykieta" data-t="soins_label"></p>
+        <h2 data-t="soins_titre"></h2>
+      </div>
+      <p class="tor3-licznik" aria-hidden="true"><span class="tor3-nr"><span class="tor3-nr-akt">01</span></span><span class="tor3-z">/ 02</span></p>
+      <div class="tor3-tasma">
+        <div class="karty" id="karty-zabiegow"></div>
+        <article class="panel panel-wizyta" data-zabieg="visite">
+          <!-- do czasu renderu RTX (js/site.js, RTX.visite): medalion ilustracji damy w złotej obręczy, z plakietką -->
+          <div class="panel-obraz panel-zastep">
+            <div class="zastep">
+              <span class="zastep-krag zastep-medalion"><img src="img/ilustracje/dama-kapelusz-600.webp" srcset="img/ilustracje/dama-kapelusz-600.webp 600w, img/ilustracje/dama-kapelusz-900.webp 900w"
+                sizes="(max-width: 900px) 52vw, 58vh" width="900" height="900" loading="lazy" decoding="async" data-t-attr="alt:ilustracja_alt" alt=""></span>
+              <span class="zastep-linia" aria-hidden="true"></span>
+            </div>
+            <span class="plakietka" data-t="image_synthese"></span>
+          </div>
+          <div class="panel-tresc">
+            <!-- zamknięcie toru, nie trzeci zabieg (biznesplan: dwa zabiegi): bez numeru i bez udziału w liczniku -->
+            <p class="panel-nad" data-t="tor_3_nad"></p>
+            <h3 class="panel-tytul" data-t="visite_label"></h3>
+            <p class="panel-opis" data-t="soins_fin"></p>
+            <p class="panel-cena panel-meta" data-t="visite_pratique"></p>
+            <div class="panel-cta">
+              <a class="pill solid" href="#contact" data-t="cta_rdv"></a>
+              <a class="pill ramka" href="#visite" data-t="tor_3_lien"></a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <p class="tor3-pasek" aria-hidden="true"><i></i></p>
     </div>
   </section>
 
-  <section class="noc" id="soins">
-    <p class="etykieta" data-t="soins_label"></p>
-    <h2 data-t="soins_titre"></h2>
-    <p class="uwaga" data-t="soins_test"></p>
-    <div class="karty" id="karty-zabiegow"></div>
+  <section class="noc" id="tarifs">
+    <div class="tarifs-glowa">
+      <p class="etykieta" data-t="tarifs_label"></p>
+      <h2 class="h-blok" data-t="tarifs_titre"></h2>
+    </div>
+    <div class="cennik" id="cennik"></div>
+    <div class="tarifs-dol">
+      <p class="tarifs-note" data-t="tarifs_note"></p>
+      <a class="pill solid" href="#contact" data-t="cta_rdv"></a>
+    </div>
   </section>
 
-  <section class="jasna" id="visite">
-    <p class="etykieta" data-t="visite_label"></p>
-    <h2 data-t="visite_titre"></h2>
+  <section class="noc" id="visite">
+    <div class="kula" aria-hidden="true"></div>
+    <div class="duo" aria-hidden="true">
+      <span class="duo-l" data-t="visite_mot_1"></span>
+      <span class="duo-kreska"></span>
+      <span class="duo-r" data-t="visite_mot_2"></span>
+    </div>
+    <figure class="ilustracja ilustracja-kapelusz">
+      <div class="ilustracja-obraz">
+        <img src="img/ilustracje/dama-kapelusz-900.webp" srcset="img/ilustracje/dama-kapelusz-600.webp 600w, img/ilustracje/dama-kapelusz-900.webp 900w"
+          sizes="(max-width: 900px) min(78vw, 340px), min(420px, 32vw)" width="900" height="900" loading="lazy" decoding="async" data-t-attr="alt:ilustracja_alt" alt="">
+        <span class="plakietka" data-t="image_synthese"></span>
+      </div>
+    </figure>
+    <div class="visite-naglowek">
+      <p class="etykieta" data-t="visite_label"></p>
+      <h2 class="h-blok" data-t="visite_titre"></h2>
+    </div>
     <ol class="kroki">
       <li><span class="nr">01</span><h3 data-t="v1_t"></h3><p data-t="v1_d"></p></li>
       <li><span class="nr">02</span><h3 data-t="v2_t"></h3><p data-t="v2_d"></p></li>
       <li><span class="nr">03</span><h3 data-t="v3_t"></h3><p data-t="v3_d"></p></li>
       <li><span class="nr">04</span><h3 data-t="v4_t"></h3><p data-t="v4_d"></p></li>
     </ol>
-    <p class="info ciemna" data-t="visite_pratique"></p>
-    <a class="pill solid" href="#contact" data-t="cta_rdv"></a>
+    <div class="visite-dol">
+      <p class="info" data-t="visite_pratique"></p>
+      <a class="pill solid" href="#contact" data-t="cta_rdv"></a>
+    </div>
   </section>
 
-  <section class="jasna druga" id="monika">
+  <section class="jasna" id="monika">
+    <p class="slowo-tlo" aria-hidden="true" data-t="monika_fond"></p>
     <div class="monika">
-      <div class="monika-foto"><img src="img/monika.webp" alt="Monika, Evolution Body Lab" width="800" height="1000" loading="lazy"></div>
-      <div>
+      <figure class="monika-foto">
+        <img src="img/monika-v3.webp" data-t-attr="alt:monika_alt" alt="" width="800" height="1000" loading="lazy" decoding="async">
+      </figure>
+      <div class="monika-tekst">
         <p class="etykieta" data-t="monika_label"></p>
-        <h2 data-t="monika_titre"></h2>
+        <h2 class="h-blok" data-t="monika_titre"></h2>
+        <blockquote class="cytat"><p data-t="monika_citation"></p></blockquote>
         <p data-t="monika_txt"></p>
         <p class="info ciemna" data-t="monika_langues"></p>
       </div>
     </div>
   </section>
 
-  <section class="jasna" id="faq">
-    <p class="etykieta" data-t="faq_label"></p>
-    <h2 data-t="faq_titre"></h2>
-    <div class="faq">
-      <details><summary data-t="q1"></summary><p data-t="a1"></p></details>
-      <details><summary data-t="q2"></summary><p data-t="a2"></p></details>
-      <details><summary data-t="q3"></summary><p data-t="a3"></p></details>
-      <details><summary data-t="q4"></summary><p data-t="a4"></p></details>
-      <details><summary data-t="q5"></summary><p data-t="a5"></p></details>
+  <section class="jasna druga" id="faq">
+    <div class="faq-uklad">
+      <div class="faq-glowa">
+        <p class="etykieta" data-t="faq_label"></p>
+        <h2 class="h-blok" data-t="faq_titre"></h2>
+        <figure class="ilustracja ilustracja-czarny">
+          <div class="ilustracja-obraz">
+            <img src="img/ilustracje/dama-czarny-kapelusz-600.webp" srcset="img/ilustracje/dama-czarny-kapelusz-600.webp 600w, img/ilustracje/dama-czarny-kapelusz-900.webp 900w"
+              sizes="(max-width: 900px) min(64vw, 260px), min(340px, 26vw)" width="900" height="900" loading="lazy" decoding="async" data-t-attr="alt:ilustracja_alt" alt="">
+            <span class="plakietka" data-t="image_synthese"></span>
+          </div>
+        </figure>
+      </div>
+      <div class="faq">
+        <details><summary><span data-t="q1"></span></summary><p data-t="a1"></p></details>
+        <details><summary><span data-t="q2"></span></summary><p data-t="a2"></p></details>
+        <details><summary><span data-t="q3"></span></summary><p data-t="a3"></p></details>
+        <details><summary><span data-t="q4"></span></summary><p data-t="a4"></p></details>
+        <details><summary><span data-t="q5"></span></summary><p data-t="a5"></p></details>
+      </div>
     </div>
   </section>
 
   <section class="noc" id="contact">
     <p class="etykieta" data-t="contact_label"></p>
-    <h2 data-t="contact_titre"></h2>
-    <p class="lead" data-t="rdv_off"></p>
+    <h2 class="h-blok" data-t="contact_titre"></h2>
+    <p class="lead" data-t="rdv_lead"></p>
+    <div class="rdv-uklad">
+    <div class="rdv" id="rdv">
+      <ol class="rdv-etapy" data-t-attr="aria-label:rdv_etapes">
+        <li><button type="button" class="rdv-etap" data-krok="1"><span class="rdv-nr">01</span><span data-t="rdv_e1"></span></button></li>
+        <li><button type="button" class="rdv-etap" data-krok="2"><span class="rdv-nr">02</span><span data-t="rdv_e2"></span></button></li>
+        <li><button type="button" class="rdv-etap" data-krok="3"><span class="rdv-nr">03</span><span data-t="rdv_e3"></span></button></li>
+      </ol>
+      <form class="rdv-form" novalidate>
+        <div class="rdv-krok" data-krok="1" role="group" aria-labelledby="rdv-k1-t">
+          <h3 class="rdv-tytul" id="rdv-k1-t" tabindex="-1" data-t="rdv_k1_t"></h3>
+          <fieldset class="rdv-opcje" aria-describedby="rdv-err-soin"><legend class="rdv-sr" data-t="rdv_k1_t"></legend></fieldset>
+          <p class="rdv-blad" id="rdv-err-soin" aria-live="polite"></p>
+          <div class="rdv-nawigacja"><button type="button" class="pill solid" data-dalej="2" data-t="rdv_continuer"></button></div>
+        </div>
+        <div class="rdv-krok" data-krok="2" role="group" aria-labelledby="rdv-k2-t" hidden>
+          <h3 class="rdv-tytul" id="rdv-k2-t" tabindex="-1" data-t="rdv_k2_t"></h3>
+          <div class="rdv-termin">
+            <div class="rdv-kal">
+              <div class="rdv-kal-glowa">
+                <button type="button" class="rdv-mies" data-mies="-1" data-t-attr="aria-label:rdv_mois_prec"><span aria-hidden="true">‹</span></button>
+                <p class="rdv-mies-nazwa" id="rdv-mies-nazwa" aria-live="polite"></p>
+                <button type="button" class="rdv-mies" data-mies="1" data-t-attr="aria-label:rdv_mois_suiv"><span aria-hidden="true">›</span></button>
+              </div>
+              <table class="rdv-siatka" role="grid" aria-labelledby="rdv-mies-nazwa"><thead><tr></tr></thead><tbody></tbody></table>
+            </div>
+            <fieldset class="rdv-godziny" aria-describedby="rdv-err-date">
+              <legend class="rdv-pole-tyt" data-t="rdv_heure"></legend>
+              <p class="rdv-podpowiedz" data-t="rdv_heure_vide"></p>
+              <div class="rdv-sloty"></div>
+            </fieldset>
+          </div>
+          <p class="rdv-blad" id="rdv-err-date" aria-live="polite"></p>
+          <div class="rdv-nawigacja">
+            <button type="button" class="pill ramka" data-dalej="1" data-t="rdv_retour"></button>
+            <button type="button" class="pill solid" data-dalej="3" data-t="rdv_continuer"></button>
+          </div>
+        </div>
+        <div class="rdv-krok" data-krok="3" role="group" aria-labelledby="rdv-k3-t" hidden>
+          <h3 class="rdv-tytul" id="rdv-k3-t" tabindex="-1" data-t="rdv_k3_t"></h3>
+          <div class="rdv-pola">
+            <p class="rdv-pole"><label for="rdv-nom" data-t="rdv_nom"></label>
+              <input id="rdv-nom" name="nom" type="text" autocomplete="name" required maxlength="80" aria-describedby="rdv-err-nom">
+              <span class="rdv-blad" id="rdv-err-nom" aria-live="polite"></span></p>
+            <p class="rdv-pole"><label for="rdv-tel" data-t="rdv_tel"></label>
+              <input id="rdv-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" required maxlength="20" aria-describedby="rdv-tel-aide rdv-err-tel">
+              <span class="rdv-aide" id="rdv-tel-aide" data-t="rdv_tel_aide"></span>
+              <span class="rdv-blad" id="rdv-err-tel" aria-live="polite"></span></p>
+            <p class="rdv-pole rdv-cala"><label for="rdv-mail"><span data-t="rdv_mail"></span> <span class="rdv-opc" data-t="rdv_facultatif"></span></label>
+              <input id="rdv-mail" name="mail" type="email" autocomplete="email" maxlength="120" aria-describedby="rdv-err-mail">
+              <span class="rdv-blad" id="rdv-err-mail" aria-live="polite"></span></p>
+            <p class="rdv-pole rdv-cala"><label for="rdv-msg"><span data-t="rdv_message"></span> <span class="rdv-opc" data-t="rdv_facultatif"></span></label>
+              <textarea id="rdv-msg" name="message" rows="3" maxlength="400" aria-describedby="rdv-msg-aide"></textarea>
+              <span class="rdv-aide" id="rdv-msg-aide" data-t="rdv_message_aide"></span></p>
+            <p class="rdv-zgoda rdv-cala"><input id="rdv-accord" name="accord" type="checkbox" required aria-describedby="rdv-err-accord">
+              <label for="rdv-accord" data-t="rdv_accord"></label>
+              <span class="rdv-blad" id="rdv-err-accord" aria-live="polite"></span></p>
+          </div>
+          <p class="rdv-aide rdv-prywatnosc" data-t="rdv_vie_privee"></p>
+          <div class="rdv-nawigacja">
+            <button type="button" class="pill ramka" data-dalej="2" data-t="rdv_retour"></button>
+            <button type="submit" class="pill solid" data-t="rdv_preparer"></button>
+          </div>
+        </div>
+      </form>
+      <div class="rdv-pret" id="rdv-pret" aria-live="polite" hidden>
+        <h3 class="rdv-tytul" id="rdv-pret-t" tabindex="-1" data-t="rdv_pret_t"></h3>
+        <p class="rdv-pret-d" data-t="rdv_pret_d"></p>
+        <dl class="rdv-pret-dane"></dl>
+        <div class="rdv-nawigacja rdv-wyslij">
+          <a class="pill solid" id="rdv-wa" target="_blank" rel="noopener" data-t="rdv_envoyer_wa"></a>
+          <a class="pill ramka" id="rdv-mail-link" data-t="rdv_envoyer_mail"></a>
+          <button type="button" class="rdv-zmien" data-dalej="3" data-t="rdv_modifier"></button>
+        </div>
+      </div>
+      <dl class="rdv-recap">
+        <div><dt data-t="rdv_recap_soin"></dt><dd data-rdv="soin"></dd></div>
+        <div><dt data-t="rdv_recap_date"></dt><dd data-rdv="date"></dd></div>
+        <div><dt data-t="rdv_recap_heure"></dt><dd data-rdv="heure"></dd></div>
+      </dl>
+      <p class="rdv-sr" id="rdv-status" aria-live="polite"></p>
+    </div>
+    <aside class="rdv-bok">
+    <p class="rdv-bok-tyt" data-t="rdv_appel_t"></p>
     <div class="przyciski">
-      <a class="pill solid" data-href="tel" data-t="cta_appeler"></a>
+      <a class="pill ramka" data-href="tel" data-t="cta_appeler"></a>
       <a class="pill ramka" data-href="wa" data-t="cta_whatsapp"></a>
     </div>
     <dl class="dane">
@@ -116,13 +333,47 @@
       <div><dt data-t="telephone"></dt><dd data-dane="telefonTekst"></dd></div>
       <div><dt data-t="langues"></dt><dd data-t="langues_val"></dd></div>
     </dl>
+    </aside>
+    </div>
   </section>
 </main>
 
-<footer class="stopka noc">
-  <p class="logo">Evolution <em>Body Lab</em></p>
-  <p><span data-dane="osoba"></span> · <span data-dane="forma"></span> · <span data-t="footer_siret"></span> <span data-dane="siret"></span></p>
-  <p data-dane="adres"></p>
+<footer class="stopka">
+  <div class="stopka-panel noc">
+    <!-- witryna gabinetu nocą (grafika Daniela 03.10.2026), przygaszona tłem zamknięcia; lokal jeszcze nie istnieje: plakietka -->
+    <div class="stopka-witryna" aria-hidden="true"></div>
+    <span class="plakietka stopka-witryna-plak" data-t="image_synthese"></span>
+    <p class="stopka-slogan t-em" data-t="footer_slogan"></p>
+    <!-- Monika wycięta z prawdziwego zdjęcia (Daniel 03.10.2026: „na końcu dodaj Monikę wyciętą, tło bezbarwne”; BiRefNet
+         na RTX), wtopiona w granat. Prawdziwe zdjęcie, zgoda potwierdzona: bez plakietki. -->
+    <figure class="stopka-monika">
+      <img src="img/monika-wycieta-900.webp" srcset="img/monika-wycieta-900.webp 648w, img/monika-wycieta.webp 1080w"
+        sizes="(max-width: 900px) min(72vw, 340px), min(30vw, 460px)" width="1080" height="1667" loading="lazy" decoding="async" data-t-attr="alt:monika_alt" alt="">
+    </figure>
+    <div class="stopka-kolumny">
+      <nav class="stopka-menu" data-t-attr="aria-label:footer_pages">
+        <p class="stopka-tyt" data-t="footer_pages"></p>
+        <a href="#top" data-t="nav_accueil"></a>
+        <a href="#soins" data-t="nav_soins"></a>
+        <a href="#tarifs" data-t="nav_tarifs"></a>
+        <a href="#visite" data-t="nav_visite"></a>
+        <a href="#monika" data-t="nav_monika"></a>
+        <a href="#faq" data-t="nav_faq"></a>
+        <a href="#contact" data-t="nav_contact"></a>
+      </nav>
+      <div class="stopka-logo">
+        <p class="logo logo-obraz"><img src="img/logo-dama-zlota.webp" width="600" height="770" alt="Evolution Body Lab" loading="lazy" decoding="async"></p>
+        <p data-t="h_sur"></p>
+      </div>
+      <div class="stopka-kontakt">
+        <p class="stopka-tyt" data-t="footer_contact"></p>
+        <p data-dane="adres"></p>
+        <p data-dane="telefonTekst"></p>
+        <p data-t="horaires_val"></p>
+      </div>
+    </div>
+    <p class="stopka-prawne"><span data-dane="osoba"></span> · <span data-dane="forma"></span> · <span data-t="footer_siret"></span> <span data-dane="siret"></span> · <span data-dane="adres"></span></p>
+  </div>
 </footer>
 
 <nav class="pasek-dol" aria-label="Contact rapide">
@@ -134,5 +385,16 @@
 <script src="js/dane.js"></script>
 <script src="js/teksty.js"></script>
 <script src="js/site.js"></script>
+<script src="js/rezerwacja.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" integrity="sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/CustomEase.min.js" integrity="sha384-bk/dsRkKcZYqsQ8OzP86S+TVAAI6D7V0ApKLhj3ssXqZPNYYO77EXxOrTX+pp1g/" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="js/lenis.min.js"></script>
+<script src="js/ruch.js"></script>
+<script src="js/gl.js"></script>
+<script src="js/petardy.js"></script>
+<script src="js/efekty.js"></script>
+<script src="js/silnik2.js"></script>
 </body>
 </html>

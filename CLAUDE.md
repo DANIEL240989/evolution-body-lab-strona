@@ -26,11 +26,33 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
   narzędzia; render na RTX 5080 Daniela przez `render_rtx.ps1`.
 - Języki w kolejności: FR (domyślny), EN, ES, PL, RU, DE (`?lang=`). Monika mówi po francusku i polsku: tylko to piszemy
   jako języki obsługi, reszta to tłumaczenie oferty. Nigdy „6 langues”.
-  Etap 1: FR kompletny do akceptacji; pozostałe języki tłumaczymy z francuskiego po akceptacji Moniki.
+  Od 03.10.2026 (Daniel: „lecimy z językami”) komplet 6 języków w `js/teksty.js`; każda zmiana tekstu we wszystkich 6.
+  Wiadomość z prośbą o wizytę (rdv_msg_*) do Moniki: po francusku, w wersji PL po polsku.
 - Godziny: pon-pt 9:00-19:00, ostatnia wizyta 18:00, weekend zamknięte (porównanie gabinetów w Nicei w dokumencie).
-- Zdjęcie Moniki (od Daniela 03.10.2026): `img/monika.webp`, prawdziwe, bez plakietki AI. Przed publikacją potwierdzić zgodę Moniki na wizerunek.
+- Zdjęcie Moniki (od Daniela 03.10.2026): `img/monika.webp`, prawdziwe, bez plakietki AI. Zgoda Moniki na wizerunek: potwierdzona przez Daniela 03.10.2026.
 - Zdjęcia: wizualizacje z RTX robione lokalnie u Daniela (ComfyUI), bez ludzi, każda z plakietką „Image de synthèse”.
   Nigdy jako „przed i po” ani jako realny gabinet. Po otwarciu: prawdziwe zdjęcia.
+- 03.10.2026 (Daniel: „jeżeli kolory nie są odpowiednie dla animacji, dawaj inne, ma być ultra”): kolory i przyciemnienia
+  wolno zmieniać tam, gdzie wymaga tego ruch lub czytelność (min. 4,5:1 na najjaśniejszym miejscu obrazu pod tekstem),
+  przy zachowaniu obecnej palety (czerń, złoto jako akcent, kość słoniowa); pierwsza zmiana: noc pod
+  tekstem pierwszego ekranu na telefonie i wygaszenie marmuru `#soins` w `#05070D` przed „Première | visite”.
+
+## Tło i obrazy od 03.10.2026 (Daniel: „zamiast kamienia czysty ciemnogranatowy”)
+Ciemne sekcje: czysty granat `#0A142C` (brzegi `#050A17`, poświata `#101C3A`, karty `#0E1A36`) z delikatnym ziarnem, BEZ
+obrazów kamienia/marmuru/kryształu (fala, granat-kora, klif, karta-* zostają w repo, nieużywane; pilnuje test).
+Pierwszy ekran: narysowana Monika (`img/monika-rys-hero.webp`) w WebGL z głębią z RTX; płyn = światło (jedwab, ciekłe złoto),
+twarz Moniki bez efektu. Tor 3 petard: 01 stacja + kombinezon EMS, 02 urządzenie krio, 03 kabina (grafiki Daniela w `img/rtx/`,
+z plakietką). Koniec strony: Monika wycięta z prawdziwego zdjęcia (`img/monika-wycieta*.webp`, bez plakietki).
+
+## Słowa Daniela z początku projektu (03.10.2026: „czemu olewasz moje słowa”) — obowiązują zawsze
+- „landonorris.com robimy 1 do 1 bez pierdolenia”, „strona bilioner, zero lipy”: ten sam poziom co wzory (Lando, jjettas,
+  Orchid), czyli WebGL (2,5D z głębi, płyn pod kursorem, dystorsje), nie same lekkie animacje CSS. 1 do 1 = układ, rytm,
+  efekty; treść, obrazy, fonty i kod własne (prawa autorskie).
+- „Zdjęcia lecą z RTX”, „czeka nas renderowanie sprzętu, ultra jakość na każdym polu”: obrazy sprzętu (EMS, kriolipoliza)
+  i gabinetu renderowane lokalnie na RTX 5080 Daniela (ComfyUI, modele na D:), bez ludzi, z plakietką „Image de synthèse”.
+- „Efekty typu wideo i 3D ultra premium”: pętle wideo i 3D są częścią strony, nie opcją na później.
+- 03.10.2026: „nie pracuj na telefonie, tylko Windows teraz; jak potwierdzę, robimy mobila”. Najpierw desktop (1440, 1366);
+  na ≤ 900 px nowe efekty wyłączone, strona ma się tylko nie psuć. Wersja telefonu dopiero po akceptacji Daniela.
 
 ## Czego nie wolno
 - Wymyślać opinii, certyfikatów, cen, wyników, liczby klientek. Przed/po i opinie tylko prawdziwe (puste = sekcja ukryta).
@@ -40,3 +62,46 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
 
 ## Sprawdzanie
 `node --test`, potem przeglądarka: 375 px i desktop, wszystkie języki, zero błędów w konsoli.
+
+## Zabiegi a prawo (skarbnik 03.10.2026)
+Oferta jak w biznesplanie Moniki (Daniel 03.10.2026: „trzymamy się tego, co w biznesplanie”): tylko EMS i kriolipoliza.
+Kriolipoliza we Francji to w praktyce akt lekarski (Cass. crim. 31.01.2023): na stronie oznaczona TEST w `js/dane.js`,
+więc `sprawdz-publikacje` blokuje wydanie do potwierdzenia przez prawnika i ubezpieczyciela.
+Bez słów „massage” i „drainage lymphatique manuel”: „soin drainant”, „palper-rouler mécanique”. Radiofrekwencja tylko jako
+raffermissement/remodelage. Ceny na stronie z biznesplanu Moniki (EMS 100 €, kriolipoliza 180/350/500 €). Ceny konkurencji w Nicei: `projekt/CENY_NICEA.md`.
+Biznesplanu (PDF, dane finansowe) nie wrzucamy do repo.
+
+## Logo i kolory (Daniel 03.10.2026)
+Od 03.10.2026 (Daniel: „mamy zgodę, zamiana logo na to”): LOGO = narysowana Monika w złotej obręczy z czerwoną różą,
+od 03.10.2026 wieczór wariant W KAPELUSZU ze złotą różą (Daniel: „z kapeluszem daj mi Monikę”; źródło
+`projekt/ilustracje/monika-medalion-4-kapelusz-zlota-roza.webp`; wcześniej „środkowy” z czarnym kołem `monika-medalion-2.webp`) + napis z fasady, pod tymi samymi nazwami plików
+(`img/logo-dama-zlota*.webp`, `img/ikona-64.png`). ZGODA MONIKI NA WIZERUNEK: potwierdzona przez Daniela 03.10.2026
+(zdjęcie `img/monika.webp`, rysunek `img/monika-rys.webp`, medalion-logo). Poprzednio (03.10 noc, „tą chcę”): dama w czarno-złotym kapeluszu z czerwoną różą w obręczy, jasne tło koła jak
+w oryginale (tylko mgiełka poza obręczą usunięta; źródło `projekt/ilustracje/dama-roza-kapelusz-logo.webp`) + napis EVOLUTION / BODY LAB z fasady
+(pliki pod tymi samymi nazwami co wersja ze złotym kapeluszem):
+`img/logo-dama-zlota-poziom.webp` (pasek), `img/logo-dama-zlota.webp` (stopka, kurtyna), `img/ikona-64.png`.
+Poprzednio (03.10 wieczór, „spoko pod 4”): złota postać z koroną, `img/logo-krolowa*`. Damy z różą/kapeluszem to ilustracje marki, nie logo
+(`projekt/ilustracje/`). Wcześniejsze: dama w kapeluszu (`img/logo-dama*`), E z fasady (`img/logo-e*`), królowa (`img/logo.webp`). Nie przerysowywać. Kolory: czerń, biel, złoto 24K tylko na pełnych przyciskach i numerach, różowe złoto na obrysach
+i kreskach (`css/paleta.css`, ostatni arkusz). Zero „musztardowego” (złoto szampańskie odrzucone).
+
+Podpis „Monika” (SVG kreską) usunięty ze strony 03.10.2026 (Daniel: „nie jest super”). Nie przywracać.
+
+## Decyzje z wieczoru 03.10.2026 (nie cofać bez polecenia Daniela)
+- Zero krótkich kresek przed napisami (etykiety sekcji, podpis nad „Première visite”): reguła na końcu `css/paleta.css`.
+  Daniel: „usuń te kreski”. Łączników w nagłówkach też nie chce: po francusku zmieniać sformułowanie, nie pisownię
+  (kontakt: „Réserver votre visite”).
+- Tor zabiegów: pętle wideo z RTX (Wan 2.2) `img/rtx/{ems,krio,kabina}-petla.mp4` + plakaty; ekrany EMS i krio pionowe
+  3:4 pod wielkim tytułem. Stare `krio-mgla.mp4`, `kabina-swiatlo.mp4` nieużywane.
+- Ekran analizatora (Daniel: „nie tak prostacko”, „ultra ma być”): wideo `img/rtx/analizator-skan.mp4` (hologram
+  ciała, bez napisów i liczb) wpasowane w perspektywę szkła przez matrix3d z 4 zmierzonych rogów (`js/site.js`, EKRAN).
+  Nigdy płaskie grafiki/SVG przyklejone prostokątem na ekranie urządzenia; nigdy liczby udające wyniki.
+- Stopka: pierwszy link „Accueil” (#top). Monika w stopce bez poświaty i złotego konturu (dawały „matowe” zdjęcie).
+
+## Telefon (od 03.10.2026 wieczór, Daniel: „teraz mobil”, „wszystko gra”)
+- Blok TELEFON na końcu `css/paleta.css`: Monika narysowana w pierwszym ekranie, przyciski złote 24K, menu pełnoekranowe
+  z medalionem (`js/silnik2.js`, `mm.add('all')`), teleport przez różę i tor 3 petard w bok (`js/petardy.js`, WSZEDZIE)
+  w układzie pionowym. PWA: `manifest.webmanifest`, ikony `img/app-*.png`, `img/apple-touch-icon.png`.
+- Ograniczony ruch w telefonie (Android „Usuń animacje”, oszczędzanie baterii Samsunga) = strona bez animacji, zgodnie ze
+  standardem dostępności; Daniel sam tak używa telefonu („szanuję płynność”) i to akceptuje. `?ruch=1` wymusza ruch do testów.
+- `color-scheme: dark` (meta i `:root`): Samsung Internet nie przerabia złota w wymuszonym trybie ciemnym.
+- Na telefonie jeszcze wyłączone: WebGL Moniki (płyn pod palcem), złoty pył, napis z kropek, ekrany wideo w torze.

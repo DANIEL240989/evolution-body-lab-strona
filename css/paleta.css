@@ -1,0 +1,990 @@
+/* PALETA 03.10.2026 (Daniel: „24 karat, biały i czarny, i różowe złoto tam, gdzie pozwoli grafika”; „zero musztardowego”).
+   Czerń i biel jako baza, złoto 24K jak w logo tylko na pełnych przyciskach i numerach, różowe złoto na obrysach i kreskach.
+   Ładowana jako ostatni arkusz. Mobilne przyciski (białe z różową nitką) zostają z style.css. */
+:root {
+  --k24: linear-gradient(105deg, #8C6418 0%, #D9A933 22%, #FBE7A1 42%, #E7BE52 58%, #A97A1F 80%, #E2B648 100%);
+  --k24-pelne: #E3B547;
+  --rz: #D4A49A; --rz-linia: rgba(212, 164, 154, .55);
+  --noc: #050505; --noc-2: #0E0E0F; --mat: #050505; --mat-karta: #0E0E0F;
+  --tekst-noc: #FFFFFF; --mocno: #FFFFFF;
+}
+
+/* (do 03.10 popołudnie) logo z fasady 1 do 1 (Daniel 03.10.2026: „najbardziej lubię te z fasady napisy”): monogram E w kole.
+   img/logo-e.webp = plik Daniela z wyciętym tłem; img/logo-e-poziom.webp = te same elementy obok siebie na pasek.
+   Logo z królową (img/logo.webp) zostaje w repo, na stronie nieużywane.
+   Od 03.10.2026 (Daniel: „logo jako szyld zamiast E”): medalion z damą w kapeluszu (obręcz zostaje) + napis
+   EVOLUTION / BODY LAB z fasady: img/logo-dama-poziom.webp (pasek), img/logo-dama.webp (stopka, kurtyna).
+   Od 03.10.2026 wieczór (Daniel: „spoko pod 4”): wariant 4, złota postać z koroną w obręczy (czytelna w 24 px) + napis
+   z fasady: img/logo-krolowa-poziom.webp (pasek), img/logo-krolowa.webp (stopka, kurtyna), img/ikona-64.png (karta).
+   Od 03.10.2026 noc (Daniel: „dawaj, pracuj nad tym”): dama w złotym kapeluszu z różą w obręczy; szare kratki z generatora
+   w tle koła zastąpione czystą czernią, mgiełka poza obręczą usunięta (postać i kolory bez zmian):
+   img/logo-dama-zlota-poziom.webp (pasek), img/logo-dama-zlota.webp (stopka, kurtyna), img/ikona-64.png. */
+.logo-obraz { display: inline-flex; align-items: center; line-height: 0; }
+.logo-obraz img { display: block; height: 54px; width: auto; }
+.stopka-logo .logo-obraz img { height: auto; width: min(240px, 56vw); margin: 0 auto; }
+.k-znak img { display: block; height: min(40vh, 360px); width: auto; margin: 0 auto; }
+@media (max-width: 600px) { .naglowek .logo-obraz img { height: 42px; } }
+
+/* obrysy różowym złotem */
+.naglowek { border-bottom-color: var(--rz-linia); }
+.karta, .karta-meta { border-color: var(--rz-linia); }
+.pill.ramka { border-color: var(--rz); }
+.noc + .jasna, .jasna + .noc { border-top-color: var(--rz-linia); }
+
+/* złoto 24K: pełne przyciski (komputer) i numery kart */
+@media (min-width: 901px) {
+  .pill.solid { background: var(--k24); background-size: 200% 100%; background-position: 0 0; color: #050505;
+    border: 1px solid #F3D47A; transition: background-position .6s ease; }
+  .pill.solid:hover { background: var(--k24); background-size: 200% 100%; background-position: 100% 0; color: #050505; }
+}
+.karta-nr { background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--k24-pelne); }
+.stopka-logo .logo-obraz { margin-bottom: 18px; }
+
+/* =====================================================================================================================
+   PORZĄDKI PO ZMIANIE PALETY (granat → czerń, 03.10.2026). Resztki granatu (#0C1322, #142038, #A7B1C2, niebieska
+   kula w wizycie) zamienione na czerń i ciepłą szarość; obrazy tła Daniela bez zmian. */
+:root { --tekst-noc-2: #B5AEAB; --szary: #B5AEAB; }
+.pasek-demo { background: #0E0E0F; color: #CFC9C6; }
+.karta { background: rgba(14, 14, 15, .88); }
+.hero-obraz, .monika-foto, .karta-obraz { background: radial-gradient(110% 80% at 70% 15%, rgba(212,164,154,.12), transparent 60%), linear-gradient(165deg, #1A1718, #050505); }
+.hero .hero-obraz { background: none; }
+.monika-foto { background: none; }
+/* kula światła w wizycie: zamiast niebieskiej poświaty ciepłe, przygaszone różowe złoto */
+#visite .kula { background: radial-gradient(closest-side, rgba(212, 164, 154, .20), rgba(212, 164, 154, .07) 50%, rgba(5, 5, 5, 0) 100%); }
+#visite .kroki li { background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.015)); }
+/* telefon: pełne przyciski wszędzie jak w pierwszym ekranie (biały środek, różowozłota nitka), a nie raz biały, raz różowy */
+@media (max-width: 900px) {
+  .pill.solid, .jasna .pill.solid { background: var(--zloto); color: #050505; border: 0; box-shadow: 0 0 0 2px var(--noc), 0 0 0 3px var(--rz); }
+  .jasna .pill.solid { box-shadow: 0 0 0 2px #F7F3EA, 0 0 0 3px var(--rz-ciemne, #8C4F58); }
+}
+/* stopka: napis pod logo miał za mało powietrza */
+.stopka-logo .logo-obraz { margin-bottom: 26px; }
+.stopka-logo p:not(.logo) { letter-spacing: .3em; color: var(--rz); }
+.stopka-kolumny { align-items: center; }
+/* cyfry ceny i numerów kart w kroju szeryfowym: równe (lining), bo „100” w cyfrach nautycznych czytało się jak „Ioo” */
+#soins .karta .karta-meta .cena, #soins .karta .karta-nr { font-variant-numeric: lining-nums; }
+
+/* =====================================================================================================================
+   ILUSTRACJE MARKI (projektant 03.10.2026). Dwie ulubione generacje Daniela (projekt/ilustracje/), NIE logo, NIE gabinet,
+   NIE Monika: dama z różą w manifeście (#approche, medalion obok tekstu), dama w kapeluszu w pierwszej wizycie (#visite,
+   pod „Première | visite”, w różowozłotej kuli światła). Daleko od zdjęcia Moniki (#monika). Każda z plakietką
+   „Image de synthèse”. Ruch (js/ruch.js): medalion odsłania się kołem i płynie lekko przy przewijaniu; bez ruchu stoi. */
+.ilustracja { margin: 0; position: relative; }
+.manifest { overflow-x: clip; }   /* poświata medalionu (inset -14%) nie może poszerzać strony na telefonie */
+.ilustracja-obraz { position: relative; aspect-ratio: 1; }
+.ilustracja-obraz::before { content: ''; position: absolute; inset: -14%; z-index: -1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(212,164,154,.16), rgba(227,181,71,.05) 55%, rgba(5,5,5,0) 100%); }
+.ilustracja img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 60px rgba(0,0,0,.55)); }
+.ilustracja .plakietka { left: auto; right: 0; bottom: 0; }
+
+/* manifest: tekst po lewej, medalion po prawej (komputer); telefon: tekst, pod nim medalion */
+.manifest-glowa { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 88px); align-items: center; text-align: left; }
+.manifest-glowa .etykieta { justify-content: flex-start; }
+.manifest-glowa .etykieta::after { display: none; }
+.manifest-glowa .manifest-tekst { font-size: clamp(36px, 4.3vw, 70px); }
+.ilustracja-roza { justify-self: end; width: min(500px, 100%); }
+
+/* pierwsza wizyta: medalion na osi, między „Première | visite” a nagłówkiem */
+.ilustracja-kapelusz { width: min(420px, 32vw); margin: calc(-1 * clamp(8px, 3vh, 40px)) auto clamp(40px, 7vh, 88px); }
+
+@media (max-width: 900px) {
+  .manifest-glowa { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+  .manifest-glowa .etykieta { justify-content: center; }
+  .manifest-glowa .etykieta::after { display: block; }
+  .ilustracja-roza { justify-self: center; width: min(82vw, 380px); }
+  .ilustracja-kapelusz { width: min(78vw, 340px); margin: 0 auto 48px; }
+}
+@media (max-width: 900px) {
+  .manifest-glowa .manifest-tekst { font-size: clamp(34px, 5.3vw, 86px); }
+}
+
+/* Dama w czarnym kapeluszu (Daniel 03.10.2026: „a ten, co dałem teraz”): na czerni znika, więc stoi w jasnej sekcji pytań.
+   Sekcja pytań w lnie zamiast chłodnej szarości #E6E8EC (ciepłe tło pod czerń, złoto i czerwień ilustracji). */
+.jasna.druga { background: #F7F3EA url(../img/materialy/len.webp) 0 0 / 128px; }
+.ilustracja-czarny { width: min(340px, 26vw); margin: clamp(28px, 5vh, 56px) 0 0; }
+.ilustracja-czarny .ilustracja-obraz::before { background: radial-gradient(closest-side, rgba(212,164,154,.22), rgba(247,243,234,0) 100%); }
+.ilustracja-czarny img { filter: drop-shadow(0 18px 34px rgba(30,26,28,.18)); }
+@media (max-width: 900px) { .ilustracja-czarny { width: min(64vw, 260px); margin: 28px auto 8px; } }
+
+/* =====================================================================================================================
+   SILNIKI P1 (projektant ruchu 03.10.2026; Daniel: „rób całą stronę, wzoruj się silnikami tamtych stron”).
+   Odtworzona MECHANIKA landonorris / jjettas / orchid (projekt/wzory/SILNIKI.md), nie ich kod ani obrazy.
+   Wszystko poniżej włącza dopiero js/ruch.js klasą; bez skryptu i przy ograniczonym ruchu strona wygląda jak dotąd. */
+:root {
+  --e-reveal: cubic-bezier(.16, 1, .3, 1); --e-editorial: cubic-bezier(.65, .05, .36, 1);
+  --e-ui: cubic-bezier(.4, 0, .2, 1); --e-cover: cubic-bezier(.85, 0, .15, 1);
+}
+
+/* #3 okno logo w kurtynie: dziura w masce kurtyny (środek --ox/--oy, promień --or) + różowozłota obręcz */
+.kurtyna.k-okno {
+  -webkit-mask-image: radial-gradient(circle at var(--ox, 50%) var(--oy, 50%), transparent var(--or, 0px), #000 calc(var(--or, 0px) + 1.5px));
+          mask-image: radial-gradient(circle at var(--ox, 50%) var(--oy, 50%), transparent var(--or, 0px), #000 calc(var(--or, 0px) + 1.5px)); }
+/* pasek górny chowa się na czas okna (przez okno widać samą falę), wraca miękko, gdy okno rośnie */
+.naglowek, .pasek-demo, .pasek-tlum { transition: opacity .8s var(--e-ui); }
+html.k-okno-on .naglowek, html.k-okno-on .pasek-demo, html.k-okno-on .pasek-tlum { opacity: 0; transition: none; }
+html.k-tlo body { background-color: var(--noc); }   /* do końca kurtyny: spod półprzezroczystego paska nie prześwituje len */
+.k-obrecz { position: absolute; border-radius: 50%; transform: translate(-50%, -50%); opacity: 0; pointer-events: none;
+  border: 1.5px solid var(--rz); box-shadow: 0 0 22px rgba(212, 164, 154, .45), inset 0 0 22px rgba(212, 164, 154, .25); }
+
+/* #4 pierwszy ekran kurczy się do ramki: fala na własnej warstwie, ramka z clip-path (zmienne liczy js/ruch.js) */
+.hero-fala { display: none; }
+.hero.hero-rama { background: var(--noc); }
+.hero.hero-rama .hero-fala { display: block; position: absolute; inset: 0; z-index: -2; pointer-events: none; overflow: hidden;
+  background: #020306;
+  clip-path: inset(var(--fy, 0px) var(--fx, 0px) round var(--fr, 0px)); transform: scale(var(--fs, 1)); }
+.hero.hero-rama::before { opacity: calc(1 - var(--fp, 0)); }
+.hero.hero-rama .hero-obraz .plakietka { right: var(--pr, 16px); bottom: var(--pb, 14px); }
+.hero.hero-rama .pas-napisu { transform: translateY(var(--pas-y, 0px));
+  -webkit-mask-image: linear-gradient(90deg, #000 var(--ml, 50%), rgba(0,0,0,var(--ma, 1)) var(--ml, 50%), rgba(0,0,0,var(--ma, 1)) var(--mr, 50%), #000 var(--mr, 50%));
+          mask-image: linear-gradient(90deg, #000 var(--ml, 50%), rgba(0,0,0,var(--ma, 1)) var(--ml, 50%), rgba(0,0,0,var(--ma, 1)) var(--mr, 50%), #000 var(--mr, 50%)); }
+@media (max-width: 900px) {
+  .hero.hero-rama .hero-fala { background: #020306; }
+}
+/* #8 skośna kurtyna #visite → #monika: len nachodzi na noc o --skos-o, górna krawędź po przekątnej (--sl lewa, --sr prawa) */
+#visite.pod-skosem::after { content: ''; display: block; height: var(--skos-o, 0px); }
+#monika.skos { z-index: 2; margin-top: calc(-1 * var(--skos-o, 0px)); border-top-color: transparent;
+  clip-path: polygon(0 var(--sl, 0px), 100% var(--sr, 0px), 100% 100%, 0 100%); }
+#monika.skos::after { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: var(--rz);
+  clip-path: polygon(0 var(--sl, 0px), 100% var(--sr, 0px), 100% calc(var(--sr, 0px) + 1.5px), 0 calc(var(--sl, 0px) + 1.5px)); }
+
+/* #16 linia przez kroki wizyty ze świecącą głowicą (--kp 0..1); krok „zapalony” = numer w złocie 24K */
+#visite .kroki.z-linia { position: relative; }
+.kroki.z-linia::before, .kroki.z-linia::after { content: ''; position: absolute; pointer-events: none; z-index: 2; }
+.kroki.z-linia::before { left: 0; right: 0; top: -22px; height: 1px;
+  background: linear-gradient(90deg, var(--rz) calc(var(--kp, 0) * 100%), rgba(212, 164, 154, .16) calc(var(--kp, 0) * 100%)); }
+.kroki.z-linia::after { left: calc(var(--kp, 0) * 100%); top: -22px; width: 9px; height: 9px; margin: -4px 0 0 -4.5px; border-radius: 50%;
+  background: #FFF6F1; opacity: min(1, calc(var(--kp, 0) * 40));
+  box-shadow: 0 0 0 3px rgba(212, 164, 154, .35), 0 0 18px 6px rgba(212, 164, 154, .6), 0 0 44px 10px rgba(227, 181, 71, .18); }
+.kroki.z-linia.pion::before { right: auto; top: 0; bottom: 0; width: 1px; height: auto;
+  background: linear-gradient(180deg, var(--rz) calc(var(--kp, 0) * 100%), rgba(212, 164, 154, .16) calc(var(--kp, 0) * 100%)); }
+.kroki.z-linia.pion::after { left: .5px; top: calc(var(--kp, 0) * 100%); }
+#visite .kroki.z-linia li { transition: border-color .5s var(--e-ui), box-shadow .6s var(--e-ui); }
+#visite .kroki.z-linia .nr { transition: opacity .5s var(--e-ui); }
+#visite .kroki.z-linia li:not(.zapalony) .nr { opacity: .4; }
+#visite .kroki.z-linia li.zapalony { border-top-color: var(--rz); box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 -10px 34px -20px rgba(212, 164, 154, .7); }
+#visite .kroki.z-linia li.zapalony .nr { background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+#visite .kroki.z-linia.pion li.zapalony { border-left-color: var(--rz-linia); }
+
+/* =====================================================================================================================
+   WEBGL (js/gl.js, 03.10.2026; Daniel: „kilka efektów mamy, ale nie to, co w tamtych stronach”). Klasy dodaje dopiero
+   skrypt po pierwszej narysowanej klatce; bez WebGL, przy ograniczonym ruchu i oszczędzaniu danych nic tu nie działa,
+   zostaje statyczny obraz z CSS. Płótno pierwszego ekranu siedzi w .hero-fala: ramka clip-path i skala z pinu
+   (js/ruch.js) kurczą je razem z warstwą, a okno w logo kurtyny pokazuje już żywy obraz. */
+.hero.gl-on .hero-fala { display: block; position: absolute; inset: 0; z-index: -2; pointer-events: none; overflow: hidden;
+  background: #020306; }
+@media (max-width: 900px) {
+  .hero.gl-on .hero-fala { background: #020306; }
+}
+.gl-hero { position: absolute; inset: 0; display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .9s var(--e-ui); }
+.hero.gl-on .gl-hero { opacity: 1; }
+/* karty zabiegów i medaliony: płótno 2D nad <img> tylko na czas efektu (wjazd, najechanie), potem wraca obraz */
+.gl-plotno { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; opacity: 0; }
+.gl-fx > .gl-plotno { opacity: 1; }
+.gl-fx > img { opacity: 0; }
+#soins .karta-obraz .gl-plotno { transform: translateY(var(--py, 0%)) scale(var(--sk, 1.12)); transition: transform 1.2s cubic-bezier(.16,1,.3,1); }
+#soins .karta:hover .karta-obraz .gl-plotno { transform: translateY(var(--py, 0%)) scale(1.17); }
+.ilustracja .gl-plotno { filter: drop-shadow(0 30px 60px rgba(0,0,0,.55)); }
+.ilustracja-czarny .gl-plotno { filter: drop-shadow(0 18px 34px rgba(30,26,28,.18)); }
+@media (prefers-reduced-motion: reduce) {
+  .gl-hero, .gl-plotno { display: none; }
+}
+
+/* =====================================================================================================================
+   TELEPORT I „3 PETARDY W LEWO” (03.10.2026; Daniel o landonorris / jjettas: „3 petardy w lewą stronę, przewijanie w dół,
+   wejście przez okulary jak teleport”). Mechanika wzorów, kod, obrazy i teksty własne. Silnik: js/petardy.js.
+   Domyślnie (bez skryptu, ograniczony ruch, telefon ≤ 900 px): zwykły pionowy układ, wszystko widać od razu.
+   Klasy .portal-on i .tor-on dodaje dopiero skrypt na komputerze z ruchem. --nav = wysokość paska (liczy skrypt),
+   --vw = szerokość sceny w px (bez paska przewijania Windows, więc panel to dokładnie jeden ekran). */
+
+/* ---------- teleport: układ statyczny ---------- */
+.portal-scena { position: relative; display: flex; flex-direction: column; align-items: center; }
+.portal-medalion { margin: 0; width: min(460px, 82vw); }
+.portal-obraz { position: relative; aspect-ratio: 1; }
+.portal-obraz::before { content: ''; position: absolute; inset: -14%; z-index: -1; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(212,164,154,.16), rgba(227,181,71,.05) 55%, rgba(5,5,5,0) 100%); }
+.portal-obraz img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 60px rgba(0,0,0,.55)); }
+.portal-scena > .plakietka { position: relative; left: auto; bottom: auto; margin: 10px 0 0; align-self: center; order: 1; }
+.portal-druga { order: 2; }
+.portal-druga { margin-top: clamp(48px, 9vh, 96px); }
+.portal-blysk, .portal-wskazowka { display: none; }
+
+/* ---------- teleport: przypięta scena (komputer z ruchem) ---------- */
+.portal.portal-on { padding-top: 0; padding-left: 0; padding-right: 0; border-top: 0; }
+.portal-on .manifest-srodek { padding: 0 max(16px, calc((100% - var(--szer)) / 2)); }
+.portal-on .cele { margin-top: clamp(72px, 12vh, 140px); }
+.portal-on .portal-scena { display: block; height: 100vh; overflow: hidden; background: #050505; isolation: isolate; }
+.portal-on .portal-medalion { position: absolute; left: 50%; top: 50%; width: 74vmin; margin: 0; z-index: 1; transform: translate(-50%, -50%); }
+.portal-on .portal-obraz img { transform-origin: 50% 50%; will-change: transform, filter; }
+.portal-gl { position: absolute; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity .6s var(--e-ui); }
+.portal-gl-on .portal-gl { opacity: 1; }
+.portal-gl-on .portal-medalion { opacity: 0; transition: opacity .6s var(--e-ui); }
+.portal-on .portal-blysk { display: block; position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at 50% 50%, #FFFDF6 0%, #FBE7A1 14%, rgba(227,181,71,.75) 30%, rgba(212,164,154,.5) 46%, rgba(5,5,5,0) 74%); }
+.portal-on .portal-druga { position: absolute; inset: 0; z-index: 2; margin: 0; display: flex; flex-direction: column; justify-content: center;
+  align-items: center; padding: var(--nav, 80px) 6vw 0; pointer-events: none; }
+.portal-on .portal-druga .etykieta { opacity: 0; }
+.portal-on .portal-druga .manifest-tekst { font-size: clamp(52px, 7.6vw, 140px); line-height: .96; max-width: 11.5em;
+  text-shadow: 0 4px 40px rgba(0,0,0,.55); }
+.portal-on .portal-druga .ebl-slowo { opacity: 0; will-change: transform, opacity, filter; }
+.portal-on .portal-wskazowka { display: flex; position: absolute; left: 50%; bottom: 4.5vh; z-index: 2; margin: 0; transform: translateX(-50%);
+  flex-direction: column; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .26em; text-transform: uppercase; color: var(--rz); }
+.portal-wskazowka i { display: block; width: 1px; height: 52px; background: linear-gradient(var(--rz), rgba(212,164,154,0));
+  transform-origin: 50% 0; animation: portal-kreska 2.2s var(--e-editorial) infinite; }
+@keyframes portal-kreska { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: 50% 0; } 51% { transform-origin: 50% 100%; } 100% { transform: scaleY(0); transform-origin: 50% 100%; } }
+.portal-on .portal-scena > .plakietka { position: absolute; left: auto; right: 24px; bottom: 20px; margin: 0; z-index: 4; }
+
+/* ---------- tor: układ statyczny (panele jeden pod drugim) ---------- */
+.tor3-scena { position: relative; z-index: 1; }
+.tor3-tlo, .tor3-licznik, .tor3-pasek { display: none; }
+.tor3-glowa { margin-bottom: clamp(32px, 6vh, 56px); }
+.tor3-tasma { display: flex; flex-direction: column; gap: clamp(48px, 8vh, 88px); }
+#soins #karty-zabiegow { display: contents; }
+#soins .panel { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: center;
+  margin: 0; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; overflow: visible; backdrop-filter: none; -webkit-backdrop-filter: none; }
+#soins .panel:hover { border: 0; box-shadow: none; }
+.panel-obraz { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border: 1px solid var(--rz-linia); background: #050505; }
+.panel-obraz img { display: block; width: 100%; height: 100%; object-fit: cover; }
+#soins .panel-obraz .plakietka { left: auto; right: 12px; bottom: 12px; z-index: 3; }
+.panel-tresc { position: relative; }
+.panel-nr { display: block; font: italic 500 clamp(48px, 5vw, 72px)/1 var(--szeryf); font-variant-numeric: lining-nums;
+  background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--k24-pelne); }
+.panel-tytul { font: 500 clamp(36px, 5.6vw, 96px)/.9 var(--szeryf); overflow-wrap: anywhere; text-transform: uppercase; letter-spacing: -.01em; color: #FFFFFF; margin: 8px 0 18px; }
+.panel-opis { color: #CFC8C5; max-width: 32em; margin: 0 0 18px; }
+.panel-cena { margin: 0; font: 500 clamp(28px, 2.6vw, 40px)/1.15 var(--szeryf); font-variant-numeric: lining-nums; color: #FFFFFF;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.panel-cena .cena-j { font: 500 14px/1.4 var(--bez); color: var(--tekst-noc-2); letter-spacing: .04em; }
+.panel-meta { font: 500 15px/1.5 var(--bez); color: var(--tekst-noc-2); }
+.panel-test { font: 600 11px/1 var(--bez); letter-spacing: .12em; text-transform: uppercase; color: var(--rz); border: 1px solid var(--rz-linia); padding: 6px 9px; }
+.panel-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.panel-cta .pill { margin: 0; }
+@media (max-width: 900px) {
+  #soins .panel { grid-template-columns: 1fr; gap: 20px; }
+  .panel-tytul { font-size: clamp(36px, 11vw, 96px); overflow-wrap: anywhere; }
+}
+
+/* ---------- tor: przypięta scena, panele jadą w lewo (komputer z ruchem) ---------- */
+#soins.tor-on { padding: 0; background-image: none; background-color: #050505; }
+.tor-on .tor3-scena { height: 100vh; overflow: hidden; }
+.tor-on .tor3-tasma { position: relative; z-index: 1; flex-direction: row; gap: 0; height: 100%; width: max-content; will-change: transform; }
+.tor-on .panel { display: block; flex: none; width: var(--vw, 100vw); height: 100%; overflow: hidden; }
+#soins.tor-on .panel-obraz { position: absolute; top: 0; right: 0; bottom: 0; width: 63%; aspect-ratio: auto; border: 0; border-left: 1px solid var(--rz-linia); }
+.tor-on .panel-obraz img { position: absolute; top: 0; left: -14%; width: 128%; height: 100%; transform: translate3d(var(--ix, 0px), 0, 0) scale(var(--is, 1.08));
+  will-change: transform; }
+.tor-on .panel-obraz::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(5,5,5,.94) 0%, rgba(5,5,5,.5) 24%, rgba(5,5,5,0) 58%), linear-gradient(0deg, rgba(5,5,5,.55), rgba(5,5,5,0) 38%); }
+.tor-on .panel-tresc { position: absolute; z-index: 2; left: max(32px, 6vw); right: 6vw; top: calc(var(--nav, 80px) + 120px); bottom: 10vh;
+  display: flex; flex-direction: column; justify-content: flex-end; }
+.tor-on .panel-nr { position: absolute; top: 0; left: 0; font-size: clamp(72px, 9vw, 168px); line-height: .8; transform: translate3d(var(--nx, 0px), 0, 0); }
+.tor-on .panel-tytul { margin: 0 0 3.2vh; font-size: clamp(72px, 11.4vw, 220px); line-height: .84; white-space: nowrap; letter-spacing: -.015em;
+  text-shadow: 0 10px 70px rgba(0,0,0,.55); transform: translate3d(var(--tx, 0px), 0, 0) skewX(var(--sk, 0deg)); transform-origin: 0 100%; will-change: transform; }
+.tor-on .panel[data-zabieg="ems"] .panel-tytul { font-size: clamp(120px, 23vw, 440px); }
+.tor-on .panel-wizyta .panel-tytul { white-space: normal; max-width: 6.2em; }
+.tor-on .panel-opis, .tor-on .panel-cena, .tor-on .panel-cta { opacity: var(--to, 1); transform: translate3d(var(--dx, 0px), 0, 0); }
+.tor-on .panel-opis { max-width: 30em; font-size: 17px; }
+.tor-on .tor3-glowa { position: absolute; z-index: 3; top: calc(var(--nav, 80px) + 26px); left: max(32px, 6vw); margin: 0; }
+.tor-on .tor3-glowa h2 { font-size: clamp(22px, 1.9vw, 32px); margin: 0; color: var(--mocno); }
+.tor-on .tor3-glowa .etykieta { margin-bottom: 8px; }
+.tor-on .tor3-licznik { display: block; position: absolute; z-index: 3; top: calc(var(--nav, 80px) + 22px); right: max(32px, 6vw); margin: 0;
+  font: italic 500 clamp(34px, 3vw, 50px)/1 var(--szeryf); font-variant-numeric: lining-nums; white-space: nowrap; }
+.tor3-nr { display: inline-block; overflow: hidden; vertical-align: bottom; padding-right: .06em; }
+.tor3-nr-akt { display: inline-block; background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--k24-pelne); }
+.tor3-z { color: var(--tekst-noc-2); font-size: .56em; margin-left: .35em; font-style: normal; letter-spacing: .08em; }
+.tor-on .tor3-pasek { display: block; position: absolute; z-index: 3; left: max(32px, 6vw); right: max(32px, 6vw); bottom: 4.2vh; height: 1px; margin: 0;
+  background: rgba(212, 164, 154, .2); }
+.tor3-pasek i { display: block; height: 100%; background: var(--rz); transform-origin: 0 50%; transform: scaleX(var(--tp, 0));
+  box-shadow: 0 0 12px rgba(212, 164, 154, .75); }
+.tor-on .tor3-tlo { display: block; position: absolute; z-index: 0; top: 50%; left: 0; margin: 0; white-space: nowrap; pointer-events: none; user-select: none;
+  font: 500 clamp(220px, 30vw, 560px)/.8 var(--szeryf); text-transform: uppercase; letter-spacing: -.02em; color: transparent;
+  -webkit-text-stroke: 1px rgba(212, 164, 154, .15); transform: translate3d(var(--bx, 0px), -50%, 0); will-change: transform; }
+@media (min-width: 901px) and (max-height: 720px) {
+  .tor-on .panel-tresc { top: calc(var(--nav, 80px) + 100px); bottom: 8vh; }
+  .portal-on .portal-medalion { width: 66vmin; top: calc(50% + var(--nav, 80px) / 2 - 4vh); }
+  .portal-on .portal-wskazowka { bottom: 2.4vh; gap: 8px; }
+  .portal-wskazowka i { height: 26px; }
+  .tor-on .panel-tytul { font-size: clamp(56px, min(11.4vw, 17vh), 220px); margin-bottom: 2.4vh; }
+  .tor-on .panel[data-zabieg="ems"] .panel-tytul { font-size: clamp(96px, min(23vw, 25vh), 440px); }
+  .tor-on .panel-opis { font-size: 15px; margin-bottom: 10px; }
+  .tor-on .panel-cta { margin-top: 16px; }
+  .tor-on .panel-nr { font-size: clamp(60px, 8vw, 120px); }
+}
+
+/* =====================================================================================================================
+   PIERWSZY EKRAN Z MONIKĄ (03.10.2026, decyzja Daniela: „jak u Lando: osoba w centrum”, Monika narysowana i wtopiona
+   w obraz). Tylko komputer (≥ 901 px); telefon bez zmian. Warstwa .hero-fala jest widoczna zawsze na komputerze:
+   za Moniką gigantyczny napis, Monika po prawej przycięta dołem (img/monika-rys-hero.webp: bluzka przechodzi od kości
+   słoniowej przez różowe złoto w czerń, dół i boki rozpuszczone w przezroczystość). Ramka z pinu (js/ruch.js) kurczy
+   całą warstwę razem z Moniką. js/gl.js rysuje falę, napis i Monikę w jednym płótnie (2,5D, płyn odsłania złotą
+   wersję także na postaci), wtedy warstwy DOM są tylko miarą (visibility: hidden). Bez plakietki na Monice. */
+.hero-imie, .hero-monika { display: none; }
+@media (min-width: 901px) {
+  .hero .hero-fala { display: block; position: absolute; inset: 0; z-index: -2; pointer-events: none; overflow: hidden; }
+  .hero-imie { display: block; position: absolute; right: -1vw; top: 7%; margin: 0; white-space: nowrap; user-select: none;
+    font: 500 clamp(120px, 15.5vw, 280px)/.8 var(--szeryf); text-transform: uppercase; letter-spacing: -.02em; color: rgba(212, 164, 154, .16); }
+  .hero-monika { display: block; position: absolute; bottom: 0; right: max(2vw, calc((100% - var(--szer)) / 2 - 60px)); height: 93%; width: auto;
+    max-width: none; filter: drop-shadow(0 0 60px rgba(2, 3, 6, .6)); }
+  .hero.hero-rama .hero-monika { transform: translate(calc(var(--fp, 0) * var(--msx, 0px)), var(--msy, 0px)); }
+  .hero.gl-on.gl-postac .hero-imie, .hero.gl-on.gl-postac .hero-monika { visibility: hidden; }
+  /* tekst po lewej czyta się na czerni także tam, gdzie postać jest blisko */
+  .hero-tresc { text-shadow: 0 2px 24px rgba(2, 3, 6, .7); }
+  /* plakietka fali po lewej stronie ramki, żeby nie stała na Monice (ramka jest symetryczna: --pr = odstęp od krawędzi) */
+  .hero .plakietka, .hero.hero-rama .hero-obraz .plakietka { right: auto; left: var(--pr, max(16px, calc((100% - var(--szer)) / 2))); }
+}
+
+/* =====================================================================================================================
+   CZYSTY GRANAT ZAMIAST KAMIENIA (03.10.2026; Daniel po obejrzeniu na żywo: „spoko, ale brakuje jakości; dajmy zamiast
+   tego kamienia czysty ciemnogranatowy tło”). Ciemne sekcje bez obrazów kamienia/marmuru/kryształu (fala-pc/tel,
+   granat-kora-*, klif-lustro, karta-* zostają w repo, nieużywane). Tło: głęboki granat #0A142C, brzegi ciemniejsze
+   (#050A17), ledwo widoczne ziarno (SVG feTurbulence w data URI, średnio ok. 1,5% bieli), żeby gradient nie robił pasów.
+   Pionowo kolor stały: sąsiednie ciemne sekcje łączą się bez szwu. Kontrasty (WCAG): biel #FFF na #0A142C 18,4:1,
+   kość słoniowa #F6F0E4 16,4:1, różowe złoto #D4A49A 8,6:1, szary #B5AEAB 8,4:1; na najjaśniejszym miejscu (poświata
+   #101C3A) biel 16,8:1, różowe złoto 7,9:1. Paleta bez zmian: biel, złoto 24K na pełnych przyciskach i numerach,
+   różowe złoto na obrysach. Ruch (WebGL) liczy to samo tło w shaderach: js/gl.js (pierwszy ekran), js/petardy.js
+   (druga strona teleportu). */
+:root {
+  --granat: #0A142C; --granat-gleboki: #050A17; --granat-swiatlo: #101C3A; --granat-karta: #0E1A36;
+  --noc: #0A142C; --noc-2: #0E1A36; --mat: #0A142C; --mat-karta: #0E1A36;
+  --ziarno: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='z'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .10 -.035'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23z)'/%3E%3C/svg%3E");
+  --winieta: linear-gradient(90deg, rgba(3, 7, 17, .55) 0%, rgba(3, 7, 17, 0) 22%, rgba(3, 7, 17, 0) 78%, rgba(3, 7, 17, .55) 100%);
+  --tlo-granat: var(--ziarno), var(--winieta), var(--granat);
+}
+body { background-color: var(--granat); }
+.noc, #visite, #soins, #soins.tor-on, #contact, html.leniwe #soins:not(.blisko), html.leniwe #contact:not(.blisko) { background: var(--tlo-granat); }
+.stopka-panel.noc { background: var(--ziarno), radial-gradient(70% 60% at 78% 70%, rgba(212, 164, 154, .10), transparent 70%), var(--granat); }
+.naglowek { background: rgba(8, 15, 33, .9); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); }
+.pasek-demo { background: var(--granat-gleboki); color: #C9CFDA; border-bottom: 1px solid rgba(212, 164, 154, .18); }
+.plakietka { background: rgba(5, 10, 23, .78); }
+html.k-tlo body { background-color: var(--granat); }
+
+/* ---------- pierwszy ekran: Monika na granacie, bez plakietki (nie ma obrazu AI) ---------- */
+.hero { background: var(--ziarno), radial-gradient(60% 70% at 72% 52%, rgba(212, 164, 154, .07), transparent 70%), var(--winieta), var(--granat); }
+.hero::before { background: linear-gradient(90deg, rgba(5, 10, 23, .42) 0%, rgba(5, 10, 23, .18) 40%, rgba(5, 10, 23, 0) 60%); }
+@media (max-width: 900px) {
+  .hero { background: var(--ziarno), radial-gradient(90% 50% at 50% 0%, rgba(212, 164, 154, .08), transparent 70%), var(--granat); }
+  .hero::before { background: none; }
+  .hero-tresc::before { background: none; }
+  .hero .hero-fala, .hero.hero-rama .hero-fala, .hero.gl-on .hero-fala { display: none; }
+}
+@media (min-width: 901px) {
+  /* warstwa ramki = jaśniejszy granat z poświatą za Moniką (to samo liczy shader); poza ramką głębia #050A17 */
+  .hero .hero-fala, .hero.hero-rama .hero-fala, .hero.gl-on .hero-fala {
+    background: var(--ziarno), radial-gradient(34% 52% at 74% 52%, rgba(212, 164, 154, .085), transparent 72%),
+      radial-gradient(40% 46% at 18% 22%, rgba(31, 51, 97, .32), transparent 72%),
+      radial-gradient(85% 95% at 56% 46%, var(--granat-swiatlo), var(--granat) 55%, var(--granat-gleboki) 100%); }
+  .hero.hero-rama { background: var(--ziarno), var(--granat-gleboki); }
+  /* gigantyczny napis za Moniką: obrys 1 px różowego złota + bardzo ciemne złoto w środku (drugi plan, ale czytelny);
+     js/gl.js rysuje go z tych samych wartości CSS */
+  .hero-imie { color: rgba(212, 164, 154, .055); -webkit-text-stroke: 1px rgba(212, 164, 154, .46); }
+  .hero-monika { filter: drop-shadow(0 0 70px rgba(5, 10, 23, .7)); }
+  .hero-tresc { text-shadow: 0 2px 24px rgba(5, 10, 23, .75); }
+}
+
+/* ---------- teleport: po drugiej stronie granat (shader); bez WebGL scena też na granacie ---------- */
+.portal-on .portal-scena { background: var(--ziarno), radial-gradient(70% 70% at 50% 50%, var(--granat-swiatlo), var(--granat) 55%, var(--granat-gleboki)); }
+.portal-on .portal-scena > .plakietka { transition: none; }
+.portal-obraz::before { background: radial-gradient(closest-side, rgba(212,164,154,.16), rgba(227,181,71,.05) 55%, rgba(10,20,44,0) 100%); }
+.portal-on .portal-blysk { background: radial-gradient(circle at 50% 50%, #FFFDF6 0%, #FBE7A1 14%, rgba(227,181,71,.75) 30%, rgba(212,164,154,.5) 46%, rgba(10,20,44,0) 74%); }
+
+/* ---------- tor 3 petard: panele na granacie, element zastępczy do czasu renderów RTX ---------- */
+#soins::after { background: linear-gradient(180deg, rgba(10, 20, 44, 0), var(--granat)); }
+.panel-obraz { background: transparent; }
+.panel-zastep { border-color: rgba(212, 164, 154, .22); background: radial-gradient(55% 60% at 50% 50%, rgba(212, 164, 154, .06), transparent 72%); }
+.zastep { position: absolute; inset: 0; display: grid; place-items: center; }
+.zastep-linia { position: absolute; left: 50%; top: 4%; bottom: 4%; width: 1px; transform: translateX(-.5px); z-index: 0;
+  background: linear-gradient(180deg, rgba(212,164,154,0), rgba(212,164,154,.42) 22%, rgba(251,231,161,.75) 50%, rgba(212,164,154,.42) 78%, rgba(212,164,154,0)); }
+.zastep-krag { position: relative; z-index: 1; height: 78%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; container-type: size;
+  background: radial-gradient(circle at 50% 38%, var(--granat-swiatlo), var(--granat) 62%, var(--granat-gleboki));
+  box-shadow: 0 0 0 1px rgba(212, 164, 154, .5), 0 0 90px -8px rgba(212, 164, 154, .2), inset 0 0 60px rgba(212, 164, 154, .07); }
+.zastep-krag::before { content: ''; position: absolute; inset: 5.5%; border-radius: 50%; border: 1px solid rgba(212, 164, 154, .2); pointer-events: none; }
+/* linia światła okrąża obręcz (łuk 24K), ruch tylko bez „ograniczonego ruchu” */
+.zastep-krag::after { content: ''; position: absolute; inset: -1px; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 0deg, rgba(251,231,161,0) 0 72%, rgba(251,231,161,.9) 84%, rgba(251,231,161,0) 92%);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+          mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+  animation: zastep-obrot 16s linear infinite; }
+@keyframes zastep-obrot { to { transform: rotate(360deg); } }
+.zastep-litera { font: italic 500 58cqh/1 var(--szeryf); padding: 0 .1em; margin-top: -.04em; transform: translateX(-.06em); user-select: none;
+  background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--k24-pelne);
+  filter: drop-shadow(0 6px 30px rgba(227, 181, 71, .18)); }
+.zastep-medalion img { display: block; width: 88%; height: auto; border-radius: 50%; filter: drop-shadow(0 20px 40px rgba(0, 0, 0, .5)); }
+#soins .panel-zastep .plakietka { right: 12px; bottom: 12px; }
+@media (prefers-reduced-motion: reduce) { .zastep-krag::after { animation: none; transform: rotate(140deg); } }
+@media (min-width: 901px) {
+  #soins.tor-on .panel-obraz.panel-zastep { border-left-color: rgba(212, 164, 154, .16); background: none; }
+  .tor-on .panel-zastep::after { display: none; }
+  /* obręcz w prawej części ekranu, nad linią tytułów (tytuły panelu leżą w dolnej połowie) */
+  .tor-on .zastep { padding: calc(var(--nav, 80px) + 24px) 0 28vh 40%; transform: translate3d(var(--ix, 0px), 0, 0) scale(var(--is, 1)); will-change: transform; }
+  .tor-on .zastep-krag { height: min(46vh, 420px); }
+  .tor-on .zastep-linia { left: 70%; }
+  .tor-on .panel-zastep .zastep-medalion img { position: static; width: 88%; height: auto; transform: none; left: auto; }
+  /* numer panelu w toku, nad tytułem (przy 1366×657 „03” wchodził na „PREMIÈRE”) */
+  .tor-on .panel-nr { position: relative; top: auto; left: auto; margin-bottom: 1.2vh; }
+}
+@media (min-width: 901px) and (max-height: 720px) {
+  .tor-on .panel-wizyta .panel-tytul { font-size: clamp(52px, min(9vw, 13vh), 160px); }
+  .tor-on .panel-nr { font-size: clamp(48px, min(6vw, 10vh), 96px); margin-bottom: .6vh; }
+  .tor-on .zastep { padding-top: calc(var(--nav, 80px) + 64px); padding-bottom: 26vh; }
+  .tor-on .zastep-krag { height: min(40vh, 360px); }
+}
+
+/* ---------- Monika wycięta na końcu strony (panel stopki): prawdziwe zdjęcie, bez plakietki ---------- */
+.stopka-monika { position: relative; margin: 28px auto 0; width: min(72vw, 340px); pointer-events: none; }
+.stopka-monika::before { content: ''; position: absolute; left: 0; right: 0; top: 8%; bottom: 0; z-index: 0;
+  /* cień zamiast różowej poświaty: postać odcina się od witryny w tle, zamiast tonąć w mgle */
+  background: radial-gradient(ellipse 55% 50% at 55% 55%, rgba(5, 10, 23, .55), rgba(5, 10, 23, .2) 60%, rgba(5, 10, 23, 0) 100%); }
+/* wycięcie dotyka lewej, górnej i dolnej krawędzi kadru zdjęcia (bluzka i włosy ucięte kadrem): te brzegi rozpuszczone
+   maską (przecięcie trzech gradientów), prawa krawędź to czyste wycięcie BiRefNet */
+.stopka-monika img { position: relative; z-index: 1; display: block; width: 100%; height: auto;
+  /* góra: tylko 3% miękkiego wejścia (było 9%: zjadało czubek głowy; Daniel 03.10.2026 „na końcu ucięło głowę”) */
+  /* lewo i dół wygaszane krótko (było 24% i od 66%: bluzka szarzała na granacie, Daniel 03.10.2026: „takie matowe”) */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, rgba(0,0,0,.35) 6%, #000 17%), linear-gradient(180deg, transparent 0, #000 3%), linear-gradient(180deg, #000 82%, transparent 100%);
+  -webkit-mask-composite: source-in, source-in;
+  mask-image: linear-gradient(90deg, transparent 0, rgba(0,0,0,.35) 6%, #000 17%), linear-gradient(180deg, transparent 0, #000 3%), linear-gradient(180deg, #000 82%, transparent 100%);
+  mask-composite: intersect;
+  filter: contrast(1.07) saturate(1.06); }
+/* kontur światła i poświata na figurze (nie na <img>): maska przycina do pudełka obrazu, a cień musi wyjść poza nie */
+/* bez poświaty i złotego konturu: dawały mleczną mgłę i jasną obwódkę na włosach (zdjęcie wyglądało na matowe i doklejone) */
+.stopka-monika { filter: none; }
+@media (min-width: 901px) {
+  .stopka-panel { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(16px, 2vw, 32px); overflow: hidden; }
+  .stopka-slogan { grid-column: 1 / 9; grid-row: 1; margin: 0; max-width: 10em; text-align: left; font-size: clamp(48px, 5.8vw, 100px); }
+  .stopka-kolumny { grid-column: 1 / 9; grid-row: 2; align-self: end; grid-template-columns: 1fr auto 1fr; }
+  .stopka-logo .logo-obraz img { width: min(200px, 15vw); }
+  .stopka-monika { grid-column: 9 / 13; grid-row: 1 / 3; align-self: end; width: 100%; max-width: 400px; justify-self: end; padding-top: clamp(80px, 12vh, 130px);   /* niżej: zapas nad głową (Daniel 03.10.2026: „obniż postać”) */
+    margin: 0 calc(-1 * clamp(8px, 2vw, 40px)) -1px 0; }
+  .stopka-prawne { grid-column: 1 / -1; grid-row: 3; position: relative; z-index: 2; text-align: left; }
+}
+
+/* =====================================================================================================================
+   JAKOŚĆ (recenzja 03.10.2026 na 1440×900 i 1366×657; lista przed → po w raporcie). Kroje, rytm, stany przycisków. */
+h1, h2, h3, .manifest-tekst, .stopka-slogan, .duo, .panel-tytul { font-kerning: normal; font-feature-settings: "kern", "liga"; text-rendering: optimizeLegibility; }
+h1, h2 { text-wrap: balance; }
+main p, .stopka p { text-wrap: pretty; }
+/* jedna skala H2 sekcji (było: 52 / 64 / 88 px na przemian); kontakt zostaje większy jako finał */
+#visite h2, #monika h2, #faq h2, .tarifs-glowa h2 { font-size: clamp(40px, 4.4vw, 64px); line-height: 1.04; font-weight: 500; letter-spacing: -.005em; }
+#contact h2 { font-weight: 500; letter-spacing: -.01em; line-height: 1; }
+/* stany przycisków: wyraźny fokus z klawiatury (różowe złoto, 2 px, odstęp), ramka po najechaniu delikatnie się wypełnia */
+.pill { transition: background-position .6s ease, background-color .3s ease, border-color .3s ease, color .3s ease, box-shadow .3s ease; }
+.pill.ramka:hover { background-color: rgba(212, 164, 154, .1); border-color: #E2B5A8; }
+.jasna .pill.ramka:hover { background-color: rgba(140, 79, 88, .08); }
+.pill:focus-visible, .menu a:focus-visible, .jezyki a:focus-visible, .logo:focus-visible, .stopka-menu a:focus-visible, .cel:focus-visible,
+.faq summary:focus-visible { outline: 2px solid var(--rz); outline-offset: 4px; border-radius: 999px; }
+.menu a:focus-visible, .jezyki a:focus-visible, .stopka-menu a:focus-visible, .cel:focus-visible, .faq summary:focus-visible, .logo:focus-visible { border-radius: 2px; }
+.jasna .pill:focus-visible, .jasna .faq summary:focus-visible { outline-color: var(--rz-ciemne); }
+@media (min-width: 901px) {
+  .pill.solid:hover { box-shadow: 0 10px 30px -12px rgba(227, 181, 71, .55); }
+  .pill.solid:active { background-position: 60% 0; }
+  .menu a { transition: color .25s ease, box-shadow .25s ease; }
+}
+/* pasek górny: linie 1 px ostre (bez półpikseli), logo wyrównane do linii bazowej menu */
+.naglowek { border-bottom: 1px solid rgba(212, 164, 154, .28); }
+.menu { align-items: center; }
+
+/* pas napisu w pierwszym ekranie: pełny różowy rząd na granacie wychodził „błotnisty” (mauve); teraz oba rzędy jako
+   obrys, górny różowym złotem z ledwo widocznym wypełnieniem, dolny bielą */
+.r1 span { color: rgba(212, 164, 154, .07); -webkit-text-stroke: 1px rgba(212, 164, 154, .38); }
+.r2 span { -webkit-text-stroke: 1px rgba(246, 240, 228, .22); }
+
+/* ---------- render RTX z przezroczystym tłem (EMS, 03.10.2026): urządzenie stoi wolno na granacie ----------
+   Bez ramki i bez przyciemnienia kadru; za ekranem urządzenia poświata różowego złota, pod kółkami miękki cień
+   i ledwo widoczne odbicie. Tor (komputer): ok. 80 vh wysokości po prawej, paralaksa wolniejsza niż panel (--ix),
+   obrót 3D przy przejeździe (--ry z js/petardy.js). Plakietka „Image de synthèse” w rogu kadru. */
+.panel-wolny { aspect-ratio: auto; border: 0; background: none; overflow: visible; display: grid; place-items: end center; padding: 24px 0 36px; }
+.urzadzenie { position: relative; display: block; line-height: 0; transform-origin: 50% 100%; }
+.urzadzenie::before { content: ''; position: absolute; z-index: -1; left: -30%; right: -30%; top: -8%; height: 62%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(212, 164, 154, .24), rgba(212, 164, 154, .08) 55%, rgba(212, 164, 154, 0) 100%); }
+.urzadzenie::after { content: ''; position: absolute; z-index: -1; left: 6%; right: 6%; bottom: -2.4%; height: 6%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(2, 4, 10, .85), rgba(2, 4, 10, .4) 55%, rgba(2, 4, 10, 0) 100%); filter: blur(6px); }
+.urzadzenie-img { display: block; width: auto; height: min(64vh, 520px); max-width: 100%; object-fit: contain;
+  -webkit-box-reflect: below 2px linear-gradient(transparent 86%, rgba(255, 255, 255, .14));
+  filter: drop-shadow(0 30px 40px rgba(2, 4, 10, .55)); }
+#soins .panel-wolny .plakietka { right: 12px; bottom: 12px; }
+@media (max-width: 900px) { .urzadzenie-img { height: min(56vh, 420px); } }
+@media (min-width: 901px) {
+  #soins.tor-on .panel-obraz.panel-wolny { border-left: 0; background: none; overflow: visible; }
+  .tor-on .panel-wolny::after { display: none; }
+  .tor-on .panel-wolny .urzadzenie { position: absolute; right: 14%; bottom: 5vh;
+    transform: perspective(1600px) translate3d(var(--ix, 0px), 0, 0) rotateY(var(--ry, 0deg)); will-change: transform; }
+  .tor-on .panel-wolny .urzadzenie-img { position: static; left: auto; top: auto; width: auto; height: min(80vh, 860px); max-width: none; transform: none; }
+}
+@media (min-width: 901px) and (max-height: 720px) {
+  .tor-on .panel-wolny .urzadzenie-img { height: min(74vh, 860px); }
+  .tor-on .panel-wolny .urzadzenie { bottom: 4vh; }
+}
+/* drugi render w głębi (kombinezon EMS): mniejszy, dalej od kamery, przygaszony; paralaksa wolniejsza (js/petardy.js) */
+.panel-wolny { display: flex; align-items: flex-end; justify-content: center; }
+.urzadzenie-obok { z-index: 0; margin-right: -6%; }
+.urzadzenie-obok .urzadzenie-img { height: min(46vh, 380px); filter: brightness(.82) saturate(.92) drop-shadow(0 24px 30px rgba(2, 4, 10, .5)); }
+.urzadzenie-obok::before { opacity: .55; }
+.urzadzenie:not(.urzadzenie-obok) { z-index: 1; }
+@media (max-width: 900px) { .urzadzenie-obok .urzadzenie-img { height: min(40vh, 300px); } }
+@media (min-width: 901px) {
+  .tor-on .panel-wolny .urzadzenie-obok { right: 43%; bottom: 10vh; margin: 0; }
+  .tor-on .panel-wolny .urzadzenie-obok .urzadzenie-img { height: min(58vh, 620px); }
+}
+@media (min-width: 901px) and (max-height: 720px) {
+  .tor-on .panel-wolny .urzadzenie-obok .urzadzenie-img { height: min(52vh, 620px); }
+}
+
+/* ---------- pętle wideo z RTX (kriolipoliza, kabina): czarne studyjne tło wtapiane w granat ----------
+   .kadr-granat (granat, mix-blend-mode: lighten) podnosi czerń marmuru do koloru sekcji, a maska elipsy rozpuszcza
+   brzegi kadru: nie ma prostokąta. Plakietka stoi poza maską. */
+.panel-kadr { border: 0; background: none; }
+.kadr { position: absolute; inset: 0; display: block; isolation: isolate;
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 58%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 58%, transparent 100%); }
+.kadr-wideo { display: block; width: 100%; height: 100%; object-fit: cover; }
+.kadr-granat { position: absolute; inset: 0; z-index: 1; background: var(--granat); mix-blend-mode: lighten; pointer-events: none; }
+#soins .panel-kadr .plakietka { right: 12px; bottom: 12px; }
+@media (min-width: 901px) {
+  #soins.tor-on .panel-obraz.panel-kadr { border-left: 0; }
+  .tor-on .panel-kadr::after { display: none; }
+  #soins.tor-on .panel-obraz.panel-kadr { overflow: visible; }
+  .tor-on .panel-kadr .kadr { inset: calc(var(--nav, 80px) - 20px) 0 0 0; transform: translate3d(var(--ix, 0px), 0, 0) scale(calc(var(--is, 1) * .94)); will-change: transform; }
+}
+/* kriolipoliza: chłodna poświata (lodowy błękit z aplikatorów) zamiast różowego złota; cień i odbicie bez zmian */
+.panel-chlod .urzadzenie::before { background: radial-gradient(closest-side, rgba(150, 196, 238, .20), rgba(120, 170, 225, .07) 55%, rgba(120, 170, 225, 0) 100%); top: 0; height: 70%; }
+
+/* ---------- Witryna gabinetu nocą w tle zamknięcia (Daniel 03.10.2026: „dawaj”). Grafika AI, lokal jeszcze nie istnieje:
+   mocno przygaszona (napisy na kolumnach nieczytelne), wtopiona w granat, z plakietką. Tylko desktop. ---------- */
+.stopka-witryna, .stopka-witryna-plak { display: none; }
+@media (min-width: 901px) {
+  .stopka-panel { position: relative; isolation: isolate; }
+  .stopka-witryna { display: block; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: url(../img/rtx/witryna-1920.webp) 62% 40% / cover no-repeat;
+    background-image: image-set(url(../img/rtx/witryna-1920.webp) 1x, url(../img/rtx/witryna-2880.webp) 1.5x);
+    -webkit-mask-image: radial-gradient(120% 95% at 60% 35%, #000 25%, transparent 85%);
+    mask-image: radial-gradient(120% 95% at 60% 35%, #000 25%, transparent 85%);
+    opacity: .42; filter: saturate(.85) brightness(.8); }
+  .stopka-witryna::after { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(10,20,44,.9) 0%, rgba(10,20,44,.55) 45%, rgba(10,20,44,.25) 75%, rgba(10,20,44,.6) 100%),
+                linear-gradient(180deg, rgba(10,20,44,.2) 0%, rgba(10,20,44,.85) 100%); }
+  .stopka-witryna-plak { display: inline-block; position: absolute; left: auto; right: 18px; top: 16px; bottom: auto; z-index: 3; }
+}
+@media (min-width: 901px) and (max-resolution: 1dppx) and (max-width: 1300px) {
+  .stopka-witryna { background-image: url(../img/rtx/witryna-1200.webp); }
+}
+
+/* ---------- Schodki = droga klientki (Daniel 03.10.2026: „nie mogę wpaść, co wpisać, czy to zamienić”).
+   Zamiast pełnej plamy różowego złota: granatowe stopnie z cienką krawędzią w różowym złocie, na każdym numer (złoto 24K)
+   i krok: Rendez-vous · Bilan · Protocole · Séance · Suivi · Évolution. Ostatni stopień świeci złotem. Ruch bez zmian
+   (stopnie wchodzą, noc je przykrywa). Tylko komputer. ---------- */
+.schodki i::before { background: linear-gradient(180deg, #13214A 0%, var(--granat, #0A142C) 70%);
+  box-shadow: inset 0 1px 0 rgba(212,164,154,.85), inset 1px 0 0 rgba(212,164,154,.35); }
+.schodki i:nth-child(6)::before { background: linear-gradient(180deg, rgba(227,181,71,.32) 0%, #13214A 38%, var(--granat, #0A142C) 80%);
+  box-shadow: inset 0 1px 0 #F3D47A, inset 1px 0 0 rgba(243,212,122,.5), 0 -18px 60px -20px rgba(227,181,71,.45); }
+.schodki .st-nr, .schodki .st-t { position: absolute; left: clamp(14px, 1.6vw, 28px); z-index: 1; opacity: calc(var(--r, 0) * (1 - var(--n, 0) * 3)); white-space: nowrap;   /* gasną, gdy noc przykrywa stopnie (Daniel: „słupki zacięły się”) */ pointer-events: none; }
+.schodki .st-nr { bottom: calc(var(--h, 100%) - clamp(46px, 5.6vh, 60px)); font: italic 500 clamp(22px, 1.9vw, 32px)/1 var(--szeryf);
+  background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: #E3B547; }
+.schodki .st-t { bottom: calc(var(--h, 100%) - clamp(78px, 9.4vh, 100px)); font: 500 clamp(11px, .9vw, 14px)/1 var(--bez);
+  letter-spacing: .26em; text-transform: uppercase; color: var(--mocno, #F3EEE4); }
+.schodki i:nth-child(6) .st-t { color: #F3D47A; }
+
+/* =====================================================================================================================
+   ULTRA (js/efekty.js, 03.10.2026; Daniel: „dawaj ultra bilionerskie efekty”). TYLKO komputer: wszystkie klasy dodaje
+   skrypt w (min-width: 901px) bez ograniczonego ruchu; telefon i bez skryptu: nic się nie zmienia. Kolory: granat,
+   biel, złoto 24K tylko na wypełnieniach i liczbach, różowe złoto na obrysach i kreskach. */
+
+/* ---------- 1. kursor-soczewka: pierścień różowego złota (opóźnienie quickTo .5 s), słowo w środku nad celami ---------- */
+.kursor { position: fixed; left: 0; top: 0; z-index: 9500; width: 0; height: 0; pointer-events: none; }
+.kursor-krag { position: absolute; left: -17px; top: -17px; width: 34px; height: 34px; border-radius: 50%; box-sizing: border-box;
+  border: 1px solid rgba(212, 164, 154, .85); background: rgba(10, 20, 44, 0);
+  box-shadow: 0 0 14px -4px rgba(212, 164, 154, .55);
+  transition: transform .55s var(--e-reveal), background-color .4s var(--e-ui), border-color .4s var(--e-ui), opacity .3s var(--e-ui),
+    -webkit-backdrop-filter .4s var(--e-ui), backdrop-filter .4s var(--e-ui); }
+.kursor-slowo { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%) scale(.6); opacity: 0; white-space: nowrap;
+  font: 600 11px/1 var(--bez); letter-spacing: .2em; text-transform: uppercase; color: #F6F0E4; padding-left: .2em;
+  transition: opacity .3s var(--e-ui), transform .5s var(--e-reveal); }
+.kursor[data-stan="ukryty"] .kursor-krag { opacity: 0; transform: scale(.4); }
+.kursor[data-stan="link"] .kursor-krag { transform: scale(1.45); border-color: #F1C9BE; }
+.kursor[data-stan="przycisk"] .kursor-krag { transform: scale(.26); background-color: #FBE7A1; border-color: #FBE7A1; }
+.kursor[data-stan="slowo"] .kursor-krag { transform: scale(2.7); background-color: rgba(10, 20, 44, .62); border-color: var(--rz);
+  -webkit-backdrop-filter: blur(6px) saturate(1.2); backdrop-filter: blur(6px) saturate(1.2); }
+.kursor[data-stan="slowo"] .kursor-slowo { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.kursor[data-stan="soczewka"] .kursor-krag { transform: scale(3.4); border-color: rgba(251, 231, 161, .7);
+  -webkit-backdrop-filter: brightness(1.16) saturate(1.18) contrast(1.04); backdrop-filter: brightness(1.16) saturate(1.18) contrast(1.04); }
+/* natywny kursor znika tylko tam, gdzie złote kółko pokazuje słowo; w kontakcie i nad polami zostaje */
+html.kursor-on .cel, html.kursor-on #soins.tor-on .tor3-scena, html.kursor-on #soins.tor-on .panel-obraz { cursor: none; }
+html.kursor-on #soins.tor-on .tor3-scena a, html.kursor-on #soins.tor-on .tor3-scena button { cursor: pointer; }
+/* tor: puste miejsca nad renderem przepuszczają kursor do obrazu (klik = przycisk panelu); przyciski zostają klikalne */
+html.kursor-on #soins.tor-on .panel-tresc { pointer-events: none; }
+html.kursor-on #soins.tor-on .panel-cta { pointer-events: auto; }
+.pill { will-change: auto; }
+
+/* ---------- 2. przejście kolorem: zasłona-elipsa od miejsca kliknięcia, różowozłota krawędź, medalion logo ---------- */
+.zaslona { position: fixed; inset: 0; z-index: 9400; pointer-events: none; visibility: hidden; }
+.zaslona.jest { visibility: visible; }
+.zaslona > span { position: absolute; inset: 0; display: block; }
+.zaslona-poswiata { background: radial-gradient(ellipse var(--ze, 0px) var(--zr, 0px) at var(--zx, 50%) var(--zy, 50%),
+  rgba(212, 164, 154, 0) calc(var(--ze, 0px) - 2px), rgba(251, 231, 161, .34) var(--ze, 0px), rgba(212, 164, 154, .12) calc(var(--ze, 0px) + 26px),
+  rgba(212, 164, 154, 0) calc(var(--ze, 0px) + 70px)); }
+.zaslona-brzeg { clip-path: ellipse(var(--ze, 0px) var(--zr, 0px) at var(--zx, 50%) var(--zy, 50%));
+  background: linear-gradient(115deg, #D4A49A 0%, #F1C9BE 30%, #FBE7A1 48%, #E3B547 58%, #D4A49A 80%); }
+.zaslona-tlo { clip-path: ellipse(max(0px, calc(var(--ze, 0px) - 2.5px)) max(0px, calc(var(--zr, 0px) - 2.5px)) at var(--zx, 50%) var(--zy, 50%));
+  background: var(--ziarno), radial-gradient(70% 70% at 50% 50%, var(--granat-swiatlo), var(--granat) 55%, var(--granat-gleboki)); }
+/* medalion logo: samo koło z obręczą (wycinek img/logo-dama-zlota.webp, środek .52/.41, promień obręczy ok. .47) */
+.zaslona-znak { left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important; width: 150px; height: 150px;
+  margin: -75px 0 0 -75px; border-radius: 50%; overflow: hidden; opacity: 0;
+  box-shadow: 0 0 0 1px rgba(212, 164, 154, .5), 0 0 60px -6px rgba(212, 164, 154, .45); }
+.zaslona-znak img { position: absolute; left: -8px; top: -9px; width: 160px; height: auto; max-width: none; }
+html.zaslona-on .kursor { visibility: hidden; }
+
+/* ---------- 3. złoty pył (WebGL): addytywnie, warstwa nad obrazem, pod treścią ---------- */
+.pyl { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; opacity: 0;
+  mix-blend-mode: screen; transition: opacity 1.4s var(--e-ui); }
+.pyl.pyl-on { opacity: 1; }
+.pyl-hero { z-index: 1; }
+.portal-on .pyl-portal { z-index: 1; }
+
+/* ---------- 4. połysk złota przesuwa się po napisie (nagłówki H2 po wejściu, ceny po liczniku) ---------- */
+@keyframes blysk-tekst { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+.blysk-tekst { --g1: #E3B547; --g2: #FBE7A1; --g3: #FFF8E4;
+  background-image: linear-gradient(100deg, var(--c, #fff) 0%, var(--c, #fff) 41%, var(--g1) 45.5%, var(--g2) 48%, var(--g3) 50%, var(--g2) 52%,
+    var(--g1) 54.5%, var(--c, #fff) 59%, var(--c, #fff) 100%);
+  background-size: 300% 100%; background-position: 100% 0; background-repeat: no-repeat;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: blysk-tekst 1.9s var(--e-editorial) forwards; }
+.blysk-tekst.blysk-ciemny { --g1: #8C6418; --g2: #B8892A; --g3: #D9A933; }
+.cennik-cena.licznik { font-variant-numeric: lining-nums tabular-nums; }
+
+/* ---------- 5. cele na orbicie 3D wokół tytułu (pin w js/efekty.js) ---------- */
+.cele.orbita { position: relative; height: 100vh; margin-top: 0; }
+.portal-on .cele.orbita { margin-top: 0; }
+.cele.orbita::before { content: ''; position: absolute; left: 50%; top: 56%; width: calc(2 * var(--orx, 400px)); height: calc(2 * var(--ory, 140px));
+  transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid rgba(212, 164, 154, .16); pointer-events: none;
+  box-shadow: 0 0 80px -30px rgba(212, 164, 154, .25), inset 0 0 80px -40px rgba(212, 164, 154, .2); }
+.orbita .cele-tytul { position: absolute; left: 50%; top: 44%; z-index: 2; width: min(780px, 80vw); margin: 0; transform: translate(-50%, -50%);
+  text-align: center; font-size: 0; letter-spacing: 0; pointer-events: none; }
+.orbita .cele-tytul span:first-child { display: block; font: 600 12px/1.4 var(--bez); letter-spacing: .3em; text-transform: uppercase; color: var(--rz); }
+.orbita .cele-tytul span:last-child { display: block; margin-top: 16px; font: 500 clamp(48px, 5.4vw, 92px)/1 var(--szeryf); letter-spacing: -.01em;
+  text-transform: none; color: #FFFFFF; text-shadow: 0 6px 50px rgba(5, 10, 23, .8); }
+.orbita .siatka4 { position: absolute; inset: 0; display: block; margin: 0; }
+.cel-orbita { position: absolute; left: 50%; top: 56%; width: clamp(240px, 20vw, 300px); will-change: transform, opacity; }
+.orbita .cel-orbita .cel { display: block; height: auto; padding: 24px 26px 26px; border: 1px solid rgba(212, 164, 154, .3); border-radius: 4px;
+  background: linear-gradient(160deg, rgba(24, 40, 82, .82), rgba(10, 20, 44, .78));
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .75), inset 0 1px 0 rgba(255, 255, 255, .05);
+  transition: border-color .4s var(--e-ui), box-shadow .5s var(--e-ui); }
+.orbita .cel-orbita.z-przodu .cel { border-color: rgba(212, 164, 154, .6); box-shadow: 0 34px 70px -30px rgba(0, 0, 0, .8), 0 0 50px -20px rgba(212, 164, 154, .35); }
+.orbita .cel-orbita .cel:hover, .orbita .cel-orbita .cel:focus-visible { border-color: var(--rz); }
+.orbita .cel h3 { margin: 10px 0 8px; }
+.orbita .cel .cel-nr { background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-size: 22px; }
+
+/* ---------- 6. „Première | visite” z kropek: płótno nad napisem, napis wchodzi skośną maską ---------- */
+#visite > canvas.kropki { position: absolute; left: 0; width: 100%; z-index: 2; pointer-events: none; display: block; }
+.duo.kropki-on .duo-l, .duo.kropki-on .duo-r { will-change: clip-path; }
+
+/* ---------- 7. połysk złota po obręczy medalionów i logo (maska ze złotych pikseli obrazu) ---------- */
+.z-obrecza { position: relative; }
+.obrecz-blysk { position: absolute; inset: 0; z-index: 2; display: block; pointer-events: none;
+  background: linear-gradient(118deg, rgba(255, 250, 236, 0) 38%, rgba(227, 181, 71, .35) 44%, rgba(251, 231, 161, .75) 47.5%, #FFFCF2 50%,
+    rgba(251, 231, 161, .75) 52.5%, rgba(227, 181, 71, .35) 56%, rgba(255, 250, 236, 0) 62%) 100% 100% / 320% 320% no-repeat;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  mix-blend-mode: plus-lighter; animation: obrecz-blysk 7s var(--e-editorial) infinite; animation-play-state: paused; }
+.obrecz-widac .obrecz-blysk { animation-play-state: running; }
+.logo-obraz .obrecz-blysk { animation-duration: 9s; animation-delay: 2.4s; opacity: .85; }
+.ilustracja-obraz .obrecz-blysk { border-radius: 0; }
+@keyframes obrecz-blysk { 0% { background-position: 100% 100%; } 42%, 100% { background-position: 0% 0%; } }
+
+/* ---------- 8. pas światła przed kontaktem: smuga różowe złoto → 24K po granacie, nad nią złota nić ---------- */
+#contact.z-pasem { isolation: isolate; }
+.pas-swiatla { position: absolute; left: 0; right: 0; top: 0; height: 64vh; z-index: -1; overflow: hidden; pointer-events: none; }
+.pas-smuga { position: absolute; left: -10%; width: 120%; top: -190px; height: 380px; display: block; mix-blend-mode: plus-lighter;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(251, 231, 161, .3) 0%, rgba(227, 181, 71, .16) 22%, rgba(212, 164, 154, .12) 44%, rgba(212, 164, 154, 0) 72%); }
+.pas-nic { position: absolute; left: 0; right: 0; top: 0; height: 1px; display: block;
+  background: linear-gradient(90deg, rgba(212, 164, 154, 0), rgba(212, 164, 154, .7) 28%, #FBE7A1 50%, rgba(212, 164, 154, .7) 72%, rgba(212, 164, 154, 0));
+  box-shadow: 0 0 18px 2px rgba(251, 231, 161, .35); }
+
+/* bezpieczniki: telefon i ograniczony ruch nigdy nie widzą warstw efektów (gdyby skrypt nie zdążył posprzątać) */
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .kursor, .zaslona, .pyl, .kropki, .obrecz-blysk, .pas-swiatla { display: none !important; }
+  html.kursor-on .cel, html.kursor-on #soins .tor3-scena, html.kursor-on #soins .panel-obraz { cursor: auto; }
+}
+
+/* ---------- tor: treść panelu zawsze pod nagłówkiem sekcji (--tor-gora liczy js/petardy.js), bez wychodzenia w górę ---------- */
+.tor-on .panel-tresc { top: var(--tor-gora, calc(var(--nav, 80px) + 120px)); justify-content: safe flex-end; }
+@media (min-width: 901px) and (max-height: 720px) {
+  .tor-on .panel-tresc { top: var(--tor-gora, calc(var(--nav, 80px) + 100px)); }
+}
+
+/* =====================================================================================================================
+   SILNIKI-2 (03.10.2026, projekt/wzory/SILNIKI-2.md: pomiar na wideo, 15 poprawek). Wszystko poniżej włączają skrypty
+   klasami tylko na komputerze (≥ 901 px) z ruchem; telefon, ograniczony ruch i brak skryptu: strona jak dotąd.
+   Paleta bez zmian: granat, kość słoniowa, złoto 24K tylko na pełnych przyciskach i numerach, różowe złoto na obrysach. */
+
+/* ---------- #2 kurtyna: logo buduje się od dołu (pasek postępu), stoi nad twarzą Moniki, okno w medalionie rośnie ---------- */
+html.kurtyna-on.ruch .k-znak img:not(.k-cien) { clip-path: inset(100% 0% 0% 0%); }
+html.ruch:not(.ruch-js) .kurtyna .k-pod, html.ruch:not(.ruch-js) .kurtyna .k-linia { opacity: 0; }   /* bez skoku z środka nad twarz */
+.k-cien { position: absolute; left: 0; right: 0; top: 0; margin: 0 auto; opacity: .12; filter: grayscale(1) brightness(1.5); pointer-events: none; }
+.kurtyna.k-przy-twarzy .k-znak, .kurtyna.k-przy-twarzy .k-pod, .kurtyna.k-przy-twarzy .k-linia { translate: var(--kdx, 0px) var(--kdy, 0px); }
+.kurtyna.k-przy-twarzy .k-linia { left: calc(50% - 190px); right: calc(50% - 190px); }
+.kurtyna.k-okno .k-znak { overflow: visible; }
+.kurtyna.k-okno .k-znak img { will-change: transform; }
+
+/* ---------- #3 menu pełnoekranowe (przycisk 56×56 w pasku; panel spada z wypukłą krawędzią) ---------- */
+.menu-przycisk, .menu-pelne { display: none; }
+.menu-kreski { position: relative; display: block; width: 22px; height: 10px; }
+.menu-kreski i { position: absolute; left: 0; right: 0; height: 1.5px; border-radius: 1px; background: currentColor;
+  transition: transform .35s var(--e-editorial), top .35s var(--e-editorial); transform-origin: 100% 50%; }
+.menu-kreski i:first-child { top: 0; } .menu-kreski i:last-child { top: 8.5px; }
+.menu-x i { top: 4.25px !important; transform-origin: 50% 50%; }
+.menu-x i:first-child { transform: rotate(45deg); } .menu-x i:last-child { transform: rotate(-45deg); }
+@media all {   /* od 03.10.2026 menu także na telefonie; układ telefonu nadpisany w bloku TELEFON na końcu pliku */
+  html.z-menu .menu-przycisk { display: inline-grid; place-items: center; flex: none; width: 56px; height: 56px; margin: -4px 0 -4px -6px; padding: 0;
+    border: 1px solid var(--rz-linia); border-radius: 50%; background: rgba(10, 20, 44, .35); color: #F6F0E4; cursor: pointer;
+    transition: border-color .3s var(--e-ui), background-color .3s var(--e-ui); }
+  .menu-przycisk:hover { border-color: var(--rz); background-color: rgba(212, 164, 154, .1); }
+  .menu-przycisk:hover .menu-kreski i:last-child { transform: scaleX(.55); }
+  .menu-przycisk:focus-visible, .mp-zamknij:focus-visible, .mp-link:focus-visible, .mp-jezyki a:focus-visible, .mp-tel:focus-visible {
+    outline: 2px solid var(--rz); outline-offset: 4px; }
+  html.z-menu .menu-pelne:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 9300; }
+  .mp-nic, .mp-tlo { position: absolute; inset: 0; }
+  .mp-nic { clip-path: ellipse(150% var(--my, 0%) at 50% 0%); background: linear-gradient(90deg, #D4A49A, #F1C9BE 30%, #FBE7A1 50%, #F1C9BE 70%, #D4A49A); }
+  .mp-tlo { clip-path: ellipse(150% max(0px, calc(var(--my, 0%) - 1.5px)) at 50% 0%); overflow: hidden auto;
+    background: var(--ziarno), radial-gradient(70% 70% at 64% 34%, var(--granat-swiatlo), var(--granat) 58%, var(--granat-gleboki));
+    display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.3fr) minmax(200px, .55fr); gap: clamp(28px, 4vw, 72px); align-items: center;
+    padding: calc(var(--nav, 80px) + 20px) max(32px, 6vw) 6vh; }
+  .mp-zamknij { position: absolute; z-index: 2; width: 56px; height: 56px; padding: 0; display: grid; place-items: center; cursor: pointer;
+    border: 1px solid var(--rz); border-radius: 50%; background: rgba(212, 164, 154, .08); color: #F6F0E4; }
+  .mp-kadry { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-self: center; }
+  .mp-kadr { position: relative; margin: 0; overflow: hidden; aspect-ratio: 4 / 5; border: 1px solid rgba(212, 164, 154, .28);
+    background: radial-gradient(70% 60% at 50% 42%, rgba(212, 164, 154, .12), transparent 72%), #0C1830; }
+  .mp-kadr:last-child { grid-column: 1 / -1; aspect-ratio: 16 / 8.4; }
+  .mp-kadr img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) brightness(.72);
+    transition: filter .3s var(--e-ui), transform .8s var(--e-reveal); }
+  .mp-kadr-wolny img { object-fit: contain; object-position: 50% 100%; padding: 10% 12% 0; }
+  .mp-kadr.mp-kadr-kolor img { filter: none; transform: scale(1.04); }
+  .mp-wybor .mp-kadr:not(.mp-kadr-kolor) img { filter: grayscale(1) brightness(.42); }
+  .mp-kadr .plakietka { left: auto; right: 8px; bottom: 8px; }
+  .mp-linki { display: flex; flex-direction: column; gap: .5vh; }
+  .mp-link { display: flex; align-items: baseline; gap: 20px; width: max-content; text-decoration: none; color: #F6F0E4;
+    font: 500 clamp(44px, min(5vw, 8.2vh), 72px)/1.06 var(--szeryf); letter-spacing: -.005em; }
+  .mp-nr { flex: none; min-width: 2.4em; font: 600 12px/1 var(--bez); letter-spacing: .22em; color: var(--rz); transform: translateY(-1.6em); }
+  .mp-maska { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
+  .mp-tekst { display: block; }
+  .mp-link .rolka-b { color: var(--rz); }
+  .mp-bok { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
+  .mp-medalion { margin: 0; } .mp-medalion img { display: block; width: clamp(110px, 10vw, 160px); height: auto; filter: drop-shadow(0 18px 40px rgba(0, 0, 0, .5)); }
+  .mp-jezyki { display: flex; gap: 4px; margin: 0; font-size: 13px; }
+  .mp-jezyki a { padding: 4px 6px; color: var(--tekst-noc-2); text-decoration: none; }
+  .mp-jezyki a[aria-current] { color: #FFFFFF; box-shadow: inset 0 -1px 0 var(--rz); }
+  .mp-tel-w { margin: 0; }
+  .mp-etyk { display: block; margin-bottom: 6px; font: 600 11px/1 var(--bez); letter-spacing: .26em; text-transform: uppercase; color: var(--rz); }
+  .mp-tel { font: 500 22px/1.2 var(--szeryf); font-variant-numeric: lining-nums; color: #F6F0E4; text-decoration: none; }
+  .mp-cta { margin: 0; }
+}
+@media (min-width: 901px) and (max-height: 720px) {
+  .mp-kadry { grid-template-columns: 1fr 1fr 1fr; } .mp-kadr:last-child { grid-column: auto; aspect-ratio: 4 / 5; }
+  .mp-bok { gap: 14px; } .mp-medalion img { width: 96px; }
+}
+
+/* ---------- #4 rolka tekstu (dwie kopie w masce, .27 s) ---------- */
+.rolka { position: relative; display: inline-block; overflow: hidden; vertical-align: top; }
+.rolka-a, .rolka-b { display: block; transition: transform .27s cubic-bezier(.65, .05, 0, 1); }
+.rolka-b { position: absolute; left: 0; top: 0; width: 100%; transform: translateY(100%); }
+.z-rolka:hover .rolka-a, .z-rolka:focus-visible .rolka-a, .mp-link:hover .rolka-a, .mp-link:focus-visible .rolka-a { transform: translateY(-100%); }
+.z-rolka:hover .rolka-b, .z-rolka:focus-visible .rolka-b, .mp-link:hover .rolka-b, .mp-link:focus-visible .rolka-b { transform: translateY(0); }
+.naglowek .menu a .rolka-b { color: #FFFFFF; }
+.stopka-menu a .rolka-b { color: var(--rz); }
+
+/* ---------- #5 bloki odsłaniające wielkie nagłówki ---------- */
+.blok-ramka { position: relative; display: inline-block; }
+.blok { position: absolute; left: -.05em; right: -.05em; top: .04em; bottom: .02em; z-index: 1; pointer-events: none; transform: scaleX(0); }
+
+/* ---------- #6 bez martwych ciemnych ekranów: orbita celów jaśniejsza; #monika wchodzi z granatu w len ---------- */
+@media (min-width: 901px) {
+  .cele.orbita::before { border-color: rgba(212, 164, 154, .34);
+    box-shadow: 0 0 90px -24px rgba(212, 164, 154, .4), inset 0 0 90px -36px rgba(212, 164, 154, .32); }
+  .cele.orbita::after { content: ''; position: absolute; left: 50%; top: 46%; width: min(900px, 70vw); height: 52vh; transform: translate(-50%, -50%);
+    border-radius: 50%; pointer-events: none; z-index: 0;
+    background: radial-gradient(closest-side, rgba(212, 164, 154, .16), rgba(31, 51, 97, .22) 55%, rgba(10, 20, 44, 0) 100%); }
+  .orbita .cel-orbita .cel { background: linear-gradient(160deg, rgba(31, 51, 104, .9), rgba(14, 26, 54, .86)); border-color: rgba(212, 164, 154, .42); }
+  #monika.z-noca > .monika-noc { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: var(--tlo-granat); }
+}
+
+/* ---------- #7 i #8 pętle wideo RTX w torze: ekran obok renderu, wejście jak włączenie telewizora ---------- */
+.panel-ekran { display: none; }
+@media (min-width: 901px) {
+  .tor-on .panel-ekran { display: block; position: absolute; z-index: 2; margin: 0; right: 47%; top: calc(var(--tor-gora, 200px) - 12px);
+    width: min(22vw, 340px, 38vh); transform: translate3d(var(--ex, 0px), 0, 0); pointer-events: none; }
+  .tor-on .panel-wizyta .panel-ekran { right: max(24px, 3vw); width: min(15vw, 240px, 27vh); }
+  .panel-ekran-obraz { position: relative; display: block; aspect-ratio: 1280 / 704; overflow: hidden; border: 1px solid var(--rz-linia); background: #050A17;
+    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .85), 0 0 50px -22px rgba(212, 164, 154, .5); }
+  .panel-ekran video { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .panel-ekran .plakietka { left: auto; right: 8px; bottom: 8px; z-index: 2; }
+  /* EMS i krio: urządzenie wąskie, więc ekran pionowy 3:4 (wideo przycięte po bokach) */
+  .tor-on .panel-ekran.ekran-pion { width: min(13vw, 200px, 28vh); }
+  .ekran-pion .panel-ekran-obraz { aspect-ratio: 3 / 4; }
+  /* urządzenie stoi w kadrze na prawo od środka (ok. 63% szerokości) */
+  .ekran-pion video { object-position: 63% 50%; }
+  /* wielki tytuł zabiegu przechodzi nad ekranem (typografia nad obrazem, jak u Lando): ekran pod .panel-tresc (z-index 2) */
+  .tor-on .panel-ekran.ekran-pion { z-index: 1; }
+}
+
+/* ---------- #9 przechył kart + połysk ---------- */
+.przechyl { position: relative; will-change: transform; }
+.polysk { position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none; opacity: 0;
+  background: linear-gradient(115deg, rgba(246, 240, 228, 0) 30%, rgba(246, 240, 228, .28) 50%, rgba(246, 240, 228, 0) 70%) var(--px, 50%) var(--py, 50%) / 250% 250% no-repeat;
+  mix-blend-mode: overlay; transition: opacity .3s var(--e-ui); }
+.przechyl-on .polysk { opacity: 1; }
+
+/* ---------- #11 przejście medalionem: koło rośnie od środka, potem okno w medalionie odsłania nowe miejsce ---------- */
+.zaslona { -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--zo, 0px), #000 calc(var(--zo, 0px) + 1px));
+  mask-image: radial-gradient(circle at 50% 50%, transparent var(--zo, 0px), #000 calc(var(--zo, 0px) + 1px)); }
+.zaslona-brzeg { clip-path: circle(var(--zr, 0px) at 50% 50%); }
+.zaslona-tlo { clip-path: circle(max(0px, calc(var(--zr, 0px) - 2.5px)) at 50% 50%); }
+.zaslona-okno { left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important;
+  width: calc(2 * var(--zo, 0px)); height: calc(2 * var(--zo, 0px)); transform: translate(-50%, -50%); border-radius: 50%;
+  box-shadow: 0 0 0 1.5px #E7C2B6, 0 0 34px 4px rgba(212, 164, 154, .45); opacity: 0; }
+.zaslona.okno .zaslona-okno { opacity: 1; }
+
+/* ---------- #12 tło toru zmienia kolor za przesuwem (--tor-tlo z js/petardy.js) ---------- */
+.tor-on .tor3-scena { background: var(--ziarno), var(--winieta), var(--tor-tlo, var(--granat)); }
+
+/* ---------- #13 kula światła prowadzona głowicą linii kroków (520 px, blur 60 px, .55, screen) ---------- */
+@media (min-width: 901px) {
+  #visite .kula.kula-glowa { left: 0; top: 0; width: 520px; height: 520px; aspect-ratio: auto; margin: 0; background: none;
+    filter: blur(60px); opacity: .55; mix-blend-mode: screen; z-index: 0; }
+  .kula-glowa::before, .kula-glowa::after { content: ''; position: absolute; inset: 0; border-radius: 50%; }
+  .kula-glowa::before { background: radial-gradient(closest-side, rgba(212, 164, 154, .95), rgba(212, 164, 154, .35) 55%, rgba(212, 164, 154, 0)); opacity: calc(1 - var(--kp, 0)); }
+  .kula-glowa::after { background: radial-gradient(closest-side, rgba(246, 240, 228, .85), rgba(246, 240, 228, .28) 55%, rgba(246, 240, 228, 0)); opacity: var(--kp, 0); }
+}
+
+/* ---------- #14 pas światła przed kontaktem: różowe złoto → kość słoniowa → granat, blur 40 px ---------- */
+.pas-smuga { top: -70px; height: 140px; filter: blur(40px);
+  background: linear-gradient(90deg, rgba(212, 164, 154, 0) 4%, rgba(212, 164, 154, .62) 26%, rgba(246, 240, 228, .55) 50%, rgba(31, 51, 97, .5) 74%, rgba(10, 20, 44, 0) 96%); }
+
+/* bezpieczniki SILNIKI-2: telefon i ograniczony ruch nigdy nie widzą nowych warstw */
+@media (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .panel-ekran, .polysk, .monika-noc, .k-cien { display: none !important; }
+}
+
+/* ---------- tor: tylko dwa zabiegi są numerowane („01 / 02”); pierwsza wizyta zamyka tor bez numeru (Daniel 03.10.2026) ---------- */
+.panel-nad { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; font: 600 12px/1.4 var(--bez); letter-spacing: .28em;
+  text-transform: uppercase; color: var(--rz); }
+.panel-nad::before { content: ''; width: 28px; height: 1px; background: var(--rz); flex: none; }
+.tor-on .panel-nad { margin-bottom: 2.2vh; font-size: 13px; }
+.tor-on .tor3-licznik { transition: opacity .45s var(--e-ui); }
+.tor-on .tor3-licznik.tor3-licznik-off { opacity: 0; }
+/* analizator składu ciała przed kabiną (pomiary pierwszej wizyty); ekran z napisami przyciemniony i rozmyty: kopia obrazu
+   z filtrem, przycięta do ekranu urządzenia (img/rtx/analizator-*.webp ma polskie napisy i liczby) */
+.urzadzenie-przod { position: absolute; z-index: 2; left: 4%; top: 8%; bottom: 2%; }
+.urzadzenie-przod .urzadzenie-img { height: 100%; }
+.urzadzenie-przod .urzadzenie-ekran { position: absolute; left: 0; top: 0; -webkit-box-reflect: none;
+  filter: blur(7px) brightness(.38) saturate(.5);
+  clip-path: polygon(19% 0%, 77% 1.2%, 77% 29%, 21% 29%); pointer-events: none; }
+.urzadzenie-przod::before { background: radial-gradient(closest-side, rgba(212, 164, 154, .22), rgba(212, 164, 154, .06) 55%, rgba(212, 164, 154, 0) 100%); }
+@media (min-width: 901px) {
+  .tor-on .panel-kadr .urzadzenie-przod { left: auto; right: 31%; top: auto; bottom: 4vh; transform: perspective(1600px) translate3d(var(--ix, 0px), 0, 0) rotateY(var(--ry, 0deg)); }
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-img { height: min(66vh, 680px); }
+}
+@media (min-width: 901px) and (max-height: 720px) {
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-img { height: min(60vh, 680px); }
+}
+.panel-obraz .urzadzenie-przod .urzadzenie-img { width: auto; max-width: none; object-fit: contain; }
+.panel-obraz .urzadzenie-przod .urzadzenie-ekran { position: absolute; left: 0; top: 0; }
+@media (min-width: 901px) {
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-img { position: static; left: auto; top: auto; width: auto; transform: none; }
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-ekran { position: absolute; left: 0; top: 0; }
+}
+
+/* krawędzie stopni gasną razem z podpisami, gdy noc je przykrywa (bez wiszących kresek) */
+.schodki i::before { opacity: calc(1 - var(--n, 0) * 1.6); }
+
+/* Etykiety sekcji bez kresek (Daniel 03.10.2026: „tu też jest ta kreska, usuń ją”) */
+.etykieta::before, .etykieta::after, .panel-nad::before, .panel-nad::after { display: none !important; content: none !important; }
+
+/* ekran analizatora: wideo z RTX w perspektywie szkła (js/site.js, EKRAN: matrix3d z 4 zmierzonych rogów) */
+.urzadzenie-przod .ekran-mapa { position: absolute; left: 0; top: 0; transform-origin: 0 0; pointer-events: none; backface-visibility: hidden; }
+.ekran-szklo { position: absolute; inset: 0; overflow: hidden; border-radius: 26px; background: #050A17; }
+.ekran-film { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* szkło: miękki refleks od lewego górnego rogu, winieta przy ramce, cienki połysk krawędzi */
+.ekran-szklo::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(118deg, rgba(255, 255, 255, .13) 0%, rgba(255, 255, 255, .045) 26%, rgba(255, 255, 255, 0) 44%),
+              radial-gradient(120% 95% at 50% 45%, rgba(5, 10, 23, 0) 62%, rgba(5, 10, 23, .55) 100%);
+  box-shadow: inset 0 0 0 2px rgba(232, 201, 193, .10), inset 0 0 40px rgba(0, 0, 0, .55); }
+
+/* języki (03.10.2026): linki paska w jednej linii, tytuł wizyty w torze zawsze słowo pod słowem
+   (FR „Première / visite”, EN „First / visit”, DE „Erster / Besuch”), żeby nie wjeżdżał na urządzenie */
+.menu a, .pill { white-space: nowrap; }
+.tor-on .panel-wizyta .panel-tytul { width: min-content; overflow-wrap: normal; word-break: normal; }
+
+/* =====================================================================================================================
+   TELEFON (≤ 900 px), od 03.10.2026 (Daniel: „teraz mobil”). Lekko: bez WebGL i ciężkich warstw, ale ten sam charakter:
+   Monika narysowana w pierwszym ekranie, przyciski czarno-złote 24K, pełnoekranowe menu z medalionem. */
+@media (max-width: 900px) {
+  /* przyciski: pełne złoto 24K jak na komputerze (zamiast kości słoniowej) */
+  .pill.solid, .jasna .pill.solid, .hero .pill.solid, .pasek-dol a.solid {
+    background: var(--k24); background-size: 200% 100%; color: #050505; border: 1px solid #F3D47A; box-shadow: none; }
+  .pasek-dol { background: rgba(8, 15, 33, .92); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  .pasek-dol a { border-color: var(--rz-linia); }
+
+  /* pierwszy ekran: Monika na górze, tekst pod nią */
+  .hero { display: flex; flex-direction: column; justify-content: flex-end; min-height: calc(100svh - var(--nav, 64px)); padding-bottom: 120px; }
+  .hero .hero-fala, .hero.hero-rama .hero-fala, .hero.gl-on .hero-fala { display: block; position: absolute; inset: 0; z-index: -2; pointer-events: none; overflow: hidden;
+    clip-path: none; transform: none;
+    background: var(--ziarno), radial-gradient(70% 45% at 58% 30%, var(--granat-swiatlo), var(--granat) 62%, var(--granat-gleboki)); }
+  .hero-imie { display: block; position: absolute; left: 50%; top: 2svh; margin: 0; transform: translateX(-50%); white-space: nowrap; user-select: none;
+    font: 500 31vw/.8 var(--szeryf); text-transform: uppercase; letter-spacing: -.02em;
+    color: rgba(212, 164, 154, .05); -webkit-text-stroke: 1px rgba(212, 164, 154, .4); }
+  .hero-monika { display: block; position: absolute; top: 0; left: 50%; height: min(56svh, 132vw); width: auto; max-width: none;
+    transform: translateX(-42%); filter: drop-shadow(0 0 50px rgba(5, 10, 23, .7));
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 97%); mask-image: linear-gradient(180deg, #000 60%, transparent 97%);
+    animation: tel-monika 1.6s cubic-bezier(.16, 1, .3, 1) both, tel-oddech 9s ease-in-out 1.6s infinite alternate; }
+  /* tekst pod postacią czyta się na nocy, nie na rysunku */
+  .hero-tresc { position: relative; z-index: 2; text-shadow: 0 2px 18px rgba(5, 10, 23, .85); }
+  .hero-tresc::before { content: ''; position: absolute; z-index: -1; pointer-events: none; left: -24px; right: -24px; top: -90px; bottom: -40px;
+    background: linear-gradient(180deg, rgba(10, 20, 44, 0), rgba(10, 20, 44, .82) 34%, rgba(10, 20, 44, .92)); }
+  .hero h1 { font-size: clamp(34px, 10vw, 52px); }
+
+  /* pasek: logo, przycisk menu; języki są w menu */
+  html.z-menu .naglowek .jezyki { display: none; }
+  html.z-menu .menu-przycisk { display: inline-grid; place-items: center; flex: none; width: 46px; height: 46px; margin-left: auto; padding: 0;
+    border: 1px solid var(--rz-linia); border-radius: 50%; background: rgba(10, 20, 44, .35); color: #F6F0E4; cursor: pointer; }
+
+  /* menu: jedna kolumna, bez kadrów, przewijane, nad dolnym paskiem */
+  .mp-tlo { display: flex; flex-direction: column; align-items: flex-start; gap: 28px; overscroll-behavior: contain;
+    padding: calc(var(--nav, 64px) + 24px) 24px calc(40px + env(safe-area-inset-bottom, 0px)); }
+  .mp-kadry { display: none; }
+  .mp-link { font-size: clamp(34px, 10.5vw, 48px); gap: 14px; }
+  .mp-nr { min-width: 2em; font-size: 11px; }
+  .mp-bok { gap: 18px; } .mp-medalion img { width: 92px; }
+  .mp-jezyki { flex-wrap: wrap; font-size: 15px; } .mp-jezyki a { padding: 8px 8px; }
+  html.menu-otwarte .pasek-dol { display: none; }
+}
+@keyframes tel-monika { from { opacity: 0; transform: translate(-42%, 4%) scale(1.04); } to { opacity: 1; transform: translateX(-42%); } }
+@keyframes tel-oddech { from { transform: translateX(-42%) scale(1); } to { transform: translate(-42%, -1%) scale(1.025); } }
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) { .hero-monika { animation: none; } }
+
+/* TELEFON: tor „3 petardy” (od 03.10.2026 także na telefonie, js/petardy.js). Pion: urządzenie w górnej połowie, tekst na dole
+   nad dolnym paskiem, tytuł w szerokości ekranu (długie słowa łamią się do linii). */
+@media (max-width: 900px) {
+  #soins.tor-on .tor3-scena { height: 100svh; }
+  #soins.tor-on .panel-obraz { left: 0; right: 0; width: 100%; top: calc(var(--nav, 64px) + 84px); bottom: 46%; border-left: 0; }
+  .tor-on .panel-obraz::after { background: linear-gradient(0deg, rgba(10, 20, 44, .9), rgba(10, 20, 44, 0) 40%); }
+  #soins.tor-on .panel-obraz.panel-wolny { overflow: visible; background: none; }
+  .tor-on .panel-wolny::after { display: none; }
+  .tor-on .panel-wolny .urzadzenie { position: absolute; left: 50%; right: auto; bottom: 0; margin-left: calc(var(--uw, 0px) * -.5);
+    transform: perspective(1200px) translate3d(calc(-50% + var(--ix, 0px)), 0, 0) rotateY(var(--ry, 0deg)); will-change: transform; }
+  .tor-on .panel-wolny .urzadzenie-img { position: static; height: min(calc(54svh - var(--nav, 64px) - 96px), 380px); width: auto; max-width: none; transform: none; }
+  .tor-on .panel-wolny .urzadzenie-obok { display: none; }
+  .tor-on .panel-tresc { top: auto; left: 20px; right: 20px; bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+  .tor-on .panel-nr { display: none; }
+  .tor-on .panel-tytul, .tor-on .panel[data-zabieg="ems"] .panel-tytul { font-size: clamp(38px, 11.6vw, 60px); line-height: .92; white-space: normal;
+    overflow-wrap: normal; margin-bottom: 14px; }
+  .tor-on .panel[data-zabieg="ems"] .panel-tytul { font-size: clamp(64px, 21vw, 110px); }
+  .tor-on .panel-wizyta .panel-tytul { font-size: clamp(38px, 11.6vw, 60px); width: auto; max-width: none; }
+  .tor-on .panel-opis { font-size: 15px; margin-bottom: 6px; }
+  .tor-on .panel-cta { margin-top: 12px; }
+  .tor-on .tor3-glowa { top: calc(var(--nav, 64px) + 14px); left: 20px; }
+  .tor-on .tor3-glowa h2 { font-size: 20px; }
+  .tor-on .tor3-licznik { top: calc(var(--nav, 64px) + 12px); right: 20px; font-size: 30px; }
+  .tor-on .tor3-pasek { left: 20px; right: 20px; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+  .tor-on .tor3-tlo { font-size: 70vw; }
+  /* pierwsza wizyta: kabina jako tło górnej połowy, analizator przed nią */
+  .tor-on .panel-kadr .kadr { inset: 0; }
+  .tor-on .panel-kadr .urzadzenie-przod { left: auto; right: 4%; top: auto; bottom: 0; transform: perspective(1200px) translate3d(var(--ix, 0px), 0, 0) rotateY(var(--ry, 0deg)); }
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-img { position: static; height: min(calc(54svh - var(--nav, 64px) - 96px), 360px); width: auto; transform: none; }
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-ekran { position: absolute; left: 0; top: 0; }
+}
+/* Samsung Internet i inne wymuszone tryby ciemne nie przerabiają kolorów strony, która sama deklaruje ciemny motyw */
+:root { color-scheme: dark; }
