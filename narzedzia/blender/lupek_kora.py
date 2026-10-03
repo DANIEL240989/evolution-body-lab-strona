@@ -113,24 +113,35 @@ disp = node('ShaderNodeDisplacement'); disp.inputs['Scale'].default_value = 0.38
 L.new(wys.outputs['Result'], disp.inputs['Height'])
 # złoto: styk kory i żywicy + część spękań przy styku
 zloto = M('MAXIMUM', M('GREATER_THAN', brzeg, 0.72), M('MULTIPLY', M('GREATER_THAN', spek, 0.8), M('GREATER_THAN', brzeg, 0.45)), clamp=True)
+# żyłki różowego złota w pęknięciach kory (kintsugi): brzeg bruzdy, tylko część pęknięć
+kz = M('MULTIPLY', M('GREATER_THAN', bruzda, 0.4), M('LESS_THAN', bruzda, 0.9))
+kz = M('MULTIPLY', kz, M('GREATER_THAN', szum(ob, 0.8, 3).outputs['Fac'], 0.5))
+kz = M('MULTIPLY', kz, M('SUBTRACT', 1.0, zyw_strefa))
+ks = node('ShaderNodeTexVoronoi', feature='DISTANCE_TO_EDGE'); ks.inputs['Scale'].default_value = 0.55
+ksm = node('ShaderNodeMix', data_type='VECTOR'); ksm.inputs['Factor'].default_value = 0.35
+L.new(ob, ksm.inputs['A']); L.new(szum(ob, 1.1, 5).outputs['Color'], ksm.inputs['B']); L.new(ksm.outputs['Result'], ks.inputs['Vector'])
+kintsugi = M('MULTIPLY', M('LESS_THAN', ks.outputs['Distance'], 0.011), M('SUBTRACT', 1.0, zyw_strefa))
+kintsugi = M('MULTIPLY', kintsugi, M('GREATER_THAN', szum(ob, 0.5, 2).outputs['Fac'], 0.42))
+zloto = M('MAXIMUM', M('MAXIMUM', zloto, kz), kintsugi, clamp=True)
 zywica = M('MULTIPLY', M('MULTIPLY', zyw_strefa, komorka), M('SUBTRACT', 1.0, zloto))
 # kolory kory: srebrna szarość, czarne bruzdy, lekko chłodna
-k_kora = rampa(wlokna.outputs['Fac'], [(0.2, lin('#16191D')), (0.45, lin('#5E646B')), (0.66, lin('#A7ADB3')), (0.85, lin('#E0E3E6'))])
+k_kora = rampa(wlokna.outputs['Fac'], [(0.25, lin('#020203')), (0.5, lin('#0A0D12')), (0.7, lin('#222A38')), (0.9, lin('#4F5D76'))])
 ck = node('ShaderNodeMix', data_type='RGBA', blend_type='MULTIPLY'); L.new(bruzda, ck.inputs['Factor'])
 L.new(k_kora, ck.inputs['A']); ck.inputs['B'].default_value = lin('#050607')
 # spękania mozaiki: prawie czarne
 cz = node('ShaderNodeMix', data_type='RGBA'); L.new(zyw_strefa, cz.inputs['Factor'])
 L.new(ck.outputs['Result'], cz.inputs['A']); cz.inputs['B'].default_value = lin('#07090C')
 kam = node('ShaderNodeBsdfPrincipled'); L.new(cz.outputs['Result'], kam.inputs['Base Color'])
-L.new(zakres(wlokna.outputs['Fac'], 0.3, 0.9, 0.9, 0.55), kam.inputs['Roughness'])
+L.new(zakres(wlokna.outputs['Fac'], 0.3, 0.9, 0.95, 0.35), kam.inputs['Roughness'])
+kam.inputs['Specular IOR Level'].default_value = 0.7
 # żywica: niebieska z turkusowym podtonem, świeci od środka komórki
 gl = zakres(mz.outputs['Distance'], 0.0, 0.22)
 k_zyw = rampa(gl, [(0.0, lin('#020A1E')), (0.55, lin('#0A3F96')), (1.0, lin('#1C7FD0'))])
 zyw = node('ShaderNodeBsdfPrincipled'); L.new(k_zyw, zyw.inputs['Base Color'])
 zyw.inputs['Roughness'].default_value = 0.04; zyw.inputs['Coat Weight'].default_value = 1.0; zyw.inputs['Coat Roughness'].default_value = 0.0
 L.new(k_zyw, zyw.inputs['Emission Color']); L.new(zakres(gl, 0.0, 1.0, 0.15, 1.4), zyw.inputs['Emission Strength'])
-zl = node('ShaderNodeBsdfPrincipled'); zl.inputs['Base Color'].default_value = lin('#E2A99A')
-zl.inputs['Metallic'].default_value = 1.0; zl.inputs['Roughness'].default_value = 0.18
+zl = node('ShaderNodeBsdfPrincipled'); zl.inputs['Base Color'].default_value = lin('#E8B3A6')
+zl.inputs['Metallic'].default_value = 1.0; zl.inputs['Roughness'].default_value = 0.14
 m1 = node('ShaderNodeMixShader'); L.new(zywica, m1.inputs[0]); L.new(kam.outputs[0], m1.inputs[1]); L.new(zyw.outputs[0], m1.inputs[2])
 m2 = node('ShaderNodeMixShader'); L.new(zloto, m2.inputs[0]); L.new(m1.outputs[0], m2.inputs[1]); L.new(zl.outputs[0], m2.inputs[2])
 out = node('ShaderNodeOutputMaterial'); L.new(m2.outputs[0], out.inputs['Surface']); L.new(disp.outputs[0], out.inputs['Displacement'])
