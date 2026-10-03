@@ -55,16 +55,55 @@
     return '<img' + (cls ? ' class="' + cls + '"' : '') + ' src="' + r.src + '"' + (r.srcset ? ' srcset="' + r.srcset + '" sizes="' + r.sizes + '"' : '') +
       ' alt="" width="' + r.w + '" height="' + r.h + '" loading="lazy" decoding="async">';
   }
-  /* ekran analizatora (Daniel 03.10.2026: „na tym ekranie da radę dać wideo”): animacja w kodzie zamiast wideo AI, bo AI
-     wstawia na ekran zmyślone napisy i liczby. Sylwetka, przesuwający się skan, strefy ciała i paski analizy, BEZ liczb
-     (żadnych udawanych wyników). Współrzędne w pikselach obrazu analizator-*.webp (920×1400), przycięte do ekranu. */
-  var EKRAN_SKAN = '<svg class="ekran-skan" viewBox="0 0 920 1400" preserveAspectRatio="none" aria-hidden="true" focusable="false"><defs><clipPath id="sk-ekran"><polygon points="174.8,0 708.4,16.8 708.4,406 193.2,406"/></clipPath><linearGradient id="sk-tlo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#101C3A"/><stop offset="1" stop-color="#050A17"/></linearGradient><linearGradient id="sk-pas" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D4A49A" stop-opacity="0"/><stop offset="1" stop-color="#D4A49A" stop-opacity=".35"/></linearGradient><clipPath id="sk-cialo"><path d="M337.8 95.1 L339.8 104.9 L363.3 112.8 L375.1 122.6 L381.0 159.8 L384.9 208.8 L386.8 248.0 L383.9 260.7 L376.1 255.8 L373.1 208.8 L369.2 167.6 L364.3 173.5 L360.4 218.6 L366.3 248.0 L369.2 265.6 L365.3 316.6 L360.4 363.6 L360.4 379.3 L344.7 382.3 L341.8 346.0 L337.8 292.1 L332.9 265.6 L330.0 261.7 L327.1 265.6 L322.2 292.1 L318.2 346.0 L315.3 382.3 L299.6 379.3 L299.6 363.6 L294.7 316.6 L290.8 265.6 L293.7 248.0 L299.6 218.6 L295.7 173.5 L290.8 167.6 L286.9 208.8 L283.9 255.8 L276.1 260.7 L273.2 248.0 L275.1 208.8 L279.0 159.8 L284.9 122.6 L296.7 112.8 L320.2 104.9 L322.2 95.1 Z"/><circle cx="330" cy="73.6" r="17.6"/></clipPath></defs><g clip-path="url(#sk-ekran)"><rect x="170" y="0" width="545" height="410" fill="url(#sk-tlo)" opacity=".94"/><g class="sk-siatka" stroke="#D4A49A" stroke-opacity=".08" stroke-width="1"><line x1="190" y1="40" x2="710" y2="40"/><line x1="190" y1="64" x2="710" y2="64"/><line x1="190" y1="88" x2="710" y2="88"/><line x1="190" y1="112" x2="710" y2="112"/><line x1="190" y1="136" x2="710" y2="136"/><line x1="190" y1="160" x2="710" y2="160"/><line x1="190" y1="184" x2="710" y2="184"/><line x1="190" y1="208" x2="710" y2="208"/><line x1="190" y1="232" x2="710" y2="232"/><line x1="190" y1="256" x2="710" y2="256"/><line x1="190" y1="280" x2="710" y2="280"/><line x1="190" y1="304" x2="710" y2="304"/><line x1="190" y1="328" x2="710" y2="328"/><line x1="190" y1="352" x2="710" y2="352"/><line x1="190" y1="376" x2="710" y2="376"/></g><g fill="#D4A49A" fill-opacity=".1" clip-path="url(#sk-cialo)"><rect x="260" y="40" width="140" height="360"/><rect class="sk-strefa" x="260" y="105" width="140" height="70"/><rect class="sk-strefa" style="animation-delay:-1.2s" x="260" y="175" width="140" height="90"/><rect class="sk-strefa" style="animation-delay:-2.4s" x="260" y="265" width="140" height="120"/></g><g fill="none" stroke="#E8C9C1" stroke-width="2.2" stroke-linejoin="round"><path d="M337.8 95.1 L339.8 104.9 L363.3 112.8 L375.1 122.6 L381.0 159.8 L384.9 208.8 L386.8 248.0 L383.9 260.7 L376.1 255.8 L373.1 208.8 L369.2 167.6 L364.3 173.5 L360.4 218.6 L366.3 248.0 L369.2 265.6 L365.3 316.6 L360.4 363.6 L360.4 379.3 L344.7 382.3 L341.8 346.0 L337.8 292.1 L332.9 265.6 L330.0 261.7 L327.1 265.6 L322.2 292.1 L318.2 346.0 L315.3 382.3 L299.6 379.3 L299.6 363.6 L294.7 316.6 L290.8 265.6 L293.7 248.0 L299.6 218.6 L295.7 173.5 L290.8 167.6 L286.9 208.8 L283.9 255.8 L276.1 260.7 L273.2 248.0 L275.1 208.8 L279.0 159.8 L284.9 122.6 L296.7 112.8 L320.2 104.9 L322.2 95.1 Z"/><circle cx="330" cy="73.6" r="17.6"/></g><g class="sk-skan"><rect x="185" y="-60" width="530" height="60" fill="url(#sk-pas)"/><rect x="185" y="-2" width="530" height="2.5" fill="#F6F0E4"/></g><circle cx="560" cy="118" r="44" fill="none" stroke="#D4A49A" stroke-opacity=".2" stroke-width="6"/><circle class="sk-krag" cx="560" cy="118" r="44" fill="none" stroke="#D4A49A" stroke-width="6" stroke-linecap="round" stroke-dasharray="190 87"/><circle cx="560" cy="118" r="26" fill="none" stroke="#E8C9C1" stroke-opacity=".35" stroke-width="1.5"/><g fill="#D4A49A" fill-opacity=".14"><rect x="452" y="200" width="210" height="7" rx="3.5"/><rect x="452" y="232" width="210" height="7" rx="3.5"/><rect x="452" y="264" width="210" height="7" rx="3.5"/><rect x="452" y="296" width="210" height="7" rx="3.5"/><rect x="452" y="328" width="210" height="7" rx="3.5"/></g><g fill="#D4A49A"><rect class="sk-bar" style="animation-delay:-0.0s" x="452" y="200" width="210" height="7" rx="3.5"/><rect class="sk-bar" style="animation-delay:-0.7s" x="452" y="232" width="210" height="7" rx="3.5"/><rect class="sk-bar" style="animation-delay:-1.4s" x="452" y="264" width="210" height="7" rx="3.5"/><rect class="sk-bar" style="animation-delay:-2.1s" x="452" y="296" width="210" height="7" rx="3.5"/><rect class="sk-bar" style="animation-delay:-2.8s" x="452" y="328" width="210" height="7" rx="3.5"/></g><line x1="420" y1="60" x2="420" y2="370" stroke="#D4A49A" stroke-opacity=".25"/></g></svg>';
+  /* ekran analizatora (Daniel 03.10.2026: „na tym ekranie da radę dać wideo”, „nie tak prostacko”, „ultra ma być”):
+     wideo z RTX (hologram ciała, Z-Image + Wan 2.2, bez napisów i liczb) wpasowane w perspektywę ekranu. Rogi szkła
+     zmierzone w pikselach obrazu analizator-*.webp (920×1400); film (EW×EH) mapowany na ten czworokąt przez matrix3d,
+     przeliczany przy każdej zmianie rozmiaru obrazu. Pod spodem zostaje rozmyty ekran z obrazu (ukrywa jego polskie napisy). */
+  var EKRAN = { rogi: [[210, 18], [598, 38], [676, 366], [262, 360]], h0: 1400, EW: 1000, EH: 704,
+                wideo: 'img/rtx/analizator-skan.mp4', plakat: 'img/rtx/analizator-skan-plakat.webp' };
+  function ekranFilm() {
+    return '<span class="ekran-mapa" aria-hidden="true" style="width:' + EKRAN.EW + 'px;height:' + EKRAN.EH + 'px"><span class="ekran-szklo">' +
+      '<video class="ekran-film" muted loop playsinline preload="none" disablepictureinpicture poster="' + EKRAN.plakat + '" data-src="' + EKRAN.wideo +
+      '" width="' + EKRAN.EW + '" height="' + EKRAN.EH + '"></video></span></span>';
+  }
+  /* homografia prostokąt (0,0)-(w,h) → czworokąt q (TL, TR, BR, BL); wynik jako matrix3d CSS */
+  function matrix3d(w, h, q) {
+    var src = [[0, 0], [w, 0], [w, h], [0, h]], A = [], b = [], i, j, k;
+    for (i = 0; i < 4; i++) {
+      var x = src[i][0], y = src[i][1], u = q[i][0], v = q[i][1];
+      A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); b.push(u);
+      A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); b.push(v);
+    }
+    for (i = 0; i < 8; i++) {                       /* eliminacja Gaussa z wyborem elementu głównego */
+      var m = i; for (j = i + 1; j < 8; j++) if (Math.abs(A[j][i]) > Math.abs(A[m][i])) m = j;
+      var t = A[i]; A[i] = A[m]; A[m] = t; t = b[i]; b[i] = b[m]; b[m] = t;
+      for (j = i + 1; j < 8; j++) { var f = A[j][i] / A[i][i]; for (k = i; k < 8; k++) A[j][k] -= f * A[i][k]; b[j] -= f * b[i]; }
+    }
+    var hh = []; for (i = 7; i >= 0; i--) { var s2 = b[i]; for (k = i + 1; k < 8; k++) s2 -= A[i][k] * hh[k]; hh[i] = s2 / A[i][i]; }
+    return 'matrix3d(' + [hh[0], hh[3], 0, hh[6], hh[1], hh[4], 0, hh[7], 0, 0, 1, 0, hh[2], hh[5], 0, 1].map(function (n) { return +n.toFixed(9); }).join(',') + ')';
+  }
+  function ustawEkrany() {
+    [].forEach.call(document.querySelectorAll('.urzadzenie-przod'), function (u) {
+      var img = u.querySelector('.urzadzenie-img'), e = u.querySelector('.ekran-mapa'); if (!img || !e) return;
+      var hgt = img.offsetHeight; if (!hgt) return;   /* offsetHeight: bez transformacji toru (obrót 3D) */
+      var k = hgt / EKRAN.h0, q = EKRAN.rogi.map(function (p) { return [p[0] * k, p[1] * k]; });
+      e.style.transform = matrix3d(EKRAN.EW, EKRAN.EH, q);
+    });
+  }
+  function ekranyAnalizatora() {
+    ustawEkrany();
+    [].forEach.call(document.querySelectorAll('.urzadzenie-przod .urzadzenie-img'), function (img) {
+      if (!img.complete) img.addEventListener('load', ustawEkrany, { once: true });
+      if ('ResizeObserver' in window) new ResizeObserver(ustawEkrany).observe(img);
+    });
+    window.addEventListener('resize', ustawEkrany);
+  }
   function obrazRtx(r) {
     if (typeof r === 'string') r = { src: r, w: 1536, h: 1024 };
     var h;
     if (r.kadr) h = '<span class="kadr">' + obrazek(r, 'kadr-wideo') + '<span class="kadr-granat" aria-hidden="true"></span></span>' +
       (r.przod ? '<span class="urzadzenie urzadzenie-obok urzadzenie-przod">' + obrazek(r.przod, 'urzadzenie-img') +
-        obrazek(r.przod, 'urzadzenie-img urzadzenie-ekran').replace('<img', '<img aria-hidden="true"') + EKRAN_SKAN + '</span>' : '');
+        obrazek(r.przod, 'urzadzenie-img urzadzenie-ekran').replace('<img', '<img aria-hidden="true"') + ekranFilm() + '</span>' : '');
     else if (r.wideo) h = '<span class="kadr"><video class="kadr-wideo" muted loop playsinline preload="none" aria-hidden="true" poster="' + r.plakat + '" data-src="' + r.wideo +
       '" width="' + r.w + '" height="' + r.h + '"></video><span class="kadr-granat" aria-hidden="true"></span></span>';
     else if (r.wolny) h = (r.obok ? '<span class="urzadzenie urzadzenie-obok">' + obrazek(r.obok, 'urzadzenie-img') + '</span>' : '') +
@@ -77,7 +116,7 @@
   /* wideo w panelach: źródło dopiero ok. ekranu przed panelem, gra tylko w kadrze (IntersectionObserver liczy też
      przesunięcie toru w poziomie); ograniczony ruch / oszczędzanie danych = sam plakat, bez pobierania wideo */
   function wideoPaneli() {
-    var v = [].slice.call(document.querySelectorAll('video.kadr-wideo[data-src]'));
+    var v = [].slice.call(document.querySelectorAll('video.kadr-wideo[data-src], video.ekran-film[data-src]'));
     if (!v.length || !('IntersectionObserver' in window)) return;
     var oszczedzaj = false;
     try { oszczedzaj = matchMedia('(prefers-reduced-motion: reduce)').matches || !!(navigator.connection && navigator.connection.saveData); } catch (e) {}
@@ -199,4 +238,5 @@
   render(jezykZAdresu());
   leniweTla();
   wideoPaneli();
+  ekranyAnalizatora();
 })();
