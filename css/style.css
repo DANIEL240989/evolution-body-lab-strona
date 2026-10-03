@@ -312,10 +312,10 @@ section { padding: 96px max(16px, calc((100% - var(--szer)) / 2)); }
    Łupek i kora, niebieska żywica świecąca jak lawa, krawędzie w różowym złocie. Tekst po lewej na przyciemnieniu,
    karta obrazu przezroczysta (render jest obrazem), plakietka „Image de synthèse” zostaje. */
 .hero { position: relative; isolation: isolate;
-  background: #05080F url(../img/materialy/kora-3d-pc-1600.webp) 70% 50% / cover no-repeat; }
+  background: #05080F url(../img/materialy/kora-3d-pc-1600.webp) 50% 50% / cover no-repeat; }
 @media (min-width: 1601px) { .hero { background-image: url(../img/materialy/kora-3d-pc.webp); } }
 .hero::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: linear-gradient(90deg, rgba(5,8,15,.94) 0%, rgba(5,8,15,.86) 34%, rgba(5,8,15,.35) 58%, rgba(5,8,15,0) 75%); }
+  background: linear-gradient(90deg, rgba(5,8,15,.72) 0%, rgba(5,8,15,.66) 38%, rgba(5,8,15,.25) 58%, rgba(5,8,15,0) 72%); }
 .hero .hero-obraz { background: none; border: 0; }
 @media (max-width: 900px) {
   .hero { background: #05080F url(../img/materialy/kora-3d-tel.webp) 50% 0 / 100% auto no-repeat; }
