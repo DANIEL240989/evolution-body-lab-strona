@@ -67,8 +67,19 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
 
   <section class="noc manifest" id="approche">
     <div class="manifest-srodek">
-      <p class="etykieta" data-t="man_label"></p>
-      <p class="manifest-tekst t-em" data-t="manifeste"></p>
+      <div class="manifest-glowa">
+        <div class="manifest-slowa">
+          <p class="etykieta" data-t="man_label"></p>
+          <p class="manifest-tekst t-em" data-t="manifeste"></p>
+        </div>
+        <figure class="ilustracja ilustracja-roza">
+          <div class="ilustracja-obraz">
+            <img src="img/ilustracje/dama-roza-900.webp" srcset="img/ilustracje/dama-roza-600.webp 600w, img/ilustracje/dama-roza-900.webp 900w"
+              sizes="(max-width: 900px) min(82vw, 380px), min(500px, 36vw)" width="900" height="900" loading="lazy" decoding="async" data-t-attr="alt:ilustracja_alt" alt="">
+            <span class="plakietka" data-t="image_synthese"></span>
+          </div>
+        </figure>
+      </div>
       <div class="cele" id="objectifs">
         <p class="cele-tytul"><span data-t="obj_label"></span> · <span data-t="obj_titre"></span></p>
         <div class="siatka4">
@@ -107,6 +118,13 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
       <span class="duo-kreska"></span>
       <span class="duo-r" data-t="visite_mot_2"></span>
     </div>
+    <figure class="ilustracja ilustracja-kapelusz">
+      <div class="ilustracja-obraz">
+        <img src="img/ilustracje/dama-kapelusz-900.webp" srcset="img/ilustracje/dama-kapelusz-600.webp 600w, img/ilustracje/dama-kapelusz-900.webp 900w"
+          sizes="(max-width: 900px) min(78vw, 340px), min(420px, 32vw)" width="900" height="900" loading="lazy" decoding="async" data-t-attr="alt:ilustracja_alt" alt="">
+        <span class="plakietka" data-t="image_synthese"></span>
+      </div>
+    </figure>
     <div class="visite-naglowek">
       <p class="etykieta" data-t="visite_label"></p>
       <h2 data-t="visite_titre"></h2>

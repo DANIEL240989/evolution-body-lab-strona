@@ -7,6 +7,7 @@
    - manifest: słowa rozjaśniają się przy przewijaniu, schodki z bloków w różowym złocie i nocy przechodzą do zabiegów;
    - zabiegi: przy 2 kartach siatka obok siebie, od 3 kart przypięty poziomy tor (komputer); wielkie słowo w tle jedzie;
    - pierwsza wizyta: dwie połówki rozjeżdżają się, kula światła płynie, szklane karty wpływają;
+   - ilustracje marki (manifest, pierwsza wizyta): medalion odsłania się kołem, potem lekko płynie z przewijaniem;
    - stopka: ciemny panel unosi się nad poświatą;
    - Lenis tylko z myszą (telefon i dotyk przewijają natywnie);
    - przyciski, dane kontaktu i FAQ bez animacji wejścia: są gotowe od razu;
@@ -76,7 +77,7 @@
       var el = o.el, d = i * .08;
       if (odRazu) {
         el.classList.remove('czeka');
-        if (o.rodzaj === 'obraz') gsap.set(el, { clearProps: 'clipPath,transform' });
+        if (o.rodzaj === 'obraz' || o.rodzaj === 'medalion') gsap.set(el, { clearProps: 'clipPath,transform' });
         if (o.rodzaj === 'podpis') gsap.set(el, { '--p1': 0, '--p2': 0 });
         return;
       }
@@ -84,6 +85,7 @@
       else if (o.rodzaj === 'etykieta') wytrzyj(el, d);
       else if (o.rodzaj === 'obraz') gsap.to(el, { clipPath: 'inset(0% 0% 0% 0%)', scale: 1, duration: 1.4, delay: d, ease: 'ebl', clearProps: 'clipPath,transform' });
       else if (o.rodzaj === 'podpis') rysuj(el, { delay: .35 + d, duration: 2.2 });
+      else if (o.rodzaj === 'medalion') gsap.to(el, { clipPath: 'circle(72% at 50% 50%)', scale: 1, duration: 1.7, delay: d, ease: 'ebl', clearProps: 'clipPath,transform' });
       else { el.classList.remove('czeka'); gsap.fromTo(el, { opacity: 0, y: o.y || 40 }, { opacity: 1, y: 0, duration: 1.2, delay: i * .1, ease: 'ebl', clearProps: 'opacity,transform' }); }
     });
   }
@@ -93,6 +95,7 @@
       var o = { el: x, rodzaj: rodzaj, stan: 'czeka', y: y };
       if (rodzaj === 'obraz') gsap.set(x, { clipPath: 'inset(100% 0% 0% 0%)', scale: 1.14, transformOrigin: '50% 100%' });
       else if (rodzaj === 'podpis') gsap.set(x, { '--p1': 1, '--p2': 1 });
+      else if (rodzaj === 'medalion') gsap.set(x, { clipPath: 'circle(0% at 50% 50%)', scale: .9 });
       else x.classList.add('czeka');
       CZEKA.push(o); return o;
     });
@@ -197,6 +200,16 @@
   kolejka('.cytat', 'akapit', 'top 90%', 30);   /* cudzysłowy z CSS: bez podziału na linie */
   kolejka('.monika-foto img', 'obraz', 'top 90%');
   kolejka('.stopka-slogan', 'linie', 'top 90%');
+
+  /* ---------- ilustracje marki (damy z różą i w kapeluszu): odsłona kołem od środka, potem lekki parallax ---------- */
+  kolejka('.ilustracja-obraz', 'medalion', 'top 86%');
+  QA('.ilustracja').forEach(function (f) {
+    mm.add({ pc: KOMPUTER, tel: TELEFON }, function (c) {
+      var a = c.conditions.pc ? 9 : 5;
+      gsap.fromTo(f, { yPercent: a }, { yPercent: -a, ease: 'none',
+        scrollTrigger: { trigger: f, start: 'top bottom', end: 'bottom top', scrub: true } });
+    });
+  });
 
   /* ---------- manifest: słowa rozjaśniają się przy przewijaniu ---------- */
   var man = Q('.manifest-tekst');

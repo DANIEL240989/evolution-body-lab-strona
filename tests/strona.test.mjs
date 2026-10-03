@@ -77,3 +77,17 @@ test('teksty z wyróżnieniem (*słowo*) mają parzystą liczbę gwiazdek', () =
     assert.equal((T.fr[k].match(/\*/g) || []).length % 2, 0, k);
   }
 });
+
+test('ilustracje marki: plakietka, alt z kluczy, srcset, poza sekcją Moniki', () => {
+  const fig = [...html.matchAll(/<figure class="ilustracja[\s\S]*?<\/figure>/g)].map(m => m[0]);
+  assert.equal(fig.length, 2);
+  for (const f of fig) {
+    assert.match(f, /class="plakietka" data-t="image_synthese"/);
+    assert.match(f, /data-t-attr="alt:ilustracja_alt"/);
+    assert.match(f, /srcset="[^"]+600w[^"]+900w"/);
+    assert.match(f, /loading="lazy"/);
+  }
+  assert.ok(T.fr.ilustracja_alt);
+  const monika = html.slice(html.indexOf('id="monika"'), html.indexOf('</section>', html.indexOf('id="monika"')));
+  assert.doesNotMatch(monika, /ilustracj/);
+});

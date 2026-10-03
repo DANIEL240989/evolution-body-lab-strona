@@ -13,6 +13,7 @@ window.T = {
     demo: 'Version de démonstration : coordonnées, tarifs et images sont provisoires.',
     traduction: 'Traduction en préparation : le texte s’affiche en français.',
     image_synthese: 'Image de synthèse',
+    ilustracja_alt: 'Illustration Evolution Body Lab',
     h_sur: 'Nice · Côte d’Azur',
     h_titre: 'Remodelage de la silhouette à Nice',
     h_lead: 'Deux soins, un protocole clair dès la première séance et des tarifs affichés. Sur rendez-vous, du lundi au vendredi.',
