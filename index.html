@@ -27,6 +27,10 @@
    leniwe: tła sekcji poza pierwszym ekranem ładują się dopiero blisko ekranu (site.js).
    ruch: tylko bez ograniczonego ruchu i bez botów. Kurtyna: pierwsze wejście w karcie, bez skoku prosto do sekcji (#contact).
    Bezpieczniki na końcu css/style.css: bez skryptu ruchu nagłówek widać po 3 s, kurtyna gaśnie po 4 s; ruch.js zdejmuje ją najpóźniej po 6 s. */
+/* ?ruch=1 (test na telefonie Daniela, 03.10.2026): pokazuje animacje mimo ustawienia „ograniczony ruch” w telefonie,
+   do końca sesji karty. Zwykły adres dalej szanuje to ustawienie. */
+(function(){try{var u=/[?&]ruch=1\b/.test(location.search);if(u)sessionStorage.setItem('ebl-ruch','1');if(!u&&sessionStorage.getItem('ebl-ruch')!=='1')return;
+var mm=window.matchMedia;window.matchMedia=function(q){return mm.call(window,/prefers-reduced-motion\s*:\s*reduce/.test(q)?'(min-width: 999999px)':q)}}catch(e){}})();
 (function(h){h.classList.add('leniwe');try{if(matchMedia('(prefers-reduced-motion: reduce)').matches||/bot|crawl|spider|slurp|lighthouse|headless/i.test(navigator.userAgent||''))return;
 h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'))h.classList.add('kurtyna-on')}catch(e){}})(document.documentElement);</script>
 </head>
