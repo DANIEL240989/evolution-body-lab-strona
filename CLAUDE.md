@@ -54,9 +54,10 @@ raffermissement/remodelage. Ceny na stronie z biznesplanu Moniki (EMS 100 €, k
 Biznesplanu (PDF, dane finansowe) nie wrzucamy do repo.
 
 ## Logo i kolory (Daniel 03.10.2026)
-Od 03.10.2026 wieczór (Daniel: „spoko pod 4”, z 5 wariantów): złota postać z koroną w obręczy (jeden kolor złota,
-czytelna w 24 px) + napis EVOLUTION / BODY LAB z fasady: `img/logo-krolowa-poziom.webp` (pasek), `img/logo-krolowa.webp`
-(stopka, kurtyna), `img/ikona-64.png` (ikona karty). Damy z różą/kapeluszem to ilustracje marki, nie logo
+Od 03.10.2026 noc (Daniel: „dawaj, pracuj nad tym”): dama w złotym kapeluszu z czerwoną różą w obręczy (tło koła
+oczyszczone z szarych kratek generatora na czystą czerń, postać bez zmian) + napis EVOLUTION / BODY LAB z fasady:
+`img/logo-dama-zlota-poziom.webp` (pasek), `img/logo-dama-zlota.webp` (stopka, kurtyna), `img/ikona-64.png`.
+Poprzednio (03.10 wieczór, „spoko pod 4”): złota postać z koroną, `img/logo-krolowa*`. Damy z różą/kapeluszem to ilustracje marki, nie logo
 (`projekt/ilustracje/`). Wcześniejsze: dama w kapeluszu (`img/logo-dama*`), E z fasady (`img/logo-e*`), królowa (`img/logo.webp`). Nie przerysowywać. Kolory: czerń, biel, złoto 24K tylko na pełnych przyciskach i numerach, różowe złoto na obrysach
 i kreskach (`css/paleta.css`, ostatni arkusz). Zero „musztardowego” (złoto szampańskie odrzucone).
 
