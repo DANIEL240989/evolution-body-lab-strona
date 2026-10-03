@@ -36,6 +36,14 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
   przy zachowaniu obecnej palety (czerń, złoto jako akcent, kość słoniowa); pierwsza zmiana: noc pod
   tekstem pierwszego ekranu na telefonie i wygaszenie marmuru `#soins` w `#05070D` przed „Première | visite”.
 
+## Słowa Daniela z początku projektu (03.10.2026: „czemu olewasz moje słowa”) — obowiązują zawsze
+- „landonorris.com robimy 1 do 1 bez pierdolenia”, „strona bilioner, zero lipy”: ten sam poziom co wzory (Lando, jjettas,
+  Orchid), czyli WebGL (2,5D z głębi, płyn pod kursorem, dystorsje), nie same lekkie animacje CSS. 1 do 1 = układ, rytm,
+  efekty; treść, obrazy, fonty i kod własne (prawa autorskie).
+- „Zdjęcia lecą z RTX”, „czeka nas renderowanie sprzętu, ultra jakość na każdym polu”: obrazy sprzętu (EMS, kriolipoliza)
+  i gabinetu renderowane lokalnie na RTX 5080 Daniela (ComfyUI, modele na D:), bez ludzi, z plakietką „Image de synthèse”.
+- „Efekty typu wideo i 3D ultra premium”: pętle wideo i 3D są częścią strony, nie opcją na później.
+
 ## Czego nie wolno
 - Wymyślać opinii, certyfikatów, cen, wyników, liczby klientek. Przed/po i opinie tylko prawdziwe (puste = sekcja ukryta).
 - Obietnic medycznych i gwarancji efektu („guérit”, „définitivement”, „résultats garantis”).
