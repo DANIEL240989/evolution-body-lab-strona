@@ -64,8 +64,8 @@ raffermissement/remodelage. Ceny na stronie z biznesplanu Moniki (EMS 100 €, k
 Biznesplanu (PDF, dane finansowe) nie wrzucamy do repo.
 
 ## Logo i kolory (Daniel 03.10.2026)
-Od 03.10.2026 (Daniel: „mamy zgodę, zamiana logo na to”): LOGO = narysowana Monika w złotej obręczy z czerwoną różą
-(źródło `projekt/ilustracje/monika-medalion-logo.webp`, przezroczyste) + napis z fasady, pod tymi samymi nazwami plików
+Od 03.10.2026 (Daniel: „mamy zgodę, zamiana logo na to”): LOGO = narysowana Monika w złotej obręczy z czerwoną różą,
+wariant z czarnym kołem (Daniel: „środkowy”; źródło `projekt/ilustracje/monika-medalion-2.webp`, przezroczyste) + napis z fasady, pod tymi samymi nazwami plików
 (`img/logo-dama-zlota*.webp`, `img/ikona-64.png`). ZGODA MONIKI NA WIZERUNEK: potwierdzona przez Daniela 03.10.2026
 (zdjęcie `img/monika.webp`, rysunek `img/monika-rys.webp`, medalion-logo). Poprzednio (03.10 noc, „tą chcę”): dama w czarno-złotym kapeluszu z czerwoną różą w obręczy, jasne tło koła jak
 w oryginale (tylko mgiełka poza obręczą usunięta; źródło `projekt/ilustracje/dama-roza-kapelusz-logo.webp`) + napis EVOLUTION / BODY LAB z fasady
