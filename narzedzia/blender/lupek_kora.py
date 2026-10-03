@@ -80,7 +80,7 @@ sep = node('ShaderNodeSeparateXYZ'); L.new(ob, sep.inputs[0])
 # granica kora | żywica: postrzępiona, po skosie; żywica po PRAWEJ (tekst stoi na korze po lewej)
 gr_sz = szum(ob, 0.9, 6, 0.6)
 gr = M('ADD', M('ADD', sep.outputs['X'], M('MULTIPLY', sep.outputs['Y'], -0.35)), M('MULTIPLY', M('SUBTRACT', gr_sz.outputs['Fac'], 0.5), 3.2))
-zyw_strefa = zakres(gr, 1.2, 1.9)                       # 0 kora, 1 mozaika żywicy
+zyw_strefa = M('SUBTRACT', 1.0, zakres(gr, -0.2, 0.5))  # jak na wzorze Daniela: mozaika żywicy PO LEWEJ, kora po prawej
 brzeg = M('SUBTRACT', 1.0, M('ABSOLUTE', M('SUBTRACT', M('MULTIPLY', zyw_strefa, 2.0), 1.0)))  # 1 na styku
 # --- KORA: pionowe włókna i głębokie, długie bruzdy
 wl_map = node('ShaderNodeMapping'); wl_map.inputs['Rotation'].default_value = (0, 0, math.radians(8))
@@ -98,12 +98,12 @@ poprz = M('MULTIPLY', M('SUBTRACT', 1.0, zakres(pop.outputs['Distance'], 0.0, 0.
 bruzda = M('MAXIMUM', bruzda, poprz, clamp=True)
 kora_h = M('SUBTRACT', M('MULTIPLY', wlokna.outputs['Fac'], 0.4), M('MULTIPLY', bruzda, 0.75))
 # --- ŻYWICA: mozaika komórek z ciemnymi, wypukłymi spękaniami (jak zaschnięta glina)
-mz = node('ShaderNodeTexVoronoi', feature='DISTANCE_TO_EDGE'); mz.inputs['Scale'].default_value = 1.8
+mz = node('ShaderNodeTexVoronoi', feature='DISTANCE_TO_EDGE'); mz.inputs['Scale'].default_value = 3.4
 mzm = node('ShaderNodeMix', data_type='VECTOR'); mzm.inputs['Factor'].default_value = 0.12
 L.new(ob, mzm.inputs['A']); L.new(szum(ob, 1.5, 4).outputs['Color'], mzm.inputs['B']); L.new(mzm.outputs['Result'], mz.inputs['Vector'])
-mz2 = node('ShaderNodeTexVoronoi', feature='DISTANCE_TO_EDGE'); mz2.inputs['Scale'].default_value = 7.5
+mz2 = node('ShaderNodeTexVoronoi', feature='DISTANCE_TO_EDGE'); mz2.inputs['Scale'].default_value = 10.0
 L.new(mzm.outputs['Result'], mz2.inputs['Vector'])
-spek = M('MAXIMUM', M('SUBTRACT', 1.0, zakres(mz.outputs['Distance'], 0.0, 0.05)), M('MULTIPLY', M('SUBTRACT', 1.0, zakres(mz2.outputs['Distance'], 0.0, 0.012)), 0.7))
+spek = M('MAXIMUM', M('SUBTRACT', 1.0, zakres(mz.outputs['Distance'], 0.0, 0.07)), M('MULTIPLY', M('SUBTRACT', 1.0, zakres(mz2.outputs['Distance'], 0.0, 0.022)), 0.95))
 komorka = M('SUBTRACT', 1.0, spek)                       # 1 = tafla żywicy
 zyw_h = M('ADD', M('MULTIPLY', spek, 0.12), M('MULTIPLY', zakres(mz.outputs['Distance'], 0.0, 0.25), 0.08))
 # --- połączenie
@@ -136,10 +136,10 @@ L.new(zakres(wlokna.outputs['Fac'], 0.3, 0.9, 0.95, 0.35), kam.inputs['Roughness
 kam.inputs['Specular IOR Level'].default_value = 0.7
 # żywica: niebieska z turkusowym podtonem, świeci od środka komórki
 gl = zakres(mz.outputs['Distance'], 0.0, 0.22)
-k_zyw = rampa(gl, [(0.0, lin('#020A1E')), (0.55, lin('#0A3F96')), (1.0, lin('#1C7FD0'))])
+k_zyw = rampa(gl, [(0.0, lin('#010609')), (0.5, lin('#06303F')), (1.0, lin('#17788E'))])
 zyw = node('ShaderNodeBsdfPrincipled'); L.new(k_zyw, zyw.inputs['Base Color'])
-zyw.inputs['Roughness'].default_value = 0.04; zyw.inputs['Coat Weight'].default_value = 1.0; zyw.inputs['Coat Roughness'].default_value = 0.0
-L.new(k_zyw, zyw.inputs['Emission Color']); L.new(zakres(gl, 0.0, 1.0, 0.15, 1.4), zyw.inputs['Emission Strength'])
+zyw.inputs['Roughness'].default_value = 0.22; zyw.inputs['Coat Weight'].default_value = 1.0; zyw.inputs['Coat Roughness'].default_value = 0.0
+L.new(k_zyw, zyw.inputs['Emission Color']); L.new(zakres(gl, 0.0, 1.0, 0.05, 0.55), zyw.inputs['Emission Strength'])
 zl = node('ShaderNodeBsdfPrincipled'); zl.inputs['Base Color'].default_value = lin('#E8B3A6')
 zl.inputs['Metallic'].default_value = 1.0; zl.inputs['Roughness'].default_value = 0.14
 m1 = node('ShaderNodeMixShader'); L.new(zywica, m1.inputs[0]); L.new(kam.outputs[0], m1.inputs[1]); L.new(zyw.outputs[0], m1.inputs[2])
