@@ -26,7 +26,7 @@
     D.zabiegi.forEach(function (z, i) {
       var a = document.createElement('article');
       a.className = 'karta';
-      var cena = z.cena != null ? 'à partir de ' + z.cena + ' €' : tekst(lang, 'prix_tbc');
+      var cena = z.cena == null ? tekst(lang, 'prix_tbc') : z.od ? tekst(lang, 'a_partir') + ' ' + z.cena + ' €' : z.cena + ' € ' + tekst(lang, 'par_seance');
       a.innerHTML =
         '<div class="karta-obraz"><img alt="" width="720" height="540" loading="lazy" decoding="async"><span class="plakietka"></span></div>' +
         '<div class="karta-tresc"><span class="karta-nr"></span><h3></h3><p></p>' +
@@ -39,7 +39,8 @@
       a.querySelector('.karta-nr').textContent = (i < 9 ? '0' : '') + (i + 1);
       a.querySelector('h3').textContent = tekst(lang, 's_' + z.id + '_t');
       a.querySelector('.karta-tresc > p').textContent = tekst(lang, 's_' + z.id + '_d');
-      a.querySelector('.czas').textContent = z.czas + ' ' + tekst(lang, 'duree');
+      if (z.czas != null) a.querySelector('.czas').textContent = z.czas + ' ' + tekst(lang, 'duree');
+      else a.querySelector('.czas').remove();
       a.querySelector('.cena').textContent = cena;
       a.querySelector('a').textContent = tekst(lang, 'reserver_soin');
       box.appendChild(a);
