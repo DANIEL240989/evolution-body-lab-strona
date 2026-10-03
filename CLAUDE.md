@@ -43,6 +43,8 @@ Brakujące dane = dane TEST w jednym miejscu: `js/dane.js`. `npm run sprawdz-pub
 - „Zdjęcia lecą z RTX”, „czeka nas renderowanie sprzętu, ultra jakość na każdym polu”: obrazy sprzętu (EMS, kriolipoliza)
   i gabinetu renderowane lokalnie na RTX 5080 Daniela (ComfyUI, modele na D:), bez ludzi, z plakietką „Image de synthèse”.
 - „Efekty typu wideo i 3D ultra premium”: pętle wideo i 3D są częścią strony, nie opcją na później.
+- 03.10.2026: „nie pracuj na telefonie, tylko Windows teraz; jak potwierdzę, robimy mobila”. Najpierw desktop (1440, 1366);
+  na ≤ 900 px nowe efekty wyłączone, strona ma się tylko nie psuć. Wersja telefonu dopiero po akceptacji Daniela.
 
 ## Czego nie wolno
 - Wymyślać opinii, certyfikatów, cen, wyników, liczby klientek. Przed/po i opinie tylko prawdziwe (puste = sekcja ukryta).
