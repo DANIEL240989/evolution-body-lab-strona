@@ -1,0 +1,213 @@
+/* =====================================================================================================================
+   CENNIK (#tarifs) I KREATOR PROŚBY O WIZYTĘ (#contact), projektant 03.10.2026.
+   Ładowany PO css/paleta.css. Paleta bez zmian: czerń, biel, złoto 24K tylko na pełnych przyciskach, numerach
+   oraz wybranym dniu i godzinie (czarny tekst), różowe złoto na obrysach i kreskach.
+   Formularz bez animacji wejścia; mikrointerakcje 150–250 ms, wyłączone przy ograniczonym ruchu. */
+:root { --rdv-szklo: rgba(9, 9, 10, .72); --rdv-obrys: rgba(212, 164, 154, .34); --rdv-blad: #F2A7A0; --rdv-t: 200ms; }
+
+/* ------------------------------------------------- CENNIK ------------------------------------------------- */
+#tarifs { position: relative; overflow: hidden;
+  background: radial-gradient(70% 60% at 85% 0%, rgba(212, 164, 154, .10), transparent 70%),
+              radial-gradient(60% 50% at 0% 100%, rgba(227, 181, 71, .05), transparent 70%), var(--noc); }
+.tarifs-glowa { max-width: 760px; }
+.tarifs-glowa h2 { margin: 0; font-size: clamp(38px, 4.4vw, 64px); }
+.cennik { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 2.6vw, 40px); margin-top: clamp(36px, 6vh, 64px); }
+.cennik-poz { position: relative; padding: clamp(26px, 3vw, 48px); border: 1px solid var(--rz-linia); border-radius: 2px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .012)), rgba(10, 10, 11, .6); }
+/* druga, cieńsza ramka w środku: karta jak menu w spa */
+.cennik-poz::before { content: ''; position: absolute; inset: 9px; border: 1px solid rgba(212, 164, 154, .14); pointer-events: none; }
+.cennik-glowa { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 20px; align-items: end; }
+.cennik-nr { font: 600 clamp(48px, 4.6vw, 68px)/.9 var(--szeryf); font-variant-numeric: lining-nums; padding-right: .06em;
+  background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--k24-pelne); }
+.cennik-tyt h3 { margin: 0; font-size: clamp(30px, 2.8vw, 42px); color: #FFFFFF; }
+.cennik-pod { margin: 4px 0 0; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--tekst-noc-2); }
+.cennik-test { align-self: start; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--rz);
+  border: 1px solid var(--rz-linia); border-radius: 999px; padding: 4px 10px; white-space: nowrap; }
+.cennik-lista { list-style: none; margin: clamp(22px, 3vh, 32px) 0 0; padding: clamp(14px, 2vh, 20px) 0 0; border-top: 1px solid var(--rz-linia); }
+.cennik-wiersz { display: flex; align-items: baseline; gap: 14px; padding: 12px 0; }
+.cennik-co { font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--tekst-noc); white-space: nowrap; }
+.cennik-kropki { flex: 1; min-width: 24px; border-bottom: 1px dotted rgba(212, 164, 154, .5); transform: translateY(-4px); }
+.cennik-cena { font: 500 clamp(28px, 2.4vw, 36px)/1 var(--szeryf); font-variant-numeric: lining-nums; color: #FFFFFF; white-space: nowrap; }
+.tarifs-dol { display: flex; align-items: center; justify-content: space-between; gap: 20px 48px; margin-top: clamp(32px, 5vh, 56px);
+  padding-top: clamp(24px, 3.5vh, 36px); border-top: 1px solid var(--rz-linia); }
+.tarifs-note { margin: 0; max-width: 36em; color: var(--tekst-noc-2); font-size: 15px; }
+.tarifs-dol .pill { flex: none; }
+@media (max-width: 900px) {
+  .cennik { grid-template-columns: 1fr; gap: 24px; }
+  .tarifs-dol { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 420px) {
+  .cennik-glowa { grid-template-columns: auto minmax(0, 1fr); }
+  .cennik-test { grid-column: 1 / -1; justify-self: start; margin-top: 10px; }
+  .cennik-co { font-size: 13px; }
+}
+
+/* ------------------------------------------------- KREATOR ------------------------------------------------- */
+.rdv-sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.rdv-uklad { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: clamp(28px, 4vw, 64px); align-items: start; margin-top: clamp(28px, 4vh, 44px); }
+.rdv { position: relative; padding: clamp(18px, 2.8vw, 40px); border: 1px solid var(--rdv-obrys); border-radius: 4px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .012) 60%), var(--rdv-szklo);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15); backdrop-filter: blur(18px) saturate(1.15);
+  box-shadow: 0 50px 90px -50px rgba(0, 0, 0, .9), inset 0 1px 0 rgba(255, 255, 255, .07); }
+/* cienka nić różowego złota na górnej krawędzi, najjaśniejsza pośrodku */
+.rdv::before { content: ''; position: absolute; left: 12%; right: 12%; top: -1px; height: 1px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--rz), transparent); }
+.rdv [hidden] { display: none !important; }
+.rdv button { font: inherit; cursor: pointer; }
+.rdv .pill { border: 1px solid var(--rz); background: transparent; color: var(--tekst-noc); }
+.rdv .pill.solid { border-color: #F3D47A; background: var(--k24); background-size: 200% 100%; color: #050505; }
+.rdv .pill:focus-visible, .rdv-etap:focus-visible, .rdv-mies:focus-visible, .rdv-zmien:focus-visible, .rdv-dzien:focus-visible,
+.rdv-tytul:focus-visible { outline: 2px solid var(--rz); outline-offset: 3px; }
+.rdv-tytul:focus:not(:focus-visible) { outline: none; }
+
+/* etapy 01 · 02 · 03 */
+.rdv-etapy { list-style: none; margin: 0 0 clamp(22px, 3vh, 32px); padding: 0 0 16px; display: flex; gap: 8px; border-bottom: 1px solid var(--rdv-obrys); }
+.rdv-etapy li { flex: 1; min-width: 0; }
+.rdv-etap { display: flex; align-items: baseline; gap: 10px; width: 100%; padding: 6px 0; background: none; border: 0; color: var(--tekst-noc-2);
+  text-align: left; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; position: relative; transition: color var(--rdv-t) ease; }
+.rdv-etap::after { content: ''; position: absolute; left: 0; right: 0; bottom: -17px; height: 1px; background: var(--rz);
+  transform: scaleX(0); transform-origin: 0 50%; transition: transform 250ms var(--e-ui, ease); }
+.rdv-etap[aria-current="step"]::after { transform: scaleX(1); }
+.rdv-etap:disabled { cursor: default; opacity: .45; }
+.rdv-etap:not(:disabled):hover, .rdv-etap[aria-current="step"] { color: #FFFFFF; }
+.rdv-nr { font: 600 22px/1 var(--szeryf); letter-spacing: 0; font-variant-numeric: lining-nums; color: var(--tekst-noc-2); }
+.rdv-etap[aria-current="step"] .rdv-nr, .rdv-etap.zrobiony .rdv-nr {
+  background: var(--k24); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--k24-pelne); }
+.rdv-etap > span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.rdv-tytul { margin: 0 0 18px; font-size: clamp(26px, 2.4vw, 34px); color: #FFFFFF; }
+.rdv fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.rdv-blad { display: block; min-height: 0; margin: 8px 0 0; color: var(--rdv-blad); font-size: 14px; }
+.rdv-blad:empty { margin: 0; }
+.rdv-nawigacja { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+.rdv-nawigacja .pill { min-width: 150px; }
+
+/* krok 1: karty wyboru */
+.rdv-opcje { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.rdv-opcja { position: relative; display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; border: 1px solid var(--rdv-obrys); border-radius: 3px;
+  background: rgba(255, 255, 255, .025); cursor: pointer; transition: border-color var(--rdv-t) ease, background-color var(--rdv-t) ease; }
+.rdv-opcja-conseil { grid-column: 1 / -1; }
+.rdv-opcja input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.rdv-znak { flex: none; width: 18px; height: 18px; margin-top: 3px; border-radius: 50%; border: 1px solid var(--rz); position: relative; }
+.rdv-znak::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--k24); transform: scale(0); transition: transform var(--rdv-t) ease; }
+.rdv-opcja-tresc { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.rdv-opcja-nazwa { font-weight: 600; color: #FFFFFF; }
+.rdv-opcja-cena { color: var(--tekst-noc-2); font-size: 15px; font-variant-numeric: lining-nums; }
+.rdv-opcja-test { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--rz); }
+.rdv-opcja:hover { border-color: var(--rz); background: rgba(212, 164, 154, .06); }
+.rdv-opcja:has(input:checked) { border-color: var(--rz); background: rgba(212, 164, 154, .10); box-shadow: inset 0 0 0 1px rgba(212, 164, 154, .35); }
+.rdv-opcja input:checked ~ .rdv-znak::after { transform: scale(1); }
+.rdv-opcja:has(input:focus-visible) { outline: 2px solid var(--rz); outline-offset: 3px; }
+
+/* krok 2: kalendarz + godziny */
+.rdv-termin { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 40px); align-items: start; }
+.rdv-kal-glowa { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.rdv-mies-nazwa { margin: 0; font: 600 22px/1.2 var(--szeryf); color: #FFFFFF; text-align: center; flex: 1; }
+.rdv-mies { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--rdv-obrys); background: transparent; color: var(--tekst-noc);
+  font-size: 22px; line-height: 1; display: grid; place-items: center; transition: border-color var(--rdv-t) ease, background-color var(--rdv-t) ease; }
+.rdv-mies:not(:disabled):hover { border-color: var(--rz); background: rgba(212, 164, 154, .08); }
+.rdv-mies:disabled { opacity: .25; cursor: default; }
+.rdv-siatka { width: 100%; border-collapse: separate; border-spacing: 2px; table-layout: fixed; }
+.rdv-siatka th { padding: 6px 0 8px; font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--tekst-noc-2); text-align: center; }
+.rdv-siatka th.rdv-wolne { opacity: .45; }
+.rdv-siatka td { padding: 0; text-align: center; }
+.rdv-dzien { position: relative; width: 100%; max-width: 48px; aspect-ratio: 1; min-height: 40px; margin: 0 auto; display: grid; place-items: center;
+  border-radius: 50%; border: 1px solid transparent; background: transparent; color: #FFFFFF; font-size: 15px; font-variant-numeric: lining-nums tabular-nums;
+  transition: border-color var(--rdv-t) ease, background-color var(--rdv-t) ease, color var(--rdv-t) ease; }
+.rdv-dzien:not([aria-disabled="true"]):hover { border-color: var(--rz); background: rgba(212, 164, 154, .08); }
+.rdv-dzien[aria-disabled="true"] { color: rgba(255, 255, 255, .24); cursor: default; }
+/* dziś: kreska różowego złota pod cyfrą */
+.rdv-dzien.dzis::after { content: ''; position: absolute; left: 32%; right: 32%; bottom: 7px; height: 1.5px; border-radius: 1px; background: var(--rz); }
+.rdv-dzien.wybrany { background: var(--k24); background-size: 160% 100%; border-color: #F3D47A; color: #050505; font-weight: 700;
+  box-shadow: 0 6px 22px -8px rgba(227, 181, 71, .55); }
+.rdv-dzien.wybrany.dzis::after { background: #050505; }
+
+.rdv-pole-tyt { padding: 0; margin: 0 0 12px; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--tekst-noc-2); }
+.rdv-podpowiedz { margin: 0; padding: 18px; border: 1px dashed var(--rdv-obrys); border-radius: 3px; color: var(--tekst-noc-2); font-size: 15px; }
+.rdv-sloty { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.rdv-slot { position: relative; display: block; }
+.rdv-slot input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.rdv-slot span { display: block; padding: 11px 0; text-align: center; border: 1px solid var(--rdv-obrys); border-radius: 999px; color: #FFFFFF;
+  font-size: 15px; font-variant-numeric: lining-nums tabular-nums; transition: border-color var(--rdv-t) ease, background-color var(--rdv-t) ease, color var(--rdv-t) ease; }
+.rdv-slot:hover input:not(:disabled) + span { border-color: var(--rz); background: rgba(212, 164, 154, .08); }
+.rdv-slot input:checked + span { background: var(--k24); background-size: 160% 100%; border-color: #F3D47A; color: #050505; font-weight: 700; }
+.rdv-slot input:focus-visible + span { outline: 2px solid var(--rz); outline-offset: 3px; }
+.rdv-slot.zajety span { color: rgba(255, 255, 255, .24); border-color: rgba(212, 164, 154, .12); text-decoration: line-through; }
+.rdv-slot.zajety input { cursor: default; }
+
+/* krok 3: pola */
+.rdv-pola { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; }
+.rdv-cala { grid-column: 1 / -1; }
+.rdv-pole { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.rdv-pole label { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--tekst-noc); }
+.rdv-opc { text-transform: none; letter-spacing: 0; color: var(--tekst-noc-2); }
+.rdv-pole input, .rdv-pole textarea { width: 100%; padding: 13px 14px; font: 400 16px/1.4 var(--bez); color: #FFFFFF;
+  background: rgba(255, 255, 255, .04); border: 1px solid rgba(212, 164, 154, .38); border-radius: 3px;
+  transition: border-color var(--rdv-t) ease, box-shadow var(--rdv-t) ease, background-color var(--rdv-t) ease; }
+.rdv-pole textarea { resize: vertical; min-height: 92px; }
+.rdv-pole input:hover, .rdv-pole textarea:hover { border-color: rgba(212, 164, 154, .7); }
+.rdv-pole input:focus, .rdv-pole textarea:focus { outline: none; border-color: var(--rz); background: rgba(255, 255, 255, .06); box-shadow: 0 0 0 3px rgba(212, 164, 154, .2); }
+.rdv-pole [aria-invalid="true"] { border-color: var(--rdv-blad); }
+.rdv-aide { font-size: 13px; line-height: 1.5; color: var(--tekst-noc-2); }
+.rdv-zgoda { margin: 4px 0 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; align-items: start; }
+.rdv-zgoda input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--rz); cursor: pointer; }
+.rdv-zgoda input:focus-visible { outline: 2px solid var(--rz); outline-offset: 3px; }
+.rdv-zgoda label { font-size: 15px; color: var(--tekst-noc); cursor: pointer; }
+.rdv-zgoda .rdv-blad { grid-column: 2; }
+.rdv-prywatnosc { margin: 16px 0 0; padding-left: 12px; border-left: 1px solid var(--rz-linia); }
+
+/* podsumowanie */
+.rdv-pret-d { margin: -6px 0 20px; padding: 12px 14px; border: 1px solid var(--rz-linia); border-radius: 3px; color: var(--tekst-noc); font-size: 15px; background: rgba(212, 164, 154, .06); }
+.rdv-pret-dane { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 24px; }
+.rdv-pret-dane dt { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--rz); margin-bottom: 2px; }
+.rdv-pret-dane dd { margin: 0; color: #FFFFFF; overflow-wrap: anywhere; }
+.rdv-wyslij { justify-content: flex-start; align-items: center; }
+.rdv-zmien { background: none; border: 0; padding: 8px 4px; color: var(--tekst-noc-2); text-decoration: underline; text-decoration-color: var(--rz-linia); text-underline-offset: 4px; }
+.rdv-zmien:hover { color: #FFFFFF; }
+
+/* pasek z wyborem pod kreatorem */
+.rdv-recap { margin: 26px 0 0; padding-top: 16px; border-top: 1px solid var(--rdv-obrys); display: grid; grid-template-columns: 1.2fr 1.4fr .6fr; gap: 12px; }
+.rdv-recap dt { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--tekst-noc-2); }
+.rdv-recap dd { margin: 2px 0 0; color: #FFFFFF; font-size: 14px; font-variant-numeric: lining-nums; }
+.rdv.rdv-gotowe .rdv-recap { display: none; }
+
+/* kolumna obok: telefon, WhatsApp, dane */
+.rdv-bok-tyt { margin: 0; font: 600 24px/1.2 var(--szeryf); color: #FFFFFF; }
+.rdv-bok .przyciski { margin: 16px 0 28px; }
+#contact .rdv-bok .dane { grid-template-columns: 1fr; gap: 18px; margin: 0; padding-top: 22px; border-top: 1px solid var(--rz-linia); }
+
+@media (max-width: 1100px) {
+  .rdv-uklad { grid-template-columns: minmax(0, 1fr); }
+  .rdv-bok { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 0 40px; align-items: start; }
+  .rdv-bok-tyt, .rdv-bok .przyciski { grid-column: 1; }
+  #contact .rdv-bok .dane { grid-column: 2; grid-row: 1 / span 2; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 0; padding-top: 0; }
+}
+@media (max-width: 760px) {
+  .rdv-termin { grid-template-columns: minmax(0, 1fr); }
+  .rdv-sloty { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .rdv-bok { display: block; }
+  #contact .rdv-bok .dane { grid-template-columns: 1fr; padding-top: 22px; border-top: 1px solid var(--rz-linia); }
+}
+@media (max-width: 560px) {
+  .rdv { padding: 18px 14px 20px; margin: 0 -2px; }
+  .rdv-opcje, .rdv-pola, .rdv-pret-dane { grid-template-columns: 1fr; }
+  .rdv-etap { flex-direction: column; gap: 4px; font-size: 11px; letter-spacing: .04em; line-height: 1.3; }
+  .rdv-etap > span:last-child { white-space: normal; hyphens: manual; }
+  .rdv-etapy li:has([aria-current]) { flex: 1.5; }
+  /* telefon: główny przycisk na całą szerokość, „Retour” pod nim */
+  .rdv-nawigacja { flex-direction: column-reverse; align-items: stretch; }
+  .rdv-nawigacja .pill { width: 100%; min-width: 0; }
+  .rdv-wyslij { flex-direction: column; }
+  .rdv-wyslij .rdv-zmien { align-self: center; }
+  .rdv-recap { grid-template-columns: 1fr 1fr; }
+  .rdv-recap > div:first-child { grid-column: 1 / -1; }
+  .rdv-siatka { border-spacing: 1px; }
+  .rdv-dzien { min-height: 42px; font-size: 15px; }
+}
+
+/* telefon: dolny pasek (Appeler · WhatsApp · Rendez-vous) chowa się, gdy klientka pisze w formularzu */
+html.rdv-pisze .pasek-dol { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rdv *, .rdv *::before, .rdv *::after { transition: none !important; }
+}

@@ -17,8 +17,11 @@ window.EBL = {
   // Oferta jak w biznesplanie Moniki (16.09.2026, decyzja Daniela 03.10.2026): TYLKO EMS i kriolipoliza.
   // Ceny z planu: EMS 100 € / séance; kriolipoliza 1 strefa 180 €, 2 strefy 350 €, 3 strefy 500 €. Czasu sesji plan nie podaje: null.
   zabiegi: [
-    { id: 'ems', czas: null, cena: 100, od: false, seria: null, test: false },
-    { id: 'cryo', czas: null, cena: 180, od: true, seria: null, test: true }, // TEST: kriolipoliza = akt lekarski (Cass. crim. 31.01.2023); przed publikacją potwierdzenie prawnika i ubezpieczyciela
+    // ceny: warianty do cennika (#tarifs) i kreatora wizyty (js/rezerwacja.js); jednostka 'seance' albo liczba stref
+    { id: 'ems', czas: null, cena: 100, od: false, seria: null, test: false,
+      ceny: [{ seanse: 1, cena: 100 }] },
+    { id: 'cryo', czas: null, cena: 180, od: true, seria: null, test: true,
+      ceny: [{ strefy: 1, cena: 180 }, { strefy: 2, cena: 350 }, { strefy: 3, cena: 500 }] }, // TEST: kriolipoliza = akt lekarski (Cass. crim. 31.01.2023); przed publikacją potwierdzenie prawnika i ubezpieczyciela
   ],
   przedPo: [],   // tylko prawdziwe zdjęcia klientek z pisemną zgodą; pusto = sekcja ukryta
   opinie: []     // tylko prawdziwe opinie z Google; pusto = sekcja ukryta

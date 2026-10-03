@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/paleta.css">
+<link rel="stylesheet" href="css/rezerwacja.css">
 <script>/* Klasy na <html>, zanim cokolwiek się narysuje (wzór DASTAN BTP 26.09).
    leniwe: tła sekcji poza pierwszym ekranem ładują się dopiero blisko ekranu (site.js).
    ruch: tylko bez ograniczonego ruchu i bez botów. Kurtyna: pierwsze wejście w karcie, bez skoku prosto do sekcji (#contact).
@@ -35,6 +36,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
   <a class="logo logo-obraz" href="#top"><img src="img/logo-dama-zlota-poziom.webp" width="465" height="120" alt="Evolution Body Lab"></a>
   <nav class="menu" aria-label="Menu">
     <a href="#soins" data-t="nav_soins"></a>
+    <a href="#tarifs" data-t="nav_tarifs"></a>
     <a href="#visite" data-t="nav_visite"></a>
     <a href="#monika" data-t="nav_monika"></a>
     <a href="#faq" data-t="nav_faq"></a>
@@ -112,6 +114,18 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
     </div>
   </section>
 
+  <section class="noc" id="tarifs">
+    <div class="tarifs-glowa">
+      <p class="etykieta" data-t="tarifs_label"></p>
+      <h2 data-t="tarifs_titre"></h2>
+    </div>
+    <div class="cennik" id="cennik"></div>
+    <div class="tarifs-dol">
+      <p class="tarifs-note" data-t="tarifs_note"></p>
+      <a class="pill solid" href="#contact" data-t="cta_rdv"></a>
+    </div>
+  </section>
+
   <section class="noc" id="visite">
     <div class="kula" aria-hidden="true"></div>
     <div class="duo" aria-hidden="true">
@@ -184,9 +198,92 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
   <section class="noc" id="contact" data-tlo>
     <p class="etykieta" data-t="contact_label"></p>
     <h2 data-t="contact_titre"></h2>
-    <p class="lead" data-t="rdv_off"></p>
+    <p class="lead" data-t="rdv_lead"></p>
+    <div class="rdv-uklad">
+    <div class="rdv" id="rdv">
+      <ol class="rdv-etapy" data-t-attr="aria-label:rdv_etapes">
+        <li><button type="button" class="rdv-etap" data-krok="1"><span class="rdv-nr">01</span><span data-t="rdv_e1"></span></button></li>
+        <li><button type="button" class="rdv-etap" data-krok="2"><span class="rdv-nr">02</span><span data-t="rdv_e2"></span></button></li>
+        <li><button type="button" class="rdv-etap" data-krok="3"><span class="rdv-nr">03</span><span data-t="rdv_e3"></span></button></li>
+      </ol>
+      <form class="rdv-form" novalidate>
+        <div class="rdv-krok" data-krok="1" role="group" aria-labelledby="rdv-k1-t">
+          <h3 class="rdv-tytul" id="rdv-k1-t" tabindex="-1" data-t="rdv_k1_t"></h3>
+          <fieldset class="rdv-opcje" aria-describedby="rdv-err-soin"><legend class="rdv-sr" data-t="rdv_k1_t"></legend></fieldset>
+          <p class="rdv-blad" id="rdv-err-soin" aria-live="polite"></p>
+          <div class="rdv-nawigacja"><button type="button" class="pill solid" data-dalej="2" data-t="rdv_continuer"></button></div>
+        </div>
+        <div class="rdv-krok" data-krok="2" role="group" aria-labelledby="rdv-k2-t" hidden>
+          <h3 class="rdv-tytul" id="rdv-k2-t" tabindex="-1" data-t="rdv_k2_t"></h3>
+          <div class="rdv-termin">
+            <div class="rdv-kal">
+              <div class="rdv-kal-glowa">
+                <button type="button" class="rdv-mies" data-mies="-1" data-t-attr="aria-label:rdv_mois_prec"><span aria-hidden="true">‹</span></button>
+                <p class="rdv-mies-nazwa" id="rdv-mies-nazwa" aria-live="polite"></p>
+                <button type="button" class="rdv-mies" data-mies="1" data-t-attr="aria-label:rdv_mois_suiv"><span aria-hidden="true">›</span></button>
+              </div>
+              <table class="rdv-siatka" role="grid" aria-labelledby="rdv-mies-nazwa"><thead><tr></tr></thead><tbody></tbody></table>
+            </div>
+            <fieldset class="rdv-godziny" aria-describedby="rdv-err-date">
+              <legend class="rdv-pole-tyt" data-t="rdv_heure"></legend>
+              <p class="rdv-podpowiedz" data-t="rdv_heure_vide"></p>
+              <div class="rdv-sloty"></div>
+            </fieldset>
+          </div>
+          <p class="rdv-blad" id="rdv-err-date" aria-live="polite"></p>
+          <div class="rdv-nawigacja">
+            <button type="button" class="pill ramka" data-dalej="1" data-t="rdv_retour"></button>
+            <button type="button" class="pill solid" data-dalej="3" data-t="rdv_continuer"></button>
+          </div>
+        </div>
+        <div class="rdv-krok" data-krok="3" role="group" aria-labelledby="rdv-k3-t" hidden>
+          <h3 class="rdv-tytul" id="rdv-k3-t" tabindex="-1" data-t="rdv_k3_t"></h3>
+          <div class="rdv-pola">
+            <p class="rdv-pole"><label for="rdv-nom" data-t="rdv_nom"></label>
+              <input id="rdv-nom" name="nom" type="text" autocomplete="name" required maxlength="80" aria-describedby="rdv-err-nom">
+              <span class="rdv-blad" id="rdv-err-nom" aria-live="polite"></span></p>
+            <p class="rdv-pole"><label for="rdv-tel" data-t="rdv_tel"></label>
+              <input id="rdv-tel" name="tel" type="tel" autocomplete="tel" inputmode="tel" required maxlength="20" aria-describedby="rdv-tel-aide rdv-err-tel">
+              <span class="rdv-aide" id="rdv-tel-aide" data-t="rdv_tel_aide"></span>
+              <span class="rdv-blad" id="rdv-err-tel" aria-live="polite"></span></p>
+            <p class="rdv-pole rdv-cala"><label for="rdv-mail"><span data-t="rdv_mail"></span> <span class="rdv-opc" data-t="rdv_facultatif"></span></label>
+              <input id="rdv-mail" name="mail" type="email" autocomplete="email" maxlength="120" aria-describedby="rdv-err-mail">
+              <span class="rdv-blad" id="rdv-err-mail" aria-live="polite"></span></p>
+            <p class="rdv-pole rdv-cala"><label for="rdv-msg"><span data-t="rdv_message"></span> <span class="rdv-opc" data-t="rdv_facultatif"></span></label>
+              <textarea id="rdv-msg" name="message" rows="3" maxlength="400" aria-describedby="rdv-msg-aide"></textarea>
+              <span class="rdv-aide" id="rdv-msg-aide" data-t="rdv_message_aide"></span></p>
+            <p class="rdv-zgoda rdv-cala"><input id="rdv-accord" name="accord" type="checkbox" required aria-describedby="rdv-err-accord">
+              <label for="rdv-accord" data-t="rdv_accord"></label>
+              <span class="rdv-blad" id="rdv-err-accord" aria-live="polite"></span></p>
+          </div>
+          <p class="rdv-aide rdv-prywatnosc" data-t="rdv_vie_privee"></p>
+          <div class="rdv-nawigacja">
+            <button type="button" class="pill ramka" data-dalej="2" data-t="rdv_retour"></button>
+            <button type="submit" class="pill solid" data-t="rdv_preparer"></button>
+          </div>
+        </div>
+      </form>
+      <div class="rdv-pret" id="rdv-pret" aria-live="polite" hidden>
+        <h3 class="rdv-tytul" id="rdv-pret-t" tabindex="-1" data-t="rdv_pret_t"></h3>
+        <p class="rdv-pret-d" data-t="rdv_pret_d"></p>
+        <dl class="rdv-pret-dane"></dl>
+        <div class="rdv-nawigacja rdv-wyslij">
+          <a class="pill solid" id="rdv-wa" target="_blank" rel="noopener" data-t="rdv_envoyer_wa"></a>
+          <a class="pill ramka" id="rdv-mail-link" data-t="rdv_envoyer_mail"></a>
+          <button type="button" class="rdv-zmien" data-dalej="3" data-t="rdv_modifier"></button>
+        </div>
+      </div>
+      <dl class="rdv-recap">
+        <div><dt data-t="rdv_recap_soin"></dt><dd data-rdv="soin"></dd></div>
+        <div><dt data-t="rdv_recap_date"></dt><dd data-rdv="date"></dd></div>
+        <div><dt data-t="rdv_recap_heure"></dt><dd data-rdv="heure"></dd></div>
+      </dl>
+      <p class="rdv-sr" id="rdv-status" aria-live="polite"></p>
+    </div>
+    <aside class="rdv-bok">
+    <p class="rdv-bok-tyt" data-t="rdv_appel_t"></p>
     <div class="przyciski">
-      <a class="pill solid" data-href="tel" data-t="cta_appeler"></a>
+      <a class="pill ramka" data-href="tel" data-t="cta_appeler"></a>
       <a class="pill ramka" data-href="wa" data-t="cta_whatsapp"></a>
     </div>
     <dl class="dane">
@@ -195,6 +292,8 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
       <div><dt data-t="telephone"></dt><dd data-dane="telefonTekst"></dd></div>
       <div><dt data-t="langues"></dt><dd data-t="langues_val"></dd></div>
     </dl>
+    </aside>
+    </div>
     <span class="plakietka" data-t="image_synthese"></span>
   </section>
 </main>
@@ -206,6 +305,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
       <nav class="stopka-menu" data-t-attr="aria-label:footer_pages">
         <p class="stopka-tyt" data-t="footer_pages"></p>
         <a href="#soins" data-t="nav_soins"></a>
+        <a href="#tarifs" data-t="nav_tarifs"></a>
         <a href="#visite" data-t="nav_visite"></a>
         <a href="#monika" data-t="nav_monika"></a>
         <a href="#faq" data-t="nav_faq"></a>
@@ -235,6 +335,7 @@ h.classList.add('ruch');if(!location.hash&&!sessionStorage.getItem('ebl-kurtyna'
 <script src="js/dane.js"></script>
 <script src="js/teksty.js"></script>
 <script src="js/site.js"></script>
+<script src="js/rezerwacja.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" integrity="sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
