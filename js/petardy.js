@@ -28,7 +28,7 @@
   var QA = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
   var KOMPUTER = '(min-width: 901px)';
   var PIN_PORTAL = 2.8, PIN_TOR = 3.4;                  /* długość pinów w wysokościach ekranu (vh / 100) */
-  var ROZA = [.30, .32];                                /* środek róży w dama-roza-900.webp (u, v od lewego górnego rogu) */
+  var ROZA = [.33, .673];                               /* środek czerwonej róży w medalionie Moniki (dama-roza-900.webp od 03.10.2026, u, v) */
   var ZOOM_MAX = 64, ZOOM_DOM = 14;
   var mm = gsap.matchMedia();
   var MYSZ = matchMedia('(hover: hover) and (pointer: fine)');
