@@ -954,3 +954,37 @@ html.ruch:not(.ruch-js) .kurtyna .k-pod, html.ruch:not(.ruch-js) .kurtyna .k-lin
 @keyframes tel-monika { from { opacity: 0; transform: translate(-42%, 4%) scale(1.04); } to { opacity: 1; transform: translateX(-42%); } }
 @keyframes tel-oddech { from { transform: translateX(-42%) scale(1); } to { transform: translate(-42%, -1%) scale(1.025); } }
 @media (max-width: 900px) and (prefers-reduced-motion: reduce) { .hero-monika { animation: none; } }
+
+/* TELEFON: tor „3 petardy” (od 03.10.2026 także na telefonie, js/petardy.js). Pion: urządzenie w górnej połowie, tekst na dole
+   nad dolnym paskiem, tytuł w szerokości ekranu (długie słowa łamią się do linii). */
+@media (max-width: 900px) {
+  #soins.tor-on .tor3-scena { height: 100svh; }
+  #soins.tor-on .panel-obraz { left: 0; right: 0; width: 100%; top: calc(var(--nav, 64px) + 84px); bottom: 46%; border-left: 0; }
+  .tor-on .panel-obraz::after { background: linear-gradient(0deg, rgba(10, 20, 44, .9), rgba(10, 20, 44, 0) 40%); }
+  #soins.tor-on .panel-obraz.panel-wolny { overflow: visible; background: none; }
+  .tor-on .panel-wolny::after { display: none; }
+  .tor-on .panel-wolny .urzadzenie { position: absolute; left: 50%; right: auto; bottom: 0; margin-left: calc(var(--uw, 0px) * -.5);
+    transform: perspective(1200px) translate3d(calc(-50% + var(--ix, 0px)), 0, 0) rotateY(var(--ry, 0deg)); will-change: transform; }
+  .tor-on .panel-wolny .urzadzenie-img { position: static; height: min(calc(54svh - var(--nav, 64px) - 96px), 380px); width: auto; max-width: none; transform: none; }
+  .tor-on .panel-wolny .urzadzenie-obok { display: none; }
+  .tor-on .panel-tresc { top: auto; left: 20px; right: 20px; bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+  .tor-on .panel-nr { display: none; }
+  .tor-on .panel-tytul, .tor-on .panel[data-zabieg="ems"] .panel-tytul { font-size: clamp(38px, 11.6vw, 60px); line-height: .92; white-space: normal;
+    overflow-wrap: normal; margin-bottom: 14px; }
+  .tor-on .panel[data-zabieg="ems"] .panel-tytul { font-size: clamp(64px, 21vw, 110px); }
+  .tor-on .panel-wizyta .panel-tytul { font-size: clamp(38px, 11.6vw, 60px); width: auto; max-width: none; }
+  .tor-on .panel-opis { font-size: 15px; margin-bottom: 6px; }
+  .tor-on .panel-cta { margin-top: 12px; }
+  .tor-on .tor3-glowa { top: calc(var(--nav, 64px) + 14px); left: 20px; }
+  .tor-on .tor3-glowa h2 { font-size: 20px; }
+  .tor-on .tor3-licznik { top: calc(var(--nav, 64px) + 12px); right: 20px; font-size: 30px; }
+  .tor-on .tor3-pasek { left: 20px; right: 20px; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+  .tor-on .tor3-tlo { font-size: 70vw; }
+  /* pierwsza wizyta: kabina jako tło górnej połowy, analizator przed nią */
+  .tor-on .panel-kadr .kadr { inset: 0; }
+  .tor-on .panel-kadr .urzadzenie-przod { left: auto; right: 4%; top: auto; bottom: 0; transform: perspective(1200px) translate3d(var(--ix, 0px), 0, 0) rotateY(var(--ry, 0deg)); }
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-img { position: static; height: min(calc(54svh - var(--nav, 64px) - 96px), 360px); width: auto; transform: none; }
+  .tor-on .panel-kadr .urzadzenie-przod .urzadzenie-ekran { position: absolute; left: 0; top: 0; }
+}
+/* Samsung Internet i inne wymuszone tryby ciemne nie przerabiają kolorów strony, która sama deklaruje ciemny motyw */
+:root { color-scheme: dark; }

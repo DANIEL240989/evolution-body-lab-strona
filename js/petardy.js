@@ -27,6 +27,8 @@
   var Q = function (s, r) { return (r || document).querySelector(s); };
   var QA = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
   var KOMPUTER = '(min-width: 901px)';
+  /* od 03.10.2026 teleport i tor także na telefonie (Daniel: „gdzie animacja”); układ telefonu w bloku TELEFON w css/paleta.css */
+  var WSZEDZIE = 'all';
   var PIN_PORTAL = 2.8, PIN_TOR = 3.4;                  /* długość pinów w wysokościach ekranu (vh / 100) */
   var ROZA = [.33, .673];                               /* środek czerwonej róży w medalionie Moniki (dama-roza-900.webp od 03.10.2026, u, v) */
   var ZOOM_MAX = 64, ZOOM_DOM = 14;
@@ -206,7 +208,7 @@
   /* ================================================================ 1. TELEPORT */
   var portal = Q('#approche.portal'), pScena = portal && Q('.portal-scena', portal);
   var silnik = null, silnikProba = false;
-  if (pScena) mm.add(KOMPUTER, function () {
+  if (pScena) mm.add(WSZEDZIE, function () {
     var img = Q('.portal-obraz img', pScena), blysk = Q('.portal-blysk', pScena), wsk = Q('.portal-wskazowka', pScena),
         et = Q('.portal-druga .etykieta', pScena), tekst = Q('.portal-druga .manifest-tekst', pScena),
         plak = Q(':scope > .plakietka', pScena);
@@ -263,7 +265,7 @@
 
   /* ================================================================ 2. TOR „3 PETARDY W LEWO” */
   var tor = Q('#soins.tor3'), tScena = tor && Q('.tor3-scena', tor);
-  if (tScena) mm.add(KOMPUTER, function () {
+  if (tScena) mm.add(WSZEDZIE, function () {
     var tasma = Q('.tor3-tasma', tScena), panele = QA('.panel', tasma), tlo = Q('.tor3-tlo', tScena),
         nrEl = Q('.tor3-nr-akt', tScena), pasek = Q('.tor3-pasek', tScena), zEl = Q('.tor3-z', tScena);
     if (!tasma || panele.length < 2) return;
